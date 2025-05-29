@@ -2,7 +2,7 @@ package cloudcomputinginha.demo.domain;
 
 import cloudcomputinginha.demo.domain.common.BaseEntity;
 import cloudcomputinginha.demo.domain.enums.InterviewType;
-import cloudcomputinginha.demo.domain.enums.Type;
+import cloudcomputinginha.demo.domain.enums.InterviewFormat;
 import cloudcomputinginha.demo.domain.enums.VoiceType;
 import jakarta.persistence.*;
 import lombok.*;
@@ -26,7 +26,7 @@ public class InterviewOption extends BaseEntity {
 
     @Enumerated(EnumType.STRING)
     @Column(columnDefinition = "VARCHAR(20)")
-    private Type type;
+    private InterviewFormat interviewFormat;
 
     @Enumerated(EnumType.STRING)
     @Column(columnDefinition = "VARCHAR(20)")
@@ -45,6 +45,6 @@ public class InterviewOption extends BaseEntity {
     private LocalDateTime endedAt;
 
     @Builder.Default
-    @OneToMany(mappedBy = "interviewOption", cascade = CascadeType.ALL)
-    private List<Interview> interviewList = new ArrayList<>();
+    @OneToOne(mappedBy = "interviewOption", cascade = CascadeType.ALL)
+    private Interview interview;
 }

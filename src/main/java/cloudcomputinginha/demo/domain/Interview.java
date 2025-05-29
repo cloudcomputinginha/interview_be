@@ -40,7 +40,7 @@ public class Interview extends BaseEntity {
 
     private Boolean isOpen;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "interview_option_id", nullable = false)
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "interview_option_id", unique = true, nullable = false)
     private InterviewOption interviewOption;
 }
