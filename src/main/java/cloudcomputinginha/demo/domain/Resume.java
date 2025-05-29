@@ -1,6 +1,7 @@
 package cloudcomputinginha.demo.domain;
 
 import cloudcomputinginha.demo.domain.common.BaseEntity;
+import cloudcomputinginha.demo.domain.enums.FileType;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -27,4 +28,8 @@ public class Resume extends BaseEntity {
 
     @Column(nullable = false)
     private Long fileSize;
+
+    @Enumerated(EnumType.STRING)
+    @Column(length = 4, nullable = false)
+    private FileType fileType;
 }

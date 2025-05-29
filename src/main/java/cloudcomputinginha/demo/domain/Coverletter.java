@@ -19,9 +19,9 @@ public class Coverletter extends BaseEntity {
     @JoinColumn(name = "member_id", nullable = false)
     private Member member;
 
-    @Column(length = 15)
+    @Column(length = 100)
     private String corporateName;
 
-    @Column(length = 15)
+    @Column(length = 20)
     private String jobName;
 }
