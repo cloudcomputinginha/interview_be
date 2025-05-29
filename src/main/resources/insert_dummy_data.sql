@@ -135,34 +135,34 @@ VALUES (10, 3, 'Possible government per back.',
 
 INSERT INTO member_interview (member_interview_id, member_id, interview_id, resume_id, coverletter_id, status,
                               created_at, updated_at)
-VALUES (1, 2, 3,
-        3, 3,
+VALUES (1, 1, 3,
+        3, NULL,
         'SCHEDULED', NOW(), NOW());
 
 
 INSERT INTO member_interview (member_interview_id, member_id, interview_id, resume_id, coverletter_id, status,
                               created_at, updated_at)
-VALUES (2, 1, 1,
-        2, 3,
+VALUES (2, 1, 2,
+        1, NULL,
         'SCHEDULED', NOW(), NOW());
 
 
 INSERT INTO member_interview (member_interview_id, member_id, interview_id, resume_id, coverletter_id, status,
                               created_at, updated_at)
 VALUES (3, 5, 3,
-        2, 3,
+        NULL, 4,
         'DONE', NOW(), NOW());
 
 
 INSERT INTO member_interview (member_interview_id, member_id, interview_id, resume_id, coverletter_id, status,
                               created_at, updated_at)
 VALUES (4, 4, 1,
-        5, 4,
+        4, 2,
         'SCHEDULED', NOW(), NOW());
 
 
 INSERT INTO member_interview (member_interview_id, member_id, interview_id, resume_id, coverletter_id, status,
                               created_at, updated_at)
 VALUES (5, 3, 1,
-        1, 5,
+        5, 3,
         'NO_SHOW', NOW(), NOW());
