@@ -16,6 +16,7 @@ import org.hibernate.annotations.DynamicUpdate;
 public class Interview extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "interview_id")
     private Long id;
 
     @Column(nullable = false, length = 20)
