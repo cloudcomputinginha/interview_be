@@ -1,16 +1,15 @@
 package cloudcomputinginha.demo.domain;
 
 import cloudcomputinginha.demo.domain.common.BaseEntity;
-import cloudcomputinginha.demo.domain.enums.InterviewType;
 import cloudcomputinginha.demo.domain.enums.InterviewFormat;
+import cloudcomputinginha.demo.domain.enums.InterviewType;
 import cloudcomputinginha.demo.domain.enums.VoiceType;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.DynamicUpdate;
+
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
 
 @Entity
 @Getter
@@ -44,7 +43,6 @@ public class InterviewOption extends BaseEntity {
 
     private LocalDateTime endedAt;
 
-    @Builder.Default
     @OneToOne(mappedBy = "interviewOption", cascade = CascadeType.ALL)
     private Interview interview;
 }

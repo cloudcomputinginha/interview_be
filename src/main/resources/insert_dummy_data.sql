@@ -36,13 +36,29 @@ VALUES (5, 'Crystal Mclaughlin', '05497963156', 'danny95@williams-hobbs.com', 'D
         'Receive figure any wish inside either among. Behavior radio recently. End crime network modern.',
         'GOOGLE', '14ba6ccc-601b-4a7b-92e1-075a317db784',
         'dd01202ff6b524a0560576401e9c0609c2f3c01669dd2aa3b927a00701964e6f', NOW(), NOW());
+-- 1. InterviewOption 데이터 삽입
+INSERT INTO interview_option (id, interview_format, interview_type, voice_type, question_number,
+                              answer_time, scheduled_at, ended_at, created_at, updated_at)
+VALUES (1, 'ONE_TO_MANY', 'TECHNICAL', 'WOMEN_1', 5, 3, '2025-06-01 10:00:00', '2025-06-01 10:30:00', NOW(), NOW()),
+       (2, 'ONE_TO_ONE', 'BEHAVIORAL', 'MEN_2', 3, 5, '2025-06-02 14:00:00', '2025-06-02 14:30:00', NOW(), NOW()),
+       (3, 'ONE_TO_MANY', 'TECHNICAL', 'MEN_1', 4, 7, '2025-06-03 16:00:00', '2025-06-03 16:40:00', NOW(), NOW());
 
-INSERT INTO interview (interview_id, created_at, updated_at)
-VALUES (1, NOW(), NOW());
-INSERT INTO interview (interview_id, created_at, updated_at)
-VALUES (2, NOW(), NOW());
-INSERT INTO interview (interview_id, created_at, updated_at)
-VALUES (3, NOW(), NOW());
+-- 2. Interview 데이터 삽입
+INSERT INTO interview (interview_id, name, description, corporate_name, job_name,
+                       host_id, max_participants, notice_url, is_open,
+                       interview_option_id, created_at, updated_at)
+VALUES (1, '백엔드 인터뷰', '백엔드 개발자를 위한 기술 인터뷰', 'GPT컴퍼니', '백엔드 개발자',
+        4, 4, 'https://gptonline.ai/notice/1', TRUE,
+        1, NOW(), NOW()),
+
+       (2, 'HR 인터뷰', '행동 기반 면접 테스트', '오픈AI코리아', '인사 담당자',
+        1, NULL, 'https://gptonline.ai/notice/2', FALSE,
+        2, NOW(), NOW()),
+
+       (3, '프론트엔드 인터뷰', '기술 역량 검증을 위한 면접', '테크프렌즈', '프론트엔드 개발자',
+        5, 4, 'https://gptonline.ai/notice/3', TRUE,
+        3, NOW(), NOW());
+
 
 INSERT INTO resume (resume_id, member_id, file_name, file_url, file_size, created_at, updated_at)
 VALUES (1, 1, 'resume_1.pdf', '/files/resume_1.pdf', 321, NOW(), NOW());
