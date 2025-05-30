@@ -1,6 +1,7 @@
 package cloudcomputinginha.demo.service;
 
 import cloudcomputinginha.demo.apiPayload.code.handler.InterviewHandler;
+import cloudcomputinginha.demo.apiPayload.code.status.ErrorStatus;
 import cloudcomputinginha.demo.domain.Interview;
 import cloudcomputinginha.demo.repository.InterviewRepository;
 import cloudcomputinginha.demo.web.dto.InterviewRequestDTO;
@@ -21,6 +22,11 @@ public class InterviewCommandServiceImpl implements InterviewCommandService {
     @Transactional
     public Interview terminateInterview(Long interviewId, InterviewRequestDTO.endInterviewRequestDTO endInterviewRequestDTO) {
         Interview interview = interviewRepository.getReferenceWithInterviewOptionById(interviewId);
+
+        if (interview.getInterviewOption().getEndedAt() != null) {
+            throw new InterviewHandler(ErrorStatus.INTERVIEW_ALREADY_TERMINATED);
+        }
+
 
         if (endInterviewRequestDTO.getEndedAt().isBefore(interview.getInterviewOption().getScheduledAt())) {
             throw new InterviewHandler(INTERVIEW_END_TIME_INVALID);

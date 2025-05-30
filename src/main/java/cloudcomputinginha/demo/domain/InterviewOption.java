@@ -39,6 +39,7 @@ public class InterviewOption extends BaseEntity {
 
     private Integer answerTime;
 
+    @Column(nullable = false)
     private LocalDateTime scheduledAt;
 
     private LocalDateTime endedAt;

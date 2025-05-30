@@ -35,6 +35,7 @@ public enum ErrorStatus implements BaseErrorCode {
     INTERVIEW_NOT_FOUND(HttpStatus.NOT_FOUND, "INTERVIEW4001", "해당하는 인터뷰를 찾을 수 없습니다."),
     INTERVIEW_NOT_ACCEPTING_MEMBERS(HttpStatus.BAD_REQUEST, "INTERVIEW4002", "현재 인터뷰는 참여자를 받지 않습니다."),
     INTERVIEW_END_TIME_INVALID(HttpStatus.CONFLICT, "INTERVIEW4003", "인터뷰의 종료 시간이 시작 시간보다 빠릅니다."),
+    INTERVIEW_ALREADY_TERMINATED(HttpStatus.CONFLICT, "INTERVIEW4004", "해당하는 인터뷰는 이미 종료되었습니다."),
 
     // 멤버 인터뷰 관련 에러,
     INTERVIEW_STATUS_INVALID(HttpStatus.BAD_REQUEST, "MEMBERINTERVIEW4001", "올바른 인터뷰 상태가 아닙니다."),
