@@ -5,11 +5,14 @@ import cloudcomputinginha.demo.apiPayload.code.handler.MemberInterviewHandler;
 import cloudcomputinginha.demo.apiPayload.code.status.ErrorStatus;
 import cloudcomputinginha.demo.converter.MemberInterviewConverter;
 import cloudcomputinginha.demo.domain.*;
+import cloudcomputinginha.demo.domain.enums.InterviewStatus;
 import cloudcomputinginha.demo.repository.*;
 import cloudcomputinginha.demo.web.dto.MemberInterviewRequestDTO;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -66,5 +69,20 @@ public class MemberInterviewCommandServiceImpl implements MemberInterviewCommand
 
         MemberInterview memberInterview = MemberInterviewConverter.toMemberInterview(member, interview, resume, coverletter);
         return memberInterviewRepository.save(memberInterview);
+    }
+
+    @Override
+    public void finalizeStatuses(Long interviewId) {
+        List<MemberInterview> memberInterviews = memberInterviewRepository.findByInterviewId(interviewId);
+
+        for (MemberInterview mi : memberInterviews) {
+            switch (mi.getStatus()) {
+                case SCHEDULED -> mi.changeStatus(InterviewStatus.NO_SHOW);
+                case IN_PROGRESS -> mi.changeStatus(InterviewStatus.DONE);
+                default -> {
+                }
+            }
+        }
+
     }
 }

@@ -45,4 +45,8 @@ public class InterviewOption extends BaseEntity {
 
     @OneToOne(mappedBy = "interviewOption", cascade = CascadeType.ALL)
     private Interview interview;
+
+    public void changeEndedAt(LocalDateTime endedAt) {
+        this.endedAt = endedAt;
+    }
 }
