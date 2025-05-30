@@ -20,15 +20,26 @@ public enum ErrorStatus implements BaseErrorCode {
     MEMBER_NOT_FOUND(HttpStatus.BAD_REQUEST, "MEMBER4001", "사용자가 없습니다."),
     NICKNAME_NOT_EXIST(HttpStatus.BAD_REQUEST, "MEMBER4002", "닉네임은 필수 입니다."),
 
-    // 예시,,,
-    ARTICLE_NOT_FOUND(HttpStatus.NOT_FOUND, "ARTICLE4001", "게시글이 없습니다."),
+    // 자소서 관련
+    COVERLETTER_NOT_FOUND(HttpStatus.NOT_FOUND, "COVERLETTER4001", "해당하는 자기소개서를 찾을 수 없습니다."),
+    COVERLETTER_NOT_OWNED(HttpStatus.FORBIDDEN, "COVERLETTER4002", "자기소개서는 해당 회원의 소유가 아닙니다."),
+
+    // 이력서 관련
+    RESUME_NOT_FOUND(HttpStatus.NOT_FOUND, "RESUME4001", "해당하는 이력서를 찾을 수 없습니다."),
+    RESUME_NOT_OWNED(HttpStatus.FORBIDDEN, "RESUME4002", "이력서는 해당 회원의 소유가 아닙니다."),
+
+    // 자소서 + 이력서 관련
+    AT_LEAST_ONE_PRESENT_DOCUMENTS(HttpStatus.BAD_REQUEST, "DOCUMENT4001", "이력서 또는 자기소개서 중 하나는 반드시 입력해야 합니다."),
 
     // 면접 관련 에러
     INTERVIEW_NOT_FOUND(HttpStatus.NOT_FOUND, "INTERVIEW4001", "해당하는 인터뷰를 찾을 수 없습니다."),
+    INTERVIEW_NOT_ACCEPTING_MEMBERS(HttpStatus.BAD_REQUEST, "INTERVIEW4002", "현재 인터뷰는 참여자를 받지 않습니다."),
 
-    // 멤버 인터뷰 관련 에러
+    // 멤버 인터뷰 관련 에러,
     INTERVIEW_STATUS_INVALID(HttpStatus.BAD_REQUEST, "MEMBERINTERVIEW4001", "올바른 인터뷰 상태가 아닙니다."),
-    MEMBER_INTERVIEW_NOT_FOUND(HttpStatus.NOT_FOUND, "MEMBERINTERVIEW4002", "해당하는 사용자 인터뷰를 찾을 수 없습니다.");
+    MEMBER_INTERVIEW_NOT_FOUND(HttpStatus.NOT_FOUND, "MEMBERINTERVIEW4002", "해당하는 사용자 인터뷰를 찾을 수 없습니다."),
+    MEMBER_INTERVIEW_ALREADY_EXISTS(HttpStatus.CONFLICT, "MEMBERINTERVIEW4003", "이미 해당 인터뷰에 참여 신청이 완료된 회원입니다."),
+    INTERVIEW_CAPACITY_EXCEEDED(HttpStatus.BAD_REQUEST, "MEMBERINTERVIEW4004", "인터뷰 정원이 초과되어 더 이상 신청할 수 없습니다.");
 
     private final HttpStatus httpStatus;
     private final String code;
