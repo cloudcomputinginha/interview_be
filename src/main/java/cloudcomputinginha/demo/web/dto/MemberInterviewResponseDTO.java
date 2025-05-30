@@ -15,4 +15,13 @@ public class MemberInterviewResponseDTO {
         InterviewStatus status;
         LocalDateTime updatedAt;
     }
+
+    @Getter
+    @Builder
+    @NoArgsConstructor(access = AccessLevel.PROTECTED)
+    @AllArgsConstructor
+    public static class CreateMemberInterviewDTO {
+        Long memberInterviewId;
+        LocalDateTime createdAt;
+    }
 }

@@ -1,9 +1,11 @@
 package cloudcomputinginha.demo.service;
 
+import cloudcomputinginha.demo.apiPayload.code.handler.DocumentHandler;
 import cloudcomputinginha.demo.apiPayload.code.handler.MemberInterviewHandler;
 import cloudcomputinginha.demo.apiPayload.code.status.ErrorStatus;
-import cloudcomputinginha.demo.domain.MemberInterview;
-import cloudcomputinginha.demo.repository.MemberInterviewRepository;
+import cloudcomputinginha.demo.converter.MemberInterviewConverter;
+import cloudcomputinginha.demo.domain.*;
+import cloudcomputinginha.demo.repository.*;
 import cloudcomputinginha.demo.web.dto.MemberInterviewRequestDTO;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -14,6 +16,10 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional
 public class MemberInterviewCommandServiceImpl implements MemberInterviewCommandService {
     private final MemberInterviewRepository memberInterviewRepository;
+    private final MemberRepository memberRepository;
+    private final InterviewRepository interviewRepository;
+    private final CoverletterRepository coverletterRepository;
+    private final ResumeRepository resumeRepository;
 
     @Override
     public MemberInterview changeMemberInterviewStatus(Long interviewId, MemberInterviewRequestDTO.changeMemberStatusDTO memberInterviewRequestDTO) {
@@ -23,5 +29,42 @@ public class MemberInterviewCommandServiceImpl implements MemberInterviewCommand
         memberInterview.changeStatus(memberInterviewRequestDTO.getStatus());
         memberInterviewRepository.save(memberInterview);
         return memberInterview;
+    }
+
+    @Override
+    public MemberInterview createMemberInterview(Long interviewId, MemberInterviewRequestDTO.createMemberInterviewDTO createMemberInterviewDTO) {
+        boolean alreadyExists = memberInterviewRepository.existsByMemberIdAndInterviewId(createMemberInterviewDTO.getMemberId(), interviewId);
+        if (alreadyExists) {
+            throw new MemberInterviewHandler(ErrorStatus.MEMBER_INTERVIEW_ALREADY_EXISTS);
+        }
+
+        Member member = memberRepository.getReferenceById(createMemberInterviewDTO.getMemberId());
+        Interview interview = interviewRepository.getReferenceById(interviewId);
+
+        if (!interview.getIsOpen()) {
+            throw new MemberInterviewHandler(ErrorStatus.INTERVIEW_NOT_ACCEPTING_MEMBERS);
+        }
+        if (interview.getMaxParticipants() <= memberInterviewRepository.countMemberInterviewByInterviewId(interview.getId())) {
+            throw new MemberInterviewHandler(ErrorStatus.INTERVIEW_CAPACITY_EXCEEDED); //
+        }
+
+        Resume resume = null;
+        if (createMemberInterviewDTO.getResumeId() != null) {
+            resume = resumeRepository.getReferenceById(createMemberInterviewDTO.getResumeId());
+            if (!resume.getMember().getId().equals(createMemberInterviewDTO.getMemberId())) {
+                throw new DocumentHandler(ErrorStatus.RESUME_NOT_OWNED);
+            }
+        }
+
+        Coverletter coverletter = null;
+        if (createMemberInterviewDTO.getCoverletterId() != null) {
+            coverletter = coverletterRepository.getReferenceById(createMemberInterviewDTO.getCoverletterId());
+            if (!coverletter.getMember().getId().equals(createMemberInterviewDTO.getMemberId())) {
+                throw new DocumentHandler(ErrorStatus.COVERLETTER_NOT_OWNED);
+            }
+        }
+
+        MemberInterview memberInterview = MemberInterviewConverter.toMemberInterview(member, interview, resume, coverletter);
+        return memberInterviewRepository.save(memberInterview);
     }
 }

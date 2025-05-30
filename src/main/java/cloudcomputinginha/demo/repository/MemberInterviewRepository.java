@@ -11,4 +11,8 @@ public interface MemberInterviewRepository extends JpaRepository<MemberInterview
     List<MemberInterview> interview(Interview interview);
 
     Optional<MemberInterview> findByMemberIdAndInterviewId(Long memberId, Long interviewId);
+
+    boolean existsByMemberIdAndInterviewId(Long memberId, Long interviewId);
+
+    Integer countMemberInterviewByInterviewId(Long id);
 }

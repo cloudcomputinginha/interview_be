@@ -11,10 +11,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.PatchMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @Validated
 @RestController
@@ -28,4 +25,11 @@ public class MemberInterviewRestController {
         MemberInterview memberInterview = memberInterviewCommandService.changeMemberInterviewStatus(interviewId, changeMemberStatusDTO);
         return ApiResponse.onSuccess(MemberInterviewConverter.toMemberInterviewStatusDTO(memberInterview));
     }
+
+    @PostMapping("/interviews/{interviewId}")
+    public ApiResponse<MemberInterviewResponseDTO.CreateMemberInterviewDTO> createMemberInterview(@PathVariable @ExistInterview Long interviewId, @RequestBody @Valid MemberInterviewRequestDTO.createMemberInterviewDTO createMemberInterviewDTO) {
+        MemberInterview memberInterview = memberInterviewCommandService.createMemberInterview(interviewId, createMemberInterviewDTO);
+        return ApiResponse.onSuccess(MemberInterviewConverter.toMemberInterviewResultDTO(memberInterview));
+    }
+
 }

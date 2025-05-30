@@ -4,5 +4,7 @@ import cloudcomputinginha.demo.domain.MemberInterview;
 import cloudcomputinginha.demo.web.dto.MemberInterviewRequestDTO;
 
 public interface MemberInterviewCommandService {
-    public MemberInterview changeMemberInterviewStatus(Long interviewId, MemberInterviewRequestDTO.changeMemberStatusDTO memberInterviewRequestDTO);
+    MemberInterview changeMemberInterviewStatus(Long interviewId, MemberInterviewRequestDTO.changeMemberStatusDTO memberInterviewRequestDTO);
+
+    MemberInterview createMemberInterview(Long interviewId, MemberInterviewRequestDTO.createMemberInterviewDTO createMemberInterviewDTO);
 }

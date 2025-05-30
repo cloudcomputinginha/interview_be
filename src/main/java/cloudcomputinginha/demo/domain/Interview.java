@@ -33,12 +33,14 @@ public class Interview extends BaseEntity {
 
     private Long hostId;
 
-    private Integer maxParticipants;
+    @Builder.Default
+    private Integer maxParticipants = 1; //일대일 면접을 기준으로 초기화
 
     @Column(nullable = false, length = 50)
     private String noticeUrl;
 
-    private Boolean isOpen;
+    @Builder.Default
+    private Boolean isOpen = false;
 
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "interview_option_id", unique = true, nullable = false)
