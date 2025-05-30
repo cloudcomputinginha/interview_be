@@ -33,7 +33,6 @@ public class Interview extends BaseEntity {
 
     private Long hostId;
 
-    @Column(nullable = false)
     private Integer maxParticipants;
 
     @Column(nullable = false, length = 50)

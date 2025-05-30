@@ -36,4 +36,8 @@ public class MemberInterview extends BaseEntity {
     @Column(length = 10, nullable = false)
     @Builder.Default
     private InterviewStatus status = InterviewStatus.SCHEDULED;
+
+    public void changeStatus(InterviewStatus status) {
+        this.status = status;
+    }
 }
