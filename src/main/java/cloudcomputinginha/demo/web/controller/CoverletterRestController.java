@@ -3,8 +3,11 @@ package cloudcomputinginha.demo.web.controller;
 import cloudcomputinginha.demo.apiPayload.ApiResponse;
 import cloudcomputinginha.demo.converter.CoverletterConverter;
 import cloudcomputinginha.demo.domain.Coverletter;
+import cloudcomputinginha.demo.domain.Qna;
 import cloudcomputinginha.demo.service.CoverletterCommandService;
 import cloudcomputinginha.demo.service.CoverletterQueryService;
+import cloudcomputinginha.demo.service.QnaQueryService;
+import cloudcomputinginha.demo.validation.annotation.ExistCoverletter;
 import cloudcomputinginha.demo.validation.annotation.ExistMember;
 import cloudcomputinginha.demo.web.dto.CoverletterRequestDTO;
 import cloudcomputinginha.demo.web.dto.CoverletterResponseDTO;
@@ -20,12 +23,13 @@ import java.util.List;
 
 @Tag(name = "자기소개서 API")
 @RestController
-@RequestMapping("/resumes")
+@RequestMapping("/coverletters")
 @RequiredArgsConstructor
 @Validated
 public class CoverletterRestController {
     private final CoverletterCommandService coverletterCommandService;
     private final CoverletterQueryService coverletterQueryService;
+    private final QnaQueryService qnaQueryService;
 
     @PostMapping
     @Operation(summary = "자기소개서 생성")
@@ -40,5 +44,15 @@ public class CoverletterRestController {
         List<Coverletter> coverletterList = coverletterQueryService.findAllCoverletterByMember(memberId);
         return ApiResponse.onSuccess(CoverletterConverter.toMyCoverletterListDTO(coverletterList));
     }
+
+    @GetMapping("/{coverletterId}")
+    @Operation(summary = "자기소개서 세부 조회")
+    public ApiResponse<CoverletterResponseDTO.CoverletterDetailDTO> getCoverletterDetail(@PathVariable @ExistCoverletter @NotNull Long coverletterId) {
+        Coverletter coverletter = coverletterQueryService.getCoverletter(coverletterId);
+        List<Qna> qnaList = qnaQueryService.getQnasByCoverletter(coverletterId);
+
+        return ApiResponse.onSuccess(CoverletterConverter.toDetailDTO(coverletter, qnaList));
+    }
+
 }
 

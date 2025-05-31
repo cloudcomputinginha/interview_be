@@ -34,4 +34,16 @@ public class CoverletterResponseDTO {
         private String jobName;
         private LocalDateTime createdAt;
     }
+
+    @Getter
+    @Builder
+    @NoArgsConstructor(access = AccessLevel.PROTECTED)
+    @AllArgsConstructor
+    public static class CoverletterDetailDTO {
+        private Long coverletterId;
+        private String corporateName;
+        private String jobName;
+        private LocalDateTime createdAt;
+        private List<QnaResponseDTO.QnaDTO> qnaList;
+    }
 }

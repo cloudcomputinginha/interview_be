@@ -20,4 +20,9 @@ public class CoverletterQueryServiceImpl implements CoverletterQueryService {
     public List<Coverletter> findAllCoverletterByMember(Long memberId) {
         return coverletterRepository.findAllByMemberId(memberId);
     }
+
+    @Override
+    public Coverletter getCoverletter(Long coverletterId) {
+        return coverletterRepository.getReferenceById(coverletterId);
+    }
 }
