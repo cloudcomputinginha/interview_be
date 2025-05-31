@@ -5,6 +5,8 @@ import cloudcomputinginha.demo.domain.Member;
 import cloudcomputinginha.demo.web.dto.CoverletterRequestDTO;
 import cloudcomputinginha.demo.web.dto.CoverletterResponseDTO;
 
+import java.util.List;
+
 public class CoverletterConverter {
     public static Coverletter toCoverletter(CoverletterRequestDTO.createCoverletterDTO createCoverletterDTO, Member member) {
         return Coverletter.builder()
@@ -20,4 +22,20 @@ public class CoverletterConverter {
                 .createdAt(coverletter.getCreatedAt())
                 .build();
     }
+
+    public static CoverletterResponseDTO.MyCoverletterListDTO toMyCoverletterListDTO(List<Coverletter> coverletterList) {
+        List<CoverletterResponseDTO.MyCoverletterDTO> dtoList = coverletterList.stream()
+                .map(c -> CoverletterResponseDTO.MyCoverletterDTO.builder()
+                        .coverletterId(c.getId())
+                        .corporateName(c.getCorporateName())
+                        .jobName(c.getJobName())
+                        .createdAt(c.getCreatedAt())
+                        .build())
+                .toList();
+
+        return CoverletterResponseDTO.MyCoverletterListDTO.builder()
+                .coverletters(dtoList)
+                .build();
+    }
+
 }
