@@ -3,7 +3,9 @@ package cloudcomputinginha.demo.service;
 import cloudcomputinginha.demo.apiPayload.code.handler.InterviewHandler;
 import cloudcomputinginha.demo.apiPayload.code.status.ErrorStatus;
 import cloudcomputinginha.demo.domain.Interview;
+import cloudcomputinginha.demo.repository.InterviewOptionRepository;
 import cloudcomputinginha.demo.repository.InterviewRepository;
+import cloudcomputinginha.demo.repository.MemberRepository;
 import cloudcomputinginha.demo.web.dto.InterviewRequestDTO;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -17,6 +19,8 @@ import static cloudcomputinginha.demo.apiPayload.code.status.ErrorStatus.INTERVI
 public class InterviewCommandServiceImpl implements InterviewCommandService {
     private final InterviewRepository interviewRepository;
     private final MemberInterviewCommandService memberInterviewCommandService;
+    private final InterviewOptionRepository interviewOptionRepository;
+    private final MemberRepository memberRepository;
 
     @Override
     @Transactional
@@ -41,4 +45,10 @@ public class InterviewCommandServiceImpl implements InterviewCommandService {
         return interview;
     }
 
+    @Override
+    @Transactional
+    public InterviewResponseDTO.InterviewCreateResultDTO createInterview(InterviewRequestDTO.InterviewCreateDTO request, Long memberId) {
+        Member member = memberRepository.findById(memberId)
+                .orElseThrow(() -> new RuntimeException("Member not found"));
+    }
 }

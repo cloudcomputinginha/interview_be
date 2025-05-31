@@ -1,10 +1,13 @@
 package cloudcomputinginha.demo.domain;
 
 import cloudcomputinginha.demo.domain.common.BaseEntity;
+import cloudcomputinginha.demo.domain.enums.StartType;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.DynamicUpdate;
+
+import java.time.LocalDateTime;
 
 @Entity
 @Getter
@@ -31,16 +34,23 @@ public class Interview extends BaseEntity {
     @Column(nullable = false, length = 20)
     private String jobName;
 
+    private String sessionName; // 그룹 면접의 경우
+
+    @Enumerated(EnumType.STRING)
+    @Column(columnDefinition = "VARCHAR(20)")
+    private StartType startType;
+
     private Long hostId;
 
     @Builder.Default
     private Integer maxParticipants = 1; //일대일 면접을 기준으로 초기화
 
-    @Column(nullable = false, length = 50)
-    private String noticeUrl;
-
     @Builder.Default
     private Boolean isOpen = false;
+
+    private LocalDateTime startAt; // 면접 예정 시작 시간
+
+    private LocalDateTime endedAt;
 
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "interview_option_id", unique = true, nullable = false)

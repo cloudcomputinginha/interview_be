@@ -3,6 +3,7 @@ package cloudcomputinginha.demo.domain;
 import cloudcomputinginha.demo.domain.common.BaseEntity;
 import cloudcomputinginha.demo.domain.enums.InterviewFormat;
 import cloudcomputinginha.demo.domain.enums.InterviewType;
+import cloudcomputinginha.demo.domain.enums.StartType;
 import cloudcomputinginha.demo.domain.enums.VoiceType;
 import jakarta.persistence.*;
 import lombok.*;
