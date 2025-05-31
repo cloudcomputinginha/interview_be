@@ -1,5 +1,6 @@
 package cloudcomputinginha.demo.domain.enums;
 
 public enum FileType {
-    PDF, DOC, DOCX
+    PDF
+    //, DOC, DOCX
 }

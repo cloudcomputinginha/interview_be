@@ -34,5 +34,5 @@ public class MemberInterviewRestController {
         MemberInterview memberInterview = memberInterviewCommandService.createMemberInterview(interviewId, createMemberInterviewDTO);
         return ApiResponse.onSuccess(MemberInterviewConverter.toMemberInterviewResultDTO(memberInterview));
     }
-
+    
 }
