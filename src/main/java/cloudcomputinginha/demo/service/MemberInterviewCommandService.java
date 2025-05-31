@@ -7,4 +7,6 @@ public interface MemberInterviewCommandService {
     MemberInterview changeMemberInterviewStatus(Long interviewId, MemberInterviewRequestDTO.changeMemberStatusDTO memberInterviewRequestDTO);
 
     MemberInterview createMemberInterview(Long interviewId, MemberInterviewRequestDTO.createMemberInterviewDTO createMemberInterviewDTO);
+
+    void finalizeStatuses(Long interviewId);
 }
