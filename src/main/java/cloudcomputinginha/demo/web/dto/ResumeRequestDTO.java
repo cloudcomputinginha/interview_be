@@ -3,6 +3,7 @@ package cloudcomputinginha.demo.web.dto;
 import cloudcomputinginha.demo.validation.annotation.ExistMember;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Positive;
 import lombok.Getter;
 
 public class ResumeRequestDTO {
@@ -16,6 +17,7 @@ public class ResumeRequestDTO {
         @NotEmpty
         String fileUrl;
         @NotNull
+        @Positive
         Long fileSize;
 
     }

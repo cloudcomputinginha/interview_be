@@ -22,14 +22,14 @@ public class ResumeRestController {
     private final S3PresignedService s3PresignedService;
     private final ResumeCommandService resumeCommandService;
 
-    @GetMapping("/resumes/upload")
+    @GetMapping("/upload")
     @Operation(summary = "이력서를 업로드할 presignedURL을 발급합니다.", description = "업로드할 파일을 이름을 넘길 떄, 확장자를 포함합니다.")
     public ApiResponse<ResumeResponseDTO.PresignedUploadDTO> getPresignedUploadUrl(@RequestParam @NotEmpty String fileName) {
         ResumeResponseDTO.PresignedUploadDTO uploadUrlDTO = s3PresignedService.getUploadPresignedURL(fileName);
         return ApiResponse.onSuccess(uploadUrlDTO);
     }
 
-    @PostMapping("/resumes/upload")
+    @PostMapping("/upload")
     @Operation(summary = "S3에 저장된 이력서 메타데이터를 저장합니다.")
     public ApiResponse<ResumeResponseDTO.CreateResumeResultDTO> saveResume(@RequestBody @Valid ResumeRequestDTO.ResumeCreateDTO resumeCreateDTO) {
         Resume resume = resumeCommandService.saveResume(resumeCreateDTO);

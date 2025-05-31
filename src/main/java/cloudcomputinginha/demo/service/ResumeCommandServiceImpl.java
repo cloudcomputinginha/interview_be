@@ -16,19 +16,19 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional
 @RequiredArgsConstructor
 public class ResumeCommandServiceImpl implements ResumeCommandService {
-    private ResumeRepository resumeRepository;
-    private MemberRepository memberRepository;
+    private final ResumeRepository resumeRepository;
+    private final MemberRepository memberRepository;
 
     @Override
     public Resume saveResume(ResumeRequestDTO.ResumeCreateDTO resumeCreateDTO) {
-        if (!resumeCreateDTO.getFileUrl().toLowerCase().endsWith(".pdf")) {
+        if (!resumeCreateDTO.getFileName().toLowerCase().endsWith(".pdf") || !resumeCreateDTO.getFileUrl().toLowerCase().endsWith(".pdf")) {
             throw new ResumeHandler(ErrorStatus.RESUME_FILE_TPYE_INVALID);
         }
         Member member = memberRepository.getReferenceById(resumeCreateDTO.getMemberId());
         Resume resume = Resume.builder()
                 .member(member)
                 .fileName(resumeCreateDTO.getFileName())
-                .fileUrl(resumeCreateDTO.getFileName())
+                .fileUrl(resumeCreateDTO.getFileUrl())
                 .fileSize(resumeCreateDTO.getFileSize())
                 .fileType(FileType.PDF)
                 .build();
