@@ -8,7 +8,6 @@ import cloudcomputinginha.demo.web.dto.CoverletterResponseDTO;
 import cloudcomputinginha.demo.web.dto.QnaResponseDTO;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 public class CoverletterConverter {
     public static Coverletter toCoverletter(CoverletterRequestDTO.createCoverletterDTO createCoverletterDTO, Member member) {
@@ -44,7 +43,7 @@ public class CoverletterConverter {
     public static CoverletterResponseDTO.CoverletterDetailDTO toDetailDTO(Coverletter coverletter, List<Qna> qnas) {
         List<QnaResponseDTO.QnaDTO> qnaDTOs = qnas.stream()
                 .map(QnaConverter::toQnaDTO)
-                .collect(Collectors.toList());
+                .toList();
 
         return CoverletterResponseDTO.CoverletterDetailDTO.builder()
                 .coverletterId(coverletter.getId())

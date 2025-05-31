@@ -17,7 +17,7 @@ public class QnaConverter {
     public static QnaResponseDTO.QnaDTO toQnaDTO(Qna qna) {
         return QnaResponseDTO.QnaDTO.builder()
                 .question(qna.getQuestion())
-                .answer(qna.getQuestion())
+                .answer(qna.getAnswer())
                 .build();
     }
 }
