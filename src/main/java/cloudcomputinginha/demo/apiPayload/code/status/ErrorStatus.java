@@ -27,6 +27,7 @@ public enum ErrorStatus implements BaseErrorCode {
     // 이력서 관련
     RESUME_NOT_FOUND(HttpStatus.NOT_FOUND, "RESUME4001", "해당하는 이력서를 찾을 수 없습니다."),
     RESUME_NOT_OWNED(HttpStatus.FORBIDDEN, "RESUME4002", "이력서는 해당 회원의 소유가 아닙니다."),
+    RESUME_FILE_TPYE_INVALID(HttpStatus.BAD_REQUEST, "RESUME4003", "이력서는 PDF 파일만 업로드할 수 있습니다."),
 
     // 자소서 + 이력서 관련
     AT_LEAST_ONE_PRESENT_DOCUMENTS(HttpStatus.BAD_REQUEST, "DOCUMENT4001", "이력서 또는 자기소개서 중 하나는 반드시 입력해야 합니다."),
