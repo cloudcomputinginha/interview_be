@@ -59,4 +59,20 @@ public class Interview extends BaseEntity {
     public void changeEndedAt(LocalDateTime endedAt) {
         this.endedAt = endedAt;
     }
+
+    public void updateName(String name){
+        this.name = name;
+    }
+
+    public void updateDescription(String description){
+        this.description = description;
+    }
+
+    public void updateMaxParticipants(Integer maxParticipants){
+        this.maxParticipants = maxParticipants;
+    }
+
+    public void updateIsOpen(Boolean isOpen){
+        this.isOpen = isOpen;
+    }
 }

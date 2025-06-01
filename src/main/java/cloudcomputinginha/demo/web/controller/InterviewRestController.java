@@ -60,4 +60,11 @@ public class InterviewRestController {
     public ApiResponse<InterviewResponseDTO.GroupInterviewDetailDTO> getGroupInterviewDetail(@PathVariable @NotNull @ExistInterview Long interviewId) {
         return ApiResponse.onSuccess(interviewQueryService.getGroupInterviewDetail(interviewId));
     }
+
+    @PatchMapping("/{interviewId}")
+    @Operation(summary = "면접 수정 API", description = "면접 이름, 설명, 최대 인원, 공개 여부를 수정합니다.")
+    public ApiResponse<InterviewResponseDTO.InterviewUpdateResponseDTO> updateInterview(@RequestParam Long memberId, @PathVariable Long interviewId, @RequestBody @Valid InterviewRequestDTO.InterviewUpdateDTO request) {
+        InterviewResponseDTO.InterviewUpdateResponseDTO result = interviewCommandService.updateInterview(memberId, interviewId, request);
+        return ApiResponse.onSuccess(result);
+    }
 }
