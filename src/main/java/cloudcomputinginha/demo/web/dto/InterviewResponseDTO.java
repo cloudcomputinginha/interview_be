@@ -33,4 +33,20 @@ public class InterviewResponseDTO {
         private LocalDateTime startedAt; // 면접 시작 시간
         private LocalDateTime createdAt;
     }
+
+    @Getter
+    @Builder
+    @NoArgsConstructor
+    @AllArgsConstructor
+    public static class InterviewGroupCardDTO {
+        private Long interviewId;
+        private String name;
+        private String description;
+        private String sessionName;
+        private String jobName;
+        private InterviewType interviewType;
+        private int currentParticipants;
+        private int maxParticipants;
+        private LocalDateTime startedAt;
+    }
 }

@@ -4,8 +4,6 @@ import cloudcomputinginha.demo.domain.enums.InterviewFormat;
 import cloudcomputinginha.demo.domain.enums.InterviewType;
 import cloudcomputinginha.demo.domain.enums.StartType;
 import cloudcomputinginha.demo.domain.enums.VoiceType;
-import cloudcomputinginha.demo.validation.annotation.ExistCoverletter;
-import cloudcomputinginha.demo.validation.annotation.ExistResume;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
@@ -13,7 +11,6 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.springframework.format.annotation.DateTimeFormat;
-
 import java.time.LocalDateTime;
 import java.util.List;
 
