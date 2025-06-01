@@ -3,6 +3,7 @@ package cloudcomputinginha.demo.converter;
 import cloudcomputinginha.demo.domain.Resume;
 import cloudcomputinginha.demo.web.dto.ResumeResponseDTO;
 
+import java.util.Collections;
 import java.util.List;
 
 public class ResumeConverter {
@@ -34,6 +35,12 @@ public class ResumeConverter {
     }
 
     public static ResumeResponseDTO.ResumeListDTO toResumeListDTO(List<Resume> resumes) {
+        if (resumes == null) {
+            return ResumeResponseDTO.ResumeListDTO.builder()
+                    .resumes(Collections.emptyList())
+                    .build();
+        }
+
         List<ResumeResponseDTO.ResumeDTO> resumeList = resumes.stream()
                 .map(ResumeConverter::toResumeDTO)
                 .toList();
