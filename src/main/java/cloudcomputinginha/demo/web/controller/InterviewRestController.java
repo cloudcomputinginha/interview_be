@@ -5,6 +5,7 @@ import cloudcomputinginha.demo.apiPayload.ApiResponse;
 import cloudcomputinginha.demo.converter.InterviewConverter;
 import cloudcomputinginha.demo.domain.Interview;
 import cloudcomputinginha.demo.service.InterviewCommandService;
+import cloudcomputinginha.demo.service.InterviewQueryService;
 import cloudcomputinginha.demo.validation.annotation.ExistInterview;
 import cloudcomputinginha.demo.web.dto.InterviewRequestDTO;
 import cloudcomputinginha.demo.web.dto.InterviewResponseDTO;
@@ -15,12 +16,15 @@ import jakarta.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @Tag(name = "인터뷰 API")
 @RequiredArgsConstructor
 @RequestMapping("/interviews")
 public class InterviewRestController {
     private final InterviewCommandService interviewCommandService;
+    private final InterviewQueryService interviewQueryService;
 
     @PatchMapping("/{interviewId}/end")
     @Operation(summary = "면접 종료 API", description = "면접 종료 시간과 사용자 면접의 상태를 변경합니다.")
@@ -32,8 +36,15 @@ public class InterviewRestController {
     @PostMapping
     @Operation(summary = "면접 생성 API", description = "새로운 면접을 생성합니다.")
     public ApiResponse<InterviewResponseDTO.InterviewCreateResultDTO> createInterview(@RequestBody @Valid InterviewRequestDTO.InterviewCreateDTO request) {
-        Long memberId = 1L;
+        Long memberId = 2L;
         InterviewResponseDTO.InterviewCreateResultDTO result = interviewCommandService.createInterview(request, memberId);
+        return ApiResponse.onSuccess(result);
+    }
+  
+    @GetMapping("/interviews/group")
+    @Operation(summary = "일대다 면접 모집글 조회 API", description = "일대다 면접 모집글을 조회합니다.")
+    public ApiResponse<List<InterviewResponseDTO.InterviewGroupCardDTO>> getGroupInterviewCards() {
+        List<InterviewResponseDTO.InterviewGroupCardDTO> result = interviewQueryService.getGroupInterviewCards();
         return ApiResponse.onSuccess(result);
     }
 

@@ -37,6 +37,21 @@ public class InterviewResponseDTO {
 
     @Getter
     @Builder
+    @NoArgsConstructor
+    @AllArgsConstructor
+    public static class InterviewGroupCardDTO {
+        private Long interviewId;
+        private String name;
+        private String description;
+        private String sessionName;
+        private String jobName;
+        private InterviewType interviewType;
+        private int currentParticipants;
+        private int maxParticipants;
+    }
+
+    @Getter
+    @Builder
     @NoArgsConstructor(access = AccessLevel.PROTECTED)
     @AllArgsConstructor
     public static class InterviewStartResponseDTO {

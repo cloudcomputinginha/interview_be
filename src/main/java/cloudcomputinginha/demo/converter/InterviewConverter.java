@@ -71,6 +71,19 @@ public class InterviewConverter {
         return LocalDateTime.parse(request.getScheduledDate() + "T" + request.getScheduledTime() + ":00");
     }
 
+    public static InterviewResponseDTO.InterviewGroupCardDTO toInterviewGroupCardDTO(Interview interview, int currentParticipants) {
+        return InterviewResponseDTO.InterviewGroupCardDTO.builder()
+                .interviewId(interview.getId())
+                .name(interview.getName())
+                .description(interview.getDescription())
+                .sessionName(interview.getSessionName())
+                .jobName(interview.getJobName())
+                .interviewType(interview.getInterviewOption().getInterviewType())
+                .currentParticipants(currentParticipants)
+                .maxParticipants(interview.getMaxParticipants())
+                .startedAt(interview.getStartedAt())
+                .build();
+    }
 
     public static InterviewResponseDTO.InterviewDTO toInterviewDTO(Interview interview, int participantCount) {
         return InterviewResponseDTO.InterviewDTO.builder()
