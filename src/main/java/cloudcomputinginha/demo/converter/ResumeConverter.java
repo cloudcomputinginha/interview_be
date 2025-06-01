@@ -48,4 +48,11 @@ public class ResumeConverter {
                 .resumes(resumeList)
                 .build();
     }
+
+    public static ResumeResponseDTO.ResumeSimpleDTO toResumeSimpleDTO(Resume resume) {
+        return ResumeResponseDTO.ResumeSimpleDTO.builder()
+                .resumeId(resume.getId())
+                .fileUrl(resume.getFileUrl())
+                .build();
+    }
 }

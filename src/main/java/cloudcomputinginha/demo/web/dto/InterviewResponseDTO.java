@@ -6,6 +6,7 @@ import cloudcomputinginha.demo.domain.enums.StartType;
 import lombok.*;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 public class InterviewResponseDTO {
     @Builder
@@ -32,5 +33,28 @@ public class InterviewResponseDTO {
         private StartType startType; // 즉시 or 예정
         private LocalDateTime startedAt; // 면접 시작 시간
         private LocalDateTime createdAt;
+    }
+
+    @Getter
+    @Builder
+    @NoArgsConstructor(access = AccessLevel.PROTECTED)
+    @AllArgsConstructor
+    public static class InterviewStartResponseDTO {
+        private Long interviewId;
+        private InterviewResponseDTO.InterviewDTO interview;
+        private InterviewOptionResponseDTO.InterviewOptionDTO options;
+        private List<MemberInterviewResponseDTO.ParticipantDTO> participants;
+    }
+
+    @Getter
+    @Builder
+    @NoArgsConstructor(access = AccessLevel.PROTECTED)
+    @AllArgsConstructor
+    public static class InterviewDTO {
+        private Long interviewId;
+        private String corporateName;
+        private String jobName;
+        private StartType startType;
+        private int participantCount;
     }
 }

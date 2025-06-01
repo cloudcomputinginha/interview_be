@@ -15,6 +15,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+
 import static cloudcomputinginha.demo.apiPayload.code.status.ErrorStatus.INTERVIEW_END_TIME_INVALID;
 
 @Service
@@ -28,6 +30,7 @@ public class InterviewCommandServiceImpl implements InterviewCommandService {
     private final ResumeRepository resumeRepository;
     private final CoverletterRepository coverletterRepository;
     private final MemberInterviewRepository memberInterviewRepository;
+    private final QnaRepository qnaRepository;
 
     @Override
     @Transactional
@@ -74,5 +77,19 @@ public class InterviewCommandServiceImpl implements InterviewCommandService {
         memberInterviewRepository.save(memberInterview);
 
         return InterviewConverter.createInterview(interview);
+    }
+
+    @Override
+    public InterviewResponseDTO.InterviewStartResponseDTO startInterview(Long interviewId) {
+        Interview interviewWithOption = interviewRepository.getReferenceWithInterviewOptionById(interviewId);
+
+        List<MemberInterview> memberInterviews = memberInterviewRepository.findInprogressByInterviewId(interviewId);
+
+        List<Long> coverletterIds = memberInterviews.stream()
+                .map(mi -> mi.getCoverletter().getId())
+                .toList();
+        List<Qna> allQnas = qnaRepository.findAllByCoverletterIds(coverletterIds);
+
+        return InterviewConverter.toInterviewStartResponseDTO(interviewWithOption, memberInterviews, allQnas);
     }
 }

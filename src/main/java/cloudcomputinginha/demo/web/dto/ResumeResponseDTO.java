@@ -57,4 +57,13 @@ public class ResumeResponseDTO {
     public static class ResumeListDTO {
         private List<ResumeDTO> resumes;
     }
+
+    @Getter
+    @Builder
+    @NoArgsConstructor(access = AccessLevel.PROTECTED)
+    @AllArgsConstructor
+    public static class ResumeSimpleDTO {
+        private Long resumeId;
+        private String fileUrl;
+    }
 }

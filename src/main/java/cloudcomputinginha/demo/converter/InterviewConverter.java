@@ -1,12 +1,16 @@
 package cloudcomputinginha.demo.converter;
 
-import cloudcomputinginha.demo.domain.Interview;
-import cloudcomputinginha.demo.domain.InterviewOption;
-import cloudcomputinginha.demo.domain.Member;
+import cloudcomputinginha.demo.domain.*;
 import cloudcomputinginha.demo.domain.enums.StartType;
+import cloudcomputinginha.demo.web.dto.InterviewOptionResponseDTO;
 import cloudcomputinginha.demo.web.dto.InterviewRequestDTO;
 import cloudcomputinginha.demo.web.dto.InterviewResponseDTO;
+import cloudcomputinginha.demo.web.dto.MemberInterviewResponseDTO;
+
 import java.time.LocalDateTime;
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 public class InterviewConverter {
     public static InterviewResponseDTO.InterviewEndResultDTO toInterviewEndResultDTO(Interview interview) {
@@ -65,5 +69,37 @@ public class InterviewConverter {
             throw new IllegalArgumentException("예정된 면접의 경우 예정 날짜와 예정 시간이 필요합니다.");
         }
         return LocalDateTime.parse(request.getScheduledDate() + "T" + request.getScheduledTime() + ":00");
+    }
+
+
+    public static InterviewResponseDTO.InterviewDTO toInterviewDTO(Interview interview, int participantCount) {
+        return InterviewResponseDTO.InterviewDTO.builder()
+                .interviewId(interview.getId())
+                .corporateName(interview.getCorporateName())
+                .jobName(interview.getJobName())
+                .startType(interview.getStartType())
+                .participantCount(participantCount)
+                .build();
+    }
+
+    public static InterviewResponseDTO.InterviewStartResponseDTO toInterviewStartResponseDTO(
+            Interview interview,
+            List<MemberInterview> memberInterviews,
+            List<Qna> allQnas
+    ) {
+        // 면접 참가자의 모든 QNA를 조회한 후, 자기소개서 id를 바탕으로 조회한 QNA를 그룹핑한다.
+        Map<Long, List<Qna>> qnaMap = allQnas.stream()
+                .collect(Collectors.groupingBy(q -> q.getCoverletter().getId()));
+
+        InterviewResponseDTO.InterviewDTO interviewDTO = InterviewConverter.toInterviewDTO(interview, memberInterviews.size());
+        InterviewOptionResponseDTO.InterviewOptionDTO interviewOptionDTO = InterviewOptionConverter.toInterviewOptionDTO(interview.getInterviewOption());
+        List<MemberInterviewResponseDTO.ParticipantDTO> participantDTOs = MemberInterviewConverter.toParticipantDTOs(memberInterviews, qnaMap);
+
+        return InterviewResponseDTO.InterviewStartResponseDTO.builder()
+                .interviewId(interview.getId())
+                .interview(interviewDTO)
+                .options(interviewOptionDTO)
+                .participants(participantDTOs)
+                .build();
     }
 }
