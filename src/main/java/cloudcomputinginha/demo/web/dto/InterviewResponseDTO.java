@@ -48,6 +48,7 @@ public class InterviewResponseDTO {
         private InterviewType interviewType;
         private int currentParticipants;
         private int maxParticipants;
+        private LocalDateTime startedAt;
     }
 
     @Getter
@@ -71,5 +72,36 @@ public class InterviewResponseDTO {
         private String jobName;
         private StartType startType;
         private int participantCount;
+    }
+
+    @Getter
+    @Builder
+    @NoArgsConstructor(access = AccessLevel.PROTECTED)
+    @AllArgsConstructor
+    public static class GroupInterviewDetailDTO {
+        private Long interviewId;
+        private String name;
+        private String description;
+        private String sessionName;
+        private String jobName;
+
+        private InterviewType interviewType;
+        private int maxParticipants;
+        private int currentParticipants;
+        private LocalDateTime startedAt;
+
+        private String hostName;
+        private List<GroupInterviewParticipantDTO> groupInterviewParticipants;
+    }
+
+    @Getter
+    @Builder
+    @NoArgsConstructor(access = AccessLevel.PROTECTED)
+    @AllArgsConstructor
+    public static class GroupInterviewParticipantDTO {
+        private Long memberId; // 참가자 id
+        private String name; // 그룹 면접 참가자 이름
+        private boolean isHost; // 참가자가 호스트인지 여부
+        private boolean isSubmitted; // 참가자가 자료를 제출했는지 여부
     }
 }

@@ -41,7 +41,7 @@ public class InterviewRestController {
         return ApiResponse.onSuccess(result);
     }
   
-    @GetMapping("/interviews/group")
+    @GetMapping("/group")
     @Operation(summary = "일대다 면접 모집글 조회 API", description = "일대다 면접 모집글을 조회합니다.")
     public ApiResponse<List<InterviewResponseDTO.InterviewGroupCardDTO>> getGroupInterviewCards() {
         List<InterviewResponseDTO.InterviewGroupCardDTO> result = interviewQueryService.getGroupInterviewCards();
@@ -53,5 +53,11 @@ public class InterviewRestController {
     public ApiResponse<InterviewResponseDTO.InterviewStartResponseDTO> startInterview(@PathVariable @NotNull @ExistInterview Long interviewId) {
         InterviewResponseDTO.InterviewStartResponseDTO interviewStartResponse = interviewCommandService.startInterview(interviewId);
         return ApiResponse.onSuccess(interviewStartResponse);
+    }
+
+    @GetMapping("/group/{interviewId}")
+    @Operation(summary = "일대다 면접 모집글 세부 조회 API", description = "일대다 면접 모집글 세부를 조회합니다.")
+    public ApiResponse<InterviewResponseDTO.GroupInterviewDetailDTO> getGroupInterviewDetail(@PathVariable @NotNull @ExistInterview Long interviewId) {
+        return ApiResponse.onSuccess(interviewQueryService.getGroupInterviewDetail(interviewId));
     }
 }

@@ -5,4 +5,5 @@ import java.util.List;
 
 public interface InterviewQueryService {
     List<InterviewResponseDTO.InterviewGroupCardDTO> getGroupInterviewCards();
+    InterviewResponseDTO.GroupInterviewDetailDTO getGroupInterviewDetail(Long interviewId);
 }
