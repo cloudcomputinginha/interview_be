@@ -104,4 +104,16 @@ public class InterviewResponseDTO {
         private boolean isHost; // 참가자가 호스트인지 여부
         private boolean isSubmitted; // 참가자가 자료를 제출했는지 여부
     }
+
+    @Getter
+    @Builder
+    @NoArgsConstructor(access = AccessLevel.PROTECTED)
+    @AllArgsConstructor
+    public static class InterviewUpdateResponseDTO {
+        private Long interviewId;
+        private String name;
+        private String description;
+        private Integer maxParticipants;
+        private boolean isOpen;
+    }
 }
