@@ -43,4 +43,15 @@ public class InterviewOption extends BaseEntity {
     @OneToOne(mappedBy = "interviewOption", cascade = CascadeType.ALL)
     private Interview interview;
 
+    public void updateVoiceType(VoiceType voiceType) {
+        this.voiceType = voiceType;
+    }
+
+    public void updateQuestionNumber(Integer questionNumber) {
+        this.questionNumber = questionNumber;
+    }
+
+    public void updateAnswerTime(Integer answerTime) {
+        this.answerTime = answerTime;
+    }
 }
