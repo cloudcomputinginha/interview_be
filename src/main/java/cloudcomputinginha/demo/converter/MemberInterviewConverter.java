@@ -3,6 +3,9 @@ package cloudcomputinginha.demo.converter;
 import cloudcomputinginha.demo.domain.*;
 import cloudcomputinginha.demo.web.dto.MemberInterviewResponseDTO;
 
+import java.util.List;
+import java.util.Map;
+
 public class MemberInterviewConverter {
     public static MemberInterviewResponseDTO.MemberInterviewStatusDTO toMemberInterviewStatusDTO(MemberInterview memberInterview) {
         return MemberInterviewResponseDTO.MemberInterviewStatusDTO.builder()
@@ -26,5 +29,24 @@ public class MemberInterviewConverter {
                 .memberInterviewId(memberInterview.getId())
                 .createdAt(memberInterview.getCreatedAt())
                 .build();
+    }
+
+    public static MemberInterviewResponseDTO.ParticipantDTO toParticipantDTO(MemberInterview memberInterview, List<Qna> qnas) {
+        return MemberInterviewResponseDTO.ParticipantDTO.builder()
+                .memberInterviewId(memberInterview.getId())
+                .resumeDTO(ResumeConverter.toResumeSimpleDTO(memberInterview.getResume()))
+                .coverLetterDTO(CoverletterConverter.toDetailDTO(memberInterview.getCoverletter(), qnas))
+                .build();
+    }
+
+    //참여자의 자기소개서 ID를 꺼내서 coverletterID에 해당하는 QNA 리스트를 가져온다.(해당 키가 없으면 빈 리스트 반환)
+    //반환된 QNA 리스트와 참여자 정보를 기반으로 응답용 DTO 생성
+    public static List<MemberInterviewResponseDTO.ParticipantDTO> toParticipantDTOs(List<MemberInterview> memberInterviews, Map<Long, List<Qna>> qnaMap) {
+        return memberInterviews.stream()
+                .map(mi -> {
+                    Long coverletterId = mi.getCoverletter().getId();
+                    List<Qna> qnas = qnaMap.getOrDefault(coverletterId, List.of());
+                    return MemberInterviewConverter.toParticipantDTO(mi, qnas);
+                }).toList();
     }
 }

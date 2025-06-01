@@ -10,6 +10,16 @@ public class MemberInterviewResponseDTO {
     @Builder
     @NoArgsConstructor(access = AccessLevel.PROTECTED)
     @AllArgsConstructor
+    public static class ParticipantDTO {
+        private Long memberInterviewId;
+        private ResumeResponseDTO.ResumeSimpleDTO resumeDTO;
+        private CoverletterResponseDTO.CoverletterDetailDTO coverLetterDTO;
+    }
+
+    @Getter
+    @Builder
+    @NoArgsConstructor(access = AccessLevel.PROTECTED)
+    @AllArgsConstructor
     public static class MemberInterviewStatusDTO {
         Long memberInterviewId;
         InterviewStatus status;
