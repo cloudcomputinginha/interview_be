@@ -1,7 +1,10 @@
 package cloudcomputinginha.demo.apiPayload.code.handler;
 
-public class MemberHandler extends RuntimeException {
-  public MemberHandler(String message) {
-    super(message);
-  }
+import cloudcomputinginha.demo.apiPayload.code.BaseErrorCode;
+import cloudcomputinginha.demo.apiPayload.exception.GeneralException;
+
+public class MemberHandler extends GeneralException {
+    public MemberHandler(BaseErrorCode errorCode) {
+        super(errorCode);
+    }
 }

@@ -12,10 +12,7 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.springframework.web.bind.annotation.PatchMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @Tag(name = "인터뷰 API")
@@ -28,5 +25,13 @@ public class InterviewRestController {
     public ApiResponse<InterviewResponseDTO.InterviewEndResultDTO> terminateInterview(@PathVariable @ExistInterview Long interviewId, @RequestBody @Valid InterviewRequestDTO.endInterviewRequestDTO endInterviewRequestDTO) {
         Interview interview = interviewCommandService.terminateInterview(interviewId, endInterviewRequestDTO);
         return ApiResponse.onSuccess(InterviewConverter.toInterviewEndResultDTO(interview));
+    }
+
+    @PostMapping("/interviews")
+    @Operation(summary = "면접 생성 API", description = "새로운 면접을 생성합니다.")
+    public ApiResponse<InterviewResponseDTO.InterviewCreateResultDTO> createInterview(@RequestBody @Valid InterviewRequestDTO.InterviewCreateDTO request) {
+        Long memberId = 1L;
+        InterviewResponseDTO.InterviewCreateResultDTO result = interviewCommandService.createInterview(request, memberId);
+        return ApiResponse.onSuccess(result);
     }
 }

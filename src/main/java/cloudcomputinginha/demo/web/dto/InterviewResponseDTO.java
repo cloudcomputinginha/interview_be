@@ -1,5 +1,8 @@
 package cloudcomputinginha.demo.web.dto;
 
+import cloudcomputinginha.demo.domain.enums.InterviewFormat;
+import cloudcomputinginha.demo.domain.enums.InterviewType;
+import cloudcomputinginha.demo.domain.enums.StartType;
 import lombok.*;
 
 import java.time.LocalDateTime;
@@ -27,7 +30,7 @@ public class InterviewResponseDTO {
         private InterviewFormat interviewFormat; // 면접 유형
         private InterviewType interviewType; // 기술 or 인성
         private StartType startType; // 즉시 or 예정
-        private LocalDateTime startAt; // 면접 시작 시간
+        private LocalDateTime startedAt; // 면접 시작 시간
         private LocalDateTime createdAt;
     }
 }

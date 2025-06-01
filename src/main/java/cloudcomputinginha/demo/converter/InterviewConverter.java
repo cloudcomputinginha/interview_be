@@ -3,6 +3,7 @@ package cloudcomputinginha.demo.converter;
 import cloudcomputinginha.demo.domain.Interview;
 import cloudcomputinginha.demo.domain.InterviewOption;
 import cloudcomputinginha.demo.domain.Member;
+import cloudcomputinginha.demo.domain.enums.StartType;
 import cloudcomputinginha.demo.web.dto.InterviewRequestDTO;
 import cloudcomputinginha.demo.web.dto.InterviewResponseDTO;
 import java.time.LocalDateTime;
@@ -11,7 +12,7 @@ public class InterviewConverter {
     public static InterviewResponseDTO.InterviewEndResultDTO toInterviewEndResultDTO(Interview interview) {
         return InterviewResponseDTO.InterviewEndResultDTO.builder()
                 .interviewId(interview.getId())
-                .endedAt(interview.getInterviewOption().getEndedAt())
+                .endedAt(interview.getEndedAt())
                 .build();
     }
 
@@ -25,7 +26,7 @@ public class InterviewConverter {
                 .interviewFormat(interview.getInterviewOption().getInterviewFormat())
                 .interviewType(interview.getInterviewOption().getInterviewType())
                 .startType(interview.getStartType())
-                .startAt(interview.getStartAt())
+                .startedAt(interview.getStartedAt())
                 .createdAt(interview.getCreatedAt())
                 .build();
     }
@@ -39,10 +40,20 @@ public class InterviewConverter {
                 .sessionName(request.getSessionName())
                 .interviewOption(interviewOption)
                 .startType(request.getStartType())
-                .startAt(combineStartAt(request))
+                .startedAt(combineStartAt(request))
                 .isOpen(request.getIsOpen() != null ? request.getIsOpen() : false)
                 .maxParticipants(request.getMaxParticipants())
                 .hostId(member.getId())
+                .build();
+    }
+
+    public static InterviewOption toInterviewOption(InterviewRequestDTO.InterviewCreateDTO request) {
+        return InterviewOption.builder()
+                .interviewFormat(request.getInterviewFormat())
+                .interviewType(request.getInterviewType())
+                .voiceType(request.getVoiceType())
+                .questionNumber(request.getQuestionNumber())
+                .answerTime(request.getAnswerTime())
                 .build();
     }
 

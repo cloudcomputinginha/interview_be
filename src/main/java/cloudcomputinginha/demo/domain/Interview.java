@@ -48,11 +48,15 @@ public class Interview extends BaseEntity {
     @Builder.Default
     private Boolean isOpen = false;
 
-    private LocalDateTime startAt; // 면접 예정 시작 시간
+    private LocalDateTime startedAt; // 면접 예정 시작 시간
 
     private LocalDateTime endedAt;
 
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "interview_option_id", unique = true, nullable = false)
     private InterviewOption interviewOption;
+
+    public void changeEndedAt(LocalDateTime endedAt) {
+        this.endedAt = endedAt;
+    }
 }
