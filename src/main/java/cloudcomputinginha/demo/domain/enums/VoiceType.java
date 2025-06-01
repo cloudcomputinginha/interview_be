@@ -1,5 +1,5 @@
 package cloudcomputinginha.demo.domain.enums;
 
 public enum VoiceType {
-    WOMEN_1, WOMEN_2, MEN_1, MEN_2
+    MALE20, MALE30, MALE40, MALE50, FEMALE20, FEMALE30, FEMALE40, FEMALE50;
 }
