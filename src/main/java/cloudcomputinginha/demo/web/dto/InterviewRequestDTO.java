@@ -63,8 +63,10 @@ public class InterviewRequestDTO {
         private Boolean isOpen;
 
         // 이력서 & 자기소개서
+        @NotNull
         private Long resumeId;
         private String resumeTitle;
+        @NotNull
         private Long coverLetterId;
         private String coverLetterTitle;
 
