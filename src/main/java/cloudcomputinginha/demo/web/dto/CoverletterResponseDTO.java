@@ -43,7 +43,7 @@ public class CoverletterResponseDTO {
         private Long coverletterId;
         private String corporateName;
         private String jobName;
-        private LocalDateTime createdAt;
         private List<QnaResponseDTO.QnaDTO> qnaList;
+        private LocalDateTime createdAt;
     }
 }

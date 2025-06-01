@@ -18,17 +18,17 @@ VALUES (1, '김민준', '01012345678', 'mj.kim@example.com', 'DEV', '안녕하�
 
 INSERT INTO interview_option (id, interview_format, interview_type, voice_type, question_number, answer_time,
                               created_at, updated_at)
-VALUES (1, 'ONE_TO_MANY', 'TECHNICAL', 'WOMEN_1', 3, 3, '2025-05-31 14:50:46', '2025-05-31 14:50:46'),
-       (2, 'ONE_TO_MANY', 'TECHNICAL', 'MEN_2', 4, 6, '2025-05-31 14:50:46', '2025-05-31 14:50:46'),
-       (3, 'ONE_TO_MANY', 'TECHNICAL', 'WOMEN_2', 3, 4, '2025-05-31 14:50:46', '2025-05-31 14:50:46');
+VALUES (1, 'GROUP', 'TECHNICAL', 'MALE30', 3, 3, '2025-05-31 14:50:46', '2025-05-31 14:50:46'),
+       (2, 'GROUP', 'TECHNICAL', 'MALE30', 4, 6, '2025-05-31 14:50:46', '2025-05-31 14:50:46'),
+       (3, 'GROUP', 'TECHNICAL', 'MALE30', 3, 4, '2025-05-31 14:50:46', '2025-05-31 14:50:46');
 
 INSERT INTO interview (interview_id, name, description, corporate_name, job_name, host_id, max_participants,
-                       is_open, interview_option_id, created_at, updated_at)
+                       is_open, interview_option_id, startType, created_at, updated_at)
 VALUES (1, '백엔드 기술 면접', '서버/DB 기술 관련 인터뷰', '카카오', '백엔드 개발자', 1, 4, False, 1,
-        '2025-05-31 14:50:46', '2025-05-31 14:50:46'),
+        '2025-05-31 14:50:46', 'NOW', '2025-05-31 14:50:46'),
        (2, '프론트엔드 기술 면접', 'React, Vue 등 프론트엔드 기술 검증', '네이버', '프론트엔드 개발자', 2, 4,
-        True, 2, '2025-05-31 14:50:46', '2025-05-31 14:50:46'),
-       (3, 'AI 실무 인터뷰', 'AI 모델 설계 및 적용 능력 검증', '토스', '데이터 엔지니어', 3, 2, False, 3,
+        True, 2, 'SCHEDULED', '2025-05-31 14:50:46', '2025-05-31 14:50:46'),
+       (3, 'AI 실무 인터뷰', 'AI 모델 설계 및 적용 능력 검증', '토스', '데이터 엔지니어', 3, 2, False, 3, 'SCHEDULED',
         '2025-05-31 14:50:46', '2025-05-31 14:50:46');
 
 INSERT INTO resume (resume_id, member_id, file_name, file_url, file_size, created_at, updated_at)
