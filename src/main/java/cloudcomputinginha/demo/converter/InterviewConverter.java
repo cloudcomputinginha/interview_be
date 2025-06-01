@@ -115,4 +115,35 @@ public class InterviewConverter {
                 .participants(participantDTOs)
                 .build();
     }
+
+    public static InterviewResponseDTO.GroupInterviewDetailDTO toInterviewGroupDetailDTO(Interview interview, List<MemberInterview> memberInterviewList) {
+        return InterviewResponseDTO.GroupInterviewDetailDTO.builder()
+                .interviewId(interview.getId())
+                .name(interview.getName())
+                .description(interview.getDescription())
+                .sessionName(interview.getSessionName())
+                .jobName(interview.getJobName())
+                .interviewType(interview.getInterviewOption().getInterviewType())
+                .maxParticipants(interview.getMaxParticipants())
+                .currentParticipants(memberInterviewList.size())
+                .startedAt(interview.getStartedAt())
+                .hostName(
+                        memberInterviewList.stream()
+                                .filter(mi -> mi.getMember().getId().equals(interview.getHostId()))
+                                .findFirst()
+                                .map(mi -> mi.getMember().getName())
+                                .orElse("호스트의 이름을 알 수 없습니다.")
+                )
+                .groupInterviewParticipants(
+                        memberInterviewList.stream()
+                                .map(mi -> InterviewResponseDTO.GroupInterviewParticipantDTO.builder()
+                                        .memberId(mi.getMember().getId())
+                                        .name(mi.getMember().getName())
+                                        .isHost(mi.getMember().getId().equals(interview.getHostId()))
+                                        .isSubmitted(mi.getResume() != null && mi.getCoverletter() != null)
+                                        .build()
+                                ).toList()
+                )
+                .build();
+    }
 }
