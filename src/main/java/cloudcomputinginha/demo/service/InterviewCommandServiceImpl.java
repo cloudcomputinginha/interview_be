@@ -8,6 +8,7 @@ import cloudcomputinginha.demo.apiPayload.code.status.ErrorStatus;
 import cloudcomputinginha.demo.converter.InterviewConverter;
 import cloudcomputinginha.demo.converter.MemberInterviewConverter;
 import cloudcomputinginha.demo.domain.*;
+import cloudcomputinginha.demo.domain.enums.InterviewFormat;
 import cloudcomputinginha.demo.repository.*;
 import cloudcomputinginha.demo.web.dto.InterviewRequestDTO;
 import cloudcomputinginha.demo.web.dto.InterviewResponseDTO;
@@ -15,6 +16,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 import static cloudcomputinginha.demo.apiPayload.code.status.ErrorStatus.INTERVIEW_END_TIME_INVALID;
@@ -91,5 +93,35 @@ public class InterviewCommandServiceImpl implements InterviewCommandService {
         List<Qna> allQnas = qnaRepository.findAllByCoverletterIds(coverletterIds);
 
         return InterviewConverter.toInterviewStartResponseDTO(interviewWithOption, memberInterviews, allQnas);
+    }
+
+    @Override
+    @Transactional
+    public InterviewResponseDTO.InterviewUpdateResponseDTO updateInterview(Long memberId, Long interviewId, InterviewRequestDTO.InterviewUpdateDTO request) {
+        Interview interview = interviewRepository.findById(interviewId)
+                .orElseThrow(() -> new InterviewHandler(ErrorStatus.INTERVIEW_NOT_FOUND));
+
+        if (!interview.getHostId().equals(memberId)) {
+            throw new InterviewHandler(ErrorStatus.INTERVIEW_NO_PERMISSION);
+        }
+
+        if (interview.getStartedAt().isBefore(LocalDateTime.now())) {
+            throw new InterviewHandler(ErrorStatus.INTERVIEW_ALREADY_TERMINATED);
+        }
+
+        InterviewFormat interviewFormat = interview.getInterviewOption().getInterviewFormat();
+
+        // 일대일, 일대다 공통 수정
+        interview.updateName(request.getName());
+        interview.updateDescription(request.getDescription());
+
+        if (interviewFormat == InterviewFormat.GROUP) {
+            interview.updateMaxParticipants(request.getMaxParticipants());
+            interview.updateIsOpen(request.getIsOpen());
+        } else {
+            interview.updateMaxParticipants(1);
+            interview.updateIsOpen(false);
+        }
+        return InterviewConverter.toInterviewUpdateResponseDTO(interview);
     }
 }

@@ -79,4 +79,17 @@ public class InterviewRequestDTO {
         private Long id;
         private String email;
     }
+
+    @Getter
+    @Builder
+    @NoArgsConstructor
+    @AllArgsConstructor
+    public static class InterviewUpdateDTO {
+        @NotBlank
+        private String name;
+        @NotBlank
+        private String description;
+        private Integer maxParticipants;
+        private Boolean isOpen;
+    }
 }

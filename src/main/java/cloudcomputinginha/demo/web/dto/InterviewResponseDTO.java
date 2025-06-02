@@ -3,6 +3,7 @@ package cloudcomputinginha.demo.web.dto;
 import cloudcomputinginha.demo.domain.enums.InterviewFormat;
 import cloudcomputinginha.demo.domain.enums.InterviewType;
 import cloudcomputinginha.demo.domain.enums.StartType;
+import cloudcomputinginha.demo.domain.enums.VoiceType;
 import lombok.*;
 
 import java.time.LocalDateTime;
@@ -103,5 +104,17 @@ public class InterviewResponseDTO {
         private String name; // 그룹 면접 참가자 이름
         private boolean isHost; // 참가자가 호스트인지 여부
         private boolean isSubmitted; // 참가자가 자료를 제출했는지 여부
+    }
+
+    @Getter
+    @Builder
+    @NoArgsConstructor(access = AccessLevel.PROTECTED)
+    @AllArgsConstructor
+    public static class InterviewUpdateResponseDTO {
+        private Long interviewId;
+        private String name;
+        private String description;
+        private Integer maxParticipants;
+        private boolean isOpen;
     }
 }

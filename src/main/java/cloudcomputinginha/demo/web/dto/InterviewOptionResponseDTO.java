@@ -17,4 +17,16 @@ public class InterviewOptionResponseDTO {
         private int questionNumber;
         private int answerTime;
     }
+
+    @Getter
+    @Builder
+    @NoArgsConstructor(access = AccessLevel.PROTECTED)
+    @AllArgsConstructor
+    public static class InterviewOptionUpdateResponseDTO {
+        private Long interviewId;
+        private Long interviewOptionId;
+        private VoiceType voiceType;
+        private Integer questionNumber;
+        private Integer answerTime;
+    }
 }

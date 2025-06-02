@@ -146,4 +146,14 @@ public class InterviewConverter {
                 )
                 .build();
     }
+
+    public static InterviewResponseDTO.InterviewUpdateResponseDTO toInterviewUpdateResponseDTO(Interview interview) {
+        return InterviewResponseDTO.InterviewUpdateResponseDTO.builder()
+                .interviewId(interview.getId())
+                .name(interview.getName())
+                .description(interview.getDescription())
+                .maxParticipants(interview.getMaxParticipants())
+                .isOpen(interview.getIsOpen())
+                .build();
+    }
 }
