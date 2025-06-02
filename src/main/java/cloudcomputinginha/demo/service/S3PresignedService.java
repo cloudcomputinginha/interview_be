@@ -6,7 +6,6 @@ import cloudcomputinginha.demo.web.dto.ResumeResponseDTO;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
-import software.amazon.awssdk.services.s3.model.ObjectCannedACL;
 import software.amazon.awssdk.services.s3.model.PutObjectRequest;
 import software.amazon.awssdk.services.s3.presigner.S3Presigner;
 import software.amazon.awssdk.services.s3.presigner.model.PresignedPutObjectRequest;
@@ -32,19 +31,16 @@ public class S3PresignedService {
 
 
         String key = "resumes/" + UUID.randomUUID() + "_" + fileName;
-        String fileUrl = "https://" + bucketName + ".s3." + region + ".amazonaws.com/" + key;
+        String fileUrl = "https://" + bucketName + ".s3." + ".amazonaws.com/" + key;
+
+        PutObjectRequest objectRequest = PutObjectRequest.builder()
+                .bucket(bucketName)
+                .key(key)
+                .build();
 
         PresignedPutObjectRequest presignedRequest = s3Presigner.presignPutObject(
-                req -> req.signatureDuration(Duration.ofMinutes(15))
-                        .putObjectRequest(
-                                PutObjectRequest.builder()
-                                        .bucket(bucketName)
-                                        .key(key)
-                                        .contentType("application/pdf")
-                                        .acl(ObjectCannedACL.PUBLIC_READ)
-                                        .build()
-                        )
-        );
+                b -> b.signatureDuration(Duration.ofMinutes(5))
+                        .putObjectRequest(objectRequest));
 
         return new ResumeResponseDTO.PresignedUploadDTO(presignedRequest.url().toString(), key, fileUrl);
     }
