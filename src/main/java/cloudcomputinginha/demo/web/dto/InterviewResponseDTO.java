@@ -3,6 +3,7 @@ package cloudcomputinginha.demo.web.dto;
 import cloudcomputinginha.demo.domain.enums.InterviewFormat;
 import cloudcomputinginha.demo.domain.enums.InterviewType;
 import cloudcomputinginha.demo.domain.enums.StartType;
+import cloudcomputinginha.demo.domain.enums.VoiceType;
 import lombok.*;
 
 import java.time.LocalDateTime;

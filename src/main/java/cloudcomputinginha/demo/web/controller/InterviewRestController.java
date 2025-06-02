@@ -5,8 +5,11 @@ import cloudcomputinginha.demo.apiPayload.ApiResponse;
 import cloudcomputinginha.demo.converter.InterviewConverter;
 import cloudcomputinginha.demo.domain.Interview;
 import cloudcomputinginha.demo.service.InterviewCommandService;
+import cloudcomputinginha.demo.service.InterviewOptionCommandService;
 import cloudcomputinginha.demo.service.InterviewQueryService;
 import cloudcomputinginha.demo.validation.annotation.ExistInterview;
+import cloudcomputinginha.demo.web.dto.InterviewOptionRequestDTO;
+import cloudcomputinginha.demo.web.dto.InterviewOptionResponseDTO;
 import cloudcomputinginha.demo.web.dto.InterviewRequestDTO;
 import cloudcomputinginha.demo.web.dto.InterviewResponseDTO;
 import io.swagger.v3.oas.annotations.Operation;
@@ -25,6 +28,7 @@ import java.util.List;
 public class InterviewRestController {
     private final InterviewCommandService interviewCommandService;
     private final InterviewQueryService interviewQueryService;
+    private final InterviewOptionCommandService interviewOptionCommandService;
 
     @PatchMapping("/{interviewId}/end")
     @Operation(summary = "면접 종료 API", description = "면접 종료 시간과 사용자 면접의 상태를 변경합니다.")
@@ -65,6 +69,13 @@ public class InterviewRestController {
     @Operation(summary = "면접 수정 API", description = "면접 이름, 설명, 최대 인원, 공개 여부를 수정합니다.")
     public ApiResponse<InterviewResponseDTO.InterviewUpdateResponseDTO> updateInterview(@RequestParam Long memberId, @PathVariable Long interviewId, @RequestBody @Valid InterviewRequestDTO.InterviewUpdateDTO request) {
         InterviewResponseDTO.InterviewUpdateResponseDTO result = interviewCommandService.updateInterview(memberId, interviewId, request);
+        return ApiResponse.onSuccess(result);
+    }
+
+    @PatchMapping("/{interviewId}/option")
+    @Operation(summary = "면접 옵션 수정 API", description = "목소리 유형, 최대 질문 개수, 답변 가능 시간을 수정합니다.")
+    public ApiResponse<InterviewOptionResponseDTO.InterviewOptionUpdateResponseDTO> updateInterviewOption(@RequestParam Long memberId, @PathVariable Long interviewId, @RequestBody @Valid InterviewOptionRequestDTO.InterviewOptionUpdateDTO request) {
+        InterviewOptionResponseDTO.InterviewOptionUpdateResponseDTO result = interviewOptionCommandService.updateInterviewOption(memberId, interviewId, request);
         return ApiResponse.onSuccess(result);
     }
 }
