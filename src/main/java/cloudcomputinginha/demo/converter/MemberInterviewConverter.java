@@ -49,4 +49,22 @@ public class MemberInterviewConverter {
                     return MemberInterviewConverter.toParticipantDTO(mi, qnas);
                 }).toList();
     }
+
+    public static MemberInterviewResponseDTO.MyInterviewListDTO toMyInterviewListDTO(List<MemberInterview> myInterviews) {
+        List<MemberInterviewResponseDTO.MyInterviewDTO> myInterviewDTOS = myInterviews.stream()
+                .map(MemberInterviewConverter::toMyInterviewDTO)
+                .toList();
+        return new MemberInterviewResponseDTO.MyInterviewListDTO(myInterviewDTOS);
+    }
+
+    public static MemberInterviewResponseDTO.MyInterviewDTO toMyInterviewDTO(MemberInterview memberInterview) {
+        Interview interview = memberInterview.getInterview();
+        InterviewOption option = interview.getInterviewOption();
+
+        return MemberInterviewResponseDTO.MyInterviewDTO.builder()
+                .myInterviewCardDTO(InterviewConverter.toInterviewCardDTO(interview))
+                .interviewOptionPreviewDTO(InterviewOptionConverter.toInterviewOptionPreviewDTO(option))
+                .memberInterviewStatusDTO(MemberInterviewConverter.toMemberInterviewStatusDTO(memberInterview))
+                .build();
+    }
 }

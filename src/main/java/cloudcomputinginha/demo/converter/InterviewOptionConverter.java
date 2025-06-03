@@ -23,4 +23,11 @@ public class InterviewOptionConverter {
                 .answerTime(interviewOption.getAnswerTime())
                 .build();
     }
+
+    public static InterviewOptionResponseDTO.InterviewOptionPreviewDTO toInterviewOptionPreviewDTO(InterviewOption option) {
+        return InterviewOptionResponseDTO.InterviewOptionPreviewDTO.builder()
+                .interviewFormat(option.getInterviewFormat())
+                .interviewType(option.getInterviewType())
+                .build();
+    }
 }

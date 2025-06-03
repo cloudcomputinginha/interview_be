@@ -116,4 +116,19 @@ public class InterviewResponseDTO {
         private Integer maxParticipants;
         private boolean isOpen;
     }
+
+    @Getter
+    @Builder
+    @NoArgsConstructor(access = AccessLevel.PROTECTED)
+    @AllArgsConstructor
+    public static class InterviewCardDTO {
+        private Long interviewId;
+        private String name;
+        private String corporateName;
+        private String jobName;
+        private Integer currentParticipants;
+        private Integer maxParticipants;
+        private LocalDateTime startedAt;
+        private LocalDateTime endedAt;
+    }
 }

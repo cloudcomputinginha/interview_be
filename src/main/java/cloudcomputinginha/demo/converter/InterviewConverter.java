@@ -156,4 +156,17 @@ public class InterviewConverter {
                 .isOpen(interview.getIsOpen())
                 .build();
     }
+
+    public static InterviewResponseDTO.InterviewCardDTO toInterviewCardDTO(Interview interview) {
+        return InterviewResponseDTO.InterviewCardDTO.builder()
+                .interviewId(interview.getId())
+                .name(interview.getName())
+                .corporateName(interview.getCorporateName())
+                .jobName(interview.getJobName())
+                .currentParticipants(interview.getCurrentParticipants())
+                .maxParticipants(interview.getMaxParticipants())
+                .startedAt(interview.getStartedAt())
+                .endedAt(interview.getEndedAt())
+                .build();
+    }
 }
