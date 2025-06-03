@@ -12,7 +12,10 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RestController;
 
 @Validated
 @RestController
@@ -21,7 +24,7 @@ import org.springframework.web.bind.annotation.*;
 public class MemberInterviewRestController {
     private final MemberInterviewCommandService memberInterviewCommandService;
 
-    @PatchMapping("/interviews/{interviewId}/waiting-room")
+    //@PatchMapping("/interviews/{interviewId}/waiting-room")
     @Operation(summary = "면접 대기실 내 사용자의 상태를 변경하는 API", description = "면접, 사용자 id, 사용자 상태를 요청 받아 사용자 면접의 상태를 수정합니다.")
     public ApiResponse<MemberInterviewResponseDTO.MemberInterviewStatusDTO> changeParticipantsStatus(@PathVariable @ExistInterview Long interviewId, @RequestBody @Valid MemberInterviewRequestDTO.changeMemberStatusDTO changeMemberStatusDTO) {
         MemberInterview memberInterview = memberInterviewCommandService.changeMemberInterviewStatus(interviewId, changeMemberStatusDTO);
@@ -34,5 +37,5 @@ public class MemberInterviewRestController {
         MemberInterview memberInterview = memberInterviewCommandService.createMemberInterview(interviewId, createMemberInterviewDTO);
         return ApiResponse.onSuccess(MemberInterviewConverter.toMemberInterviewResultDTO(memberInterview));
     }
-    
+
 }
