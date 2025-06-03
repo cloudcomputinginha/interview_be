@@ -38,5 +38,4 @@ out/
 
 ### 팀 노션 스페이스 참고 ###
 /src/main/resources/application.yml
-
-
+/src/main/resources/keystore.p12
