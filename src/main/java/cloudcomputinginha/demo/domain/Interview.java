@@ -43,6 +43,9 @@ public class Interview extends BaseEntity {
     private Long hostId;
 
     @Builder.Default
+    private Integer currentParticipants = 1;
+
+    @Builder.Default
     private Integer maxParticipants = 1; //일대일 면접을 기준으로 초기화
 
     @Builder.Default
@@ -60,19 +63,23 @@ public class Interview extends BaseEntity {
         this.endedAt = endedAt;
     }
 
-    public void updateName(String name){
+    public void updateName(String name) {
         this.name = name;
     }
 
-    public void updateDescription(String description){
+    public void updateDescription(String description) {
         this.description = description;
     }
 
-    public void updateMaxParticipants(Integer maxParticipants){
+    public void updateMaxParticipants(Integer maxParticipants) {
         this.maxParticipants = maxParticipants;
     }
 
-    public void updateIsOpen(Boolean isOpen){
+    public void updateIsOpen(Boolean isOpen) {
         this.isOpen = isOpen;
+    }
+
+    public void increaseCurrentParticipants() {
+        this.currentParticipants++;
     }
 }

@@ -47,8 +47,8 @@ public class MemberInterviewCommandServiceImpl implements MemberInterviewCommand
         if (!interview.getIsOpen()) {
             throw new MemberInterviewHandler(ErrorStatus.INTERVIEW_NOT_ACCEPTING_MEMBERS);
         }
-        if (interview.getMaxParticipants() <= memberInterviewRepository.countMemberInterviewByInterviewId(interview.getId())) {
-            throw new MemberInterviewHandler(ErrorStatus.INTERVIEW_CAPACITY_EXCEEDED); //
+        if (interview.getMaxParticipants() <= interview.getCurrentParticipants()) {
+            throw new MemberInterviewHandler(ErrorStatus.INTERVIEW_CAPACITY_EXCEEDED);
         }
 
         Resume resume = null;
@@ -68,6 +68,7 @@ public class MemberInterviewCommandServiceImpl implements MemberInterviewCommand
         }
 
         MemberInterview memberInterview = MemberInterviewConverter.toMemberInterview(member, interview, resume, coverletter);
+        interview.increaseCurrentParticipants();
         return memberInterviewRepository.save(memberInterview);
     }
 
