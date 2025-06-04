@@ -47,9 +47,6 @@ public class MemberInterviewCommandServiceImpl implements MemberInterviewCommand
         if (!interview.getIsOpen()) {
             throw new MemberInterviewHandler(ErrorStatus.INTERVIEW_NOT_ACCEPTING_MEMBERS);
         }
-        if (interview.getMaxParticipants() <= interview.getCurrentParticipants()) {
-            throw new MemberInterviewHandler(ErrorStatus.INTERVIEW_CAPACITY_EXCEEDED);
-        }
 
         Resume resume = null;
         if (createMemberInterviewDTO.getResumeId() != null) {
@@ -68,7 +65,7 @@ public class MemberInterviewCommandServiceImpl implements MemberInterviewCommand
         }
 
         MemberInterview memberInterview = MemberInterviewConverter.toMemberInterview(member, interview, resume, coverletter);
-        interview.increaseCurrentParticipants();
+        interview.increaseCurrentParticipants(); //이 메서드 내부에서 동시성을 보호하고, 정원이 넘치면 예외를 발생시킵니다.
         return memberInterviewRepository.save(memberInterview);
     }
 

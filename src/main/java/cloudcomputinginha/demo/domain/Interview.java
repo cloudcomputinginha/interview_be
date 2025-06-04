@@ -1,5 +1,7 @@
 package cloudcomputinginha.demo.domain;
 
+import cloudcomputinginha.demo.apiPayload.code.handler.MemberInterviewHandler;
+import cloudcomputinginha.demo.apiPayload.code.status.ErrorStatus;
 import cloudcomputinginha.demo.domain.common.BaseEntity;
 import cloudcomputinginha.demo.domain.enums.StartType;
 import jakarta.persistence.*;
@@ -8,6 +10,7 @@ import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.DynamicUpdate;
 
 import java.time.LocalDateTime;
+import java.util.concurrent.atomic.AtomicInteger;
 
 @Entity
 @Getter
@@ -43,7 +46,7 @@ public class Interview extends BaseEntity {
     private Long hostId;
 
     @Builder.Default
-    private Integer currentParticipants = 1;
+    private AtomicInteger currentParticipants = new AtomicInteger(1);
 
     @Builder.Default
     private Integer maxParticipants = 1; //일대일 면접을 기준으로 초기화
@@ -80,6 +83,15 @@ public class Interview extends BaseEntity {
     }
 
     public void increaseCurrentParticipants() {
-        this.currentParticipants++;
+        while (true) {
+            int current = currentParticipants.get();
+            if (current >= maxParticipants) {
+                throw new MemberInterviewHandler(ErrorStatus.INTERVIEW_CAPACITY_EXCEEDED);
+            }
+            if (currentParticipants.compareAndSet(current, current + 1)) {
+                // 현재 값이 current 값이면 current+1로 바꾸고, 아니면 아무것도 하지 않는다 -> 반복문 반복
+                break;
+            }
+        }
     }
 }

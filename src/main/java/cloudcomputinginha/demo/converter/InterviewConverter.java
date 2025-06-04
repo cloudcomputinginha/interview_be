@@ -79,7 +79,7 @@ public class InterviewConverter {
                 .sessionName(interview.getSessionName())
                 .jobName(interview.getJobName())
                 .interviewType(interview.getInterviewOption().getInterviewType())
-                .currentParticipants(interview.getCurrentParticipants())
+                .currentParticipants(interview.getCurrentParticipants().intValue())
                 .maxParticipants(interview.getMaxParticipants())
                 .startedAt(interview.getStartedAt())
                 .build();
@@ -125,7 +125,7 @@ public class InterviewConverter {
                 .jobName(interview.getJobName())
                 .interviewType(interview.getInterviewOption().getInterviewType())
                 .maxParticipants(interview.getMaxParticipants())
-                .currentParticipants(interview.getCurrentParticipants())
+                .currentParticipants(interview.getCurrentParticipants().intValue())
                 .startedAt(interview.getStartedAt())
                 .hostName(
                         memberInterviewList.stream()
@@ -163,7 +163,7 @@ public class InterviewConverter {
                 .name(interview.getName())
                 .corporateName(interview.getCorporateName())
                 .jobName(interview.getJobName())
-                .currentParticipants(interview.getCurrentParticipants())
+                .currentParticipants(interview.getCurrentParticipants().intValue())
                 .maxParticipants(interview.getMaxParticipants())
                 .startedAt(interview.getStartedAt())
                 .endedAt(interview.getEndedAt())
