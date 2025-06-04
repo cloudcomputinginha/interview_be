@@ -17,10 +17,13 @@ public interface MemberInterviewRepository extends JpaRepository<MemberInterview
 
     Optional<MemberInterview> findByMemberIdAndInterviewId(Long memberId, Long interviewId);
 
-    Integer countMemberInterviewByInterviewId(Long id);
-
     @Query("SELECT mi FROM MemberInterview mi " +
             "JOIN FETCH mi.resume JOIN FETCH mi.coverletter JOIN FETCH mi.interview i " +
             "WHERE i.id = :interviewId AND mi.status = 'IN_PROGRESS'")
     List<MemberInterview> findInprogressByInterviewId(Long interviewId);
+
+    @Query("SELECT mi FROM MemberInterview mi " +
+            "JOIN FETCH mi.interview i JOIN FETCH i.interviewOption o " +
+            "WHERE mi.member.id = :memberId ORDER BY i.startedAt DESC ")
+    List<MemberInterview> findAllForMyPage(Long memberId);
 }
