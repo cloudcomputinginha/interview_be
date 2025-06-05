@@ -15,7 +15,7 @@ public class WebSocketConnectionLogger {
 
     @EventListener
     public void handleConnectEvent(SessionConnectEvent event) {
-        log.info("🟢 WebSocket 연결됨: {}", event.getUser());
+        log.info("🟢 WebSocket 연결됨: {}", event.getSource());
     }
 
     @EventListener
