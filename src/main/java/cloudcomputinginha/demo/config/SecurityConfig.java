@@ -29,7 +29,8 @@ public class SecurityConfig {
                                 CorsConfiguration configuration = new CorsConfiguration();
                                 configuration.setAllowedOrigins(List.of(
                                         "http://localhost:3000",
-                                    "https://cloud-computing-fe-two.vercel.app"
+                                    "https://cloud-computing-fe-two.vercel.app",
+                                    "http://127.0.0.1:5500"
                                 ));
 
                                 configuration.setAllowedMethods(

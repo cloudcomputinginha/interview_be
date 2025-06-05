@@ -1,6 +1,7 @@
 package cloudcomputinginha.demo.service;
 
 import cloudcomputinginha.demo.apiPayload.code.handler.DocumentHandler;
+import cloudcomputinginha.demo.apiPayload.code.handler.MemberHandler;
 import cloudcomputinginha.demo.apiPayload.code.handler.MemberInterviewHandler;
 import cloudcomputinginha.demo.apiPayload.code.status.ErrorStatus;
 import cloudcomputinginha.demo.converter.MemberInterviewConverter;
@@ -12,6 +13,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Service
@@ -25,17 +27,27 @@ public class MemberInterviewCommandServiceImpl implements MemberInterviewCommand
     private final ResumeRepository resumeRepository;
 
     @Override
-    public MemberInterview changeMemberInterviewStatus(Long interviewId, MemberInterviewRequestDTO.changeMemberStatusDTO memberInterviewRequestDTO) {
-        MemberInterview memberInterview = memberInterviewRepository.findByMemberIdAndInterviewId(memberInterviewRequestDTO.getMemberId(), interviewId)
-                .orElseThrow(() -> new MemberInterviewHandler(ErrorStatus.MEMBER_INTERVIEW_NOT_FOUND));
+    public MemberInterview changeMemberInterviewStatus(Long interviewId, Long memberId, InterviewStatus status) {
 
-        memberInterview.changeStatus(memberInterviewRequestDTO.getStatus());
-        memberInterviewRepository.save(memberInterview);
+        // memberId가 존재하는지 확인(방어 코드)
+        memberRepository.findById(memberId).orElseThrow(() -> new MemberHandler(ErrorStatus.MEMBER_NOT_FOUND));
+
+        MemberInterview memberInterview = memberInterviewRepository.findByMemberIdAndInterviewId(memberId, interviewId)
+                .orElseThrow(() -> new MemberInterviewHandler(ErrorStatus.MEMBER_INTERVIEW_NOT_FOUND));
+        
+        memberInterview.changeStatus(status);
+
         return memberInterview;
     }
 
     @Override
     public MemberInterview createMemberInterview(Long interviewId, MemberInterviewRequestDTO.createMemberInterviewDTO createMemberInterviewDTO) {
+
+        Long memberId = createMemberInterviewDTO.getMemberId();
+
+        memberInterviewRepository.findByMemberIdAndInterviewId(memberId, interviewId)
+                .orElseThrow(() -> new MemberInterviewHandler(ErrorStatus.MEMBER_INTERVIEW_NOT_FOUND));
+        
         boolean alreadyExists = memberInterviewRepository.existsByMemberIdAndInterviewId(createMemberInterviewDTO.getMemberId(), interviewId);
         if (alreadyExists) {
             throw new MemberInterviewHandler(ErrorStatus.MEMBER_INTERVIEW_ALREADY_EXISTS);
@@ -85,4 +97,6 @@ public class MemberInterviewCommandServiceImpl implements MemberInterviewCommand
         }
 
     }
+
+
 }

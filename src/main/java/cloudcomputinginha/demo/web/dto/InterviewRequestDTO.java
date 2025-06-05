@@ -92,4 +92,5 @@ public class InterviewRequestDTO {
         private Integer maxParticipants;
         private Boolean isOpen;
     }
+
 }

@@ -2,6 +2,7 @@ package cloudcomputinginha.demo.repository;
 
 import cloudcomputinginha.demo.domain.Interview;
 import cloudcomputinginha.demo.domain.MemberInterview;
+import cloudcomputinginha.demo.domain.enums.InterviewStatus;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
@@ -16,6 +17,8 @@ public interface MemberInterviewRepository extends JpaRepository<MemberInterview
     boolean existsByMemberIdAndInterviewId(Long memberId, Long interviewId);
 
     Optional<MemberInterview> findByMemberIdAndInterviewId(Long memberId, Long interviewId);
+
+    List<MemberInterview> findMemberInterviewByMemberIdAndInterviewIdAndStatus(Long memberId, Long interviewId, InterviewStatus status);
 
     Integer countMemberInterviewByInterviewId(Long id);
 
