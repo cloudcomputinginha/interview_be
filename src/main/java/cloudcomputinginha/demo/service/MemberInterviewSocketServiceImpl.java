@@ -9,6 +9,8 @@ import cloudcomputinginha.demo.apiPayload.code.handler.MemberInterviewHandler;
 import cloudcomputinginha.demo.apiPayload.code.status.ErrorStatus;
 import cloudcomputinginha.demo.web.dto.MemberInterviewSocketMessageDTO.WaitingRoomActionDTO;
 import cloudcomputinginha.demo.web.session.InterviewWaitingRoomSessionManager;
+import java.util.List;
+import java.util.concurrent.atomic.AtomicInteger;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -59,25 +61,25 @@ public class MemberInterviewSocketServiceImpl implements MemberInterviewSocketSe
     }
 
     @Override
-    public void enterInterview(Long interviewId, Long memberId) {
+    public void enterInterview(Long interviewId, List<Long> memberIds) {
 
-        MemberInterview memberInterview = memberInterviewRepository.findByMemberIdAndInterviewId(memberId, interviewId)
-            .orElseThrow(() -> new MemberInterviewHandler(ErrorStatus.MEMBER_INTERVIEW_NOT_FOUND));
+        List<MemberInterview> memberInterviews = memberInterviewRepository.findByInterviewId(interviewId);
 
-        if(hasInterviewStarted(memberInterview)){
-            throw new MemberInterviewHandler(ErrorStatus.INTERVIEW_ALREADY_STARTED);
+        AtomicInteger cnt = new AtomicInteger();
+
+        memberInterviews.forEach((memberInterview) -> {
+            if(memberInterview.getStatus().equals(InterviewStatus.IN_PROGRESS)){
+                memberInterview.changeStatus(InterviewStatus.IN_PROGRESS);
+                cnt.getAndIncrement();
+            }else if(memberInterview.getStatus().equals(InterviewStatus.SCHEDULED)){
+                memberInterview.changeStatus(InterviewStatus.NO_SHOW);
+            }
+        });
+
+        // 참가중인 면접자가 있을 시 알림 발송
+        if(cnt.get() > 0){
+            eventPublisher.broadcastInterviewStart(interviewId);
         }
-
-        if(memberInterview.getStatus().equals(InterviewStatus.IN_PROGRESS)){
-            memberInterview.changeStatus(InterviewStatus.DONE);
-            return;
-        }
-
-        // InterviewStatus가 SCHEDULED일 경우
-        memberInterview.changeStatus(InterviewStatus.NO_SHOW);
-
-        // 시작 BROADCAST
-        eventPublisher.broadcastInterviewStart(interviewId);
 
     }
 
