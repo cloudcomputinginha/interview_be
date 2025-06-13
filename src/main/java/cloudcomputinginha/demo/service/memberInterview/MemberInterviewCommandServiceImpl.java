@@ -34,7 +34,7 @@ public class MemberInterviewCommandServiceImpl implements MemberInterviewCommand
         MemberInterview memberInterview = memberInterviewRepository.findByMemberIdAndInterviewId(memberId, interviewId)
                 .orElseThrow(() -> new MemberInterviewHandler(ErrorStatus.MEMBER_INTERVIEW_NOT_FOUND));
 
-        memberInterview.changeStatus(status);
+        memberInterview.updateStatus(status);
 
         return memberInterview;
     }
@@ -59,21 +59,8 @@ public class MemberInterviewCommandServiceImpl implements MemberInterviewCommand
             throw new MemberInterviewHandler(ErrorStatus.INTERVIEW_NOT_ACCEPTING_MEMBERS);
         }
 
-        Resume resume = null;
-        if (createMemberInterviewDTO.getResumeId() != null) {
-            resume = resumeRepository.getReferenceById(createMemberInterviewDTO.getResumeId());
-            if (!resume.getMember().getId().equals(createMemberInterviewDTO.getMemberId())) {
-                throw new DocumentHandler(ErrorStatus.RESUME_NOT_OWNED);
-            }
-        }
-
-        Coverletter coverletter = null;
-        if (createMemberInterviewDTO.getCoverletterId() != null) {
-            coverletter = coverletterRepository.getReferenceById(createMemberInterviewDTO.getCoverletterId());
-            if (!coverletter.getMember().getId().equals(createMemberInterviewDTO.getMemberId())) {
-                throw new DocumentHandler(ErrorStatus.COVERLETTER_NOT_OWNED);
-            }
-        }
+        Resume resume = validateResumeOwnership(createMemberInterviewDTO.getResumeId(), memberId);
+        Coverletter coverletter = validateCoverletterOwnership(createMemberInterviewDTO.getCoverletterId(), memberId);
 
         MemberInterview memberInterview = MemberInterviewConverter.toMemberInterview(member, interview, resume, coverletter);
         interview.increaseCurrentParticipants(); //이 메서드 내부에서 동시성을 보호하고, 정원이 넘치면 예외를 발생시킵니다.
@@ -86,14 +73,43 @@ public class MemberInterviewCommandServiceImpl implements MemberInterviewCommand
 
         for (MemberInterview mi : memberInterviews) {
             switch (mi.getStatus()) {
-                case SCHEDULED -> mi.changeStatus(InterviewStatus.NO_SHOW);
-                case IN_PROGRESS -> mi.changeStatus(InterviewStatus.DONE);
+                case SCHEDULED -> mi.updateStatus(InterviewStatus.NO_SHOW);
+                case IN_PROGRESS -> mi.updateStatus(InterviewStatus.DONE);
                 default -> {
                 }
             }
         }
-
     }
 
+    @Override
+    public MemberInterview changeMemberInterviewDocument(Long interviewId, MemberInterviewRequestDTO.updateDocumentDTO updateDocumentDTO) {
+        Long memberId = updateDocumentDTO.getMemberId();
+
+        MemberInterview memberInterview = memberInterviewRepository.findByMemberIdAndInterviewId(memberId, interviewId)
+                .orElseThrow(() -> new MemberInterviewHandler(ErrorStatus.MEMBER_INTERVIEW_NOT_FOUND));
+
+        Resume resume = validateResumeOwnership(updateDocumentDTO.getResumeId(), memberId);
+        Coverletter coverletter = validateCoverletterOwnership(updateDocumentDTO.getCoverletterId(), memberId);
+        memberInterview.updateDocument(resume, coverletter);
+
+        memberInterviewRepository.save(memberInterview);
+        return memberInterview;
+    }
+
+    private Coverletter validateCoverletterOwnership(Long coverletterId, Long memberId) {
+        Coverletter coverletter = coverletterRepository.getReferenceById(coverletterId);
+        if (!coverletter.getMember().getId().equals(memberId)) {
+            throw new DocumentHandler(ErrorStatus.COVERLETTER_NOT_OWNED);
+        }
+        return coverletter;
+    }
+
+    private Resume validateResumeOwnership(Long resumeId, Long memberId) {
+        Resume resume = resumeRepository.getReferenceById(memberId);
+        if (!resume.getMember().getId().equals(resumeId)) {
+            throw new DocumentHandler(ErrorStatus.RESUME_NOT_OWNED);
+        }
+        return resume;
+    }
 
 }

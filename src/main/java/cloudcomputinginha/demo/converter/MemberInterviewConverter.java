@@ -67,4 +67,13 @@ public class MemberInterviewConverter {
                 .memberInterviewStatusDTO(MemberInterviewConverter.toMemberInterviewStatusDTO(memberInterview))
                 .build();
     }
+
+    public static MemberInterviewResponseDTO.MemberInterviewDocumentDTO toMemberInterviewDocumentDTO(MemberInterview memberInterview) {
+        return MemberInterviewResponseDTO.MemberInterviewDocumentDTO.builder()
+                .memberInterviewId(memberInterview.getId())
+                .coverLetterId(memberInterview.getCoverletter().getId())
+                .resumeId(memberInterview.getResume().getId())
+                .updatedAt(memberInterview.getUpdatedAt())
+                .build();
+    }
 }

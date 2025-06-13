@@ -15,7 +15,7 @@ import cloudcomputinginha.demo.web.dto.ResumeResponseDTO;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
-import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
@@ -33,7 +33,7 @@ public class ResumeRestController {
 
     @GetMapping("/upload")
     @Operation(summary = "이력서를 업로드할 presignedURL 발급", description = "업로드할 파일을 이름을 넘길 떄, 확장자를 포함합니다.")
-    public ApiResponse<ResumeResponseDTO.PresignedUploadDTO> getPresignedUploadUrl(@RequestParam @NotEmpty String fileName) {
+    public ApiResponse<ResumeResponseDTO.PresignedUploadDTO> getPresignedUploadUrl(@RequestParam @NotBlank String fileName) {
         ResumeResponseDTO.PresignedUploadDTO uploadUrlDTO = s3PresignedService.getUploadPresignedURL(fileName);
         return ApiResponse.onSuccess(uploadUrlDTO);
     }

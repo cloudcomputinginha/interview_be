@@ -36,7 +36,7 @@ public class MemberInterviewSocketServiceImpl implements MemberInterviewSocketSe
             throw new MemberInterviewHandler(ErrorStatus.INTERVIEW_ALREADY_STARTED);
         }
 
-        memberInterview.changeStatus(InterviewStatus.IN_PROGRESS);
+        memberInterview.updateStatus(InterviewStatus.IN_PROGRESS);
         sessionManager.put(sessionId,
                 MemberInterviewSocketMessageConverter.toSessionInfoDTO(actionDTO));
 
@@ -56,7 +56,7 @@ public class MemberInterviewSocketServiceImpl implements MemberInterviewSocketSe
 
         sessionManager.remove(sessionId);
 
-        memberInterview.changeStatus(InterviewStatus.SCHEDULED);
+        memberInterview.updateStatus(InterviewStatus.SCHEDULED);
 
         eventPublisher.broadcastParticipants(interviewId);
     }
@@ -70,10 +70,10 @@ public class MemberInterviewSocketServiceImpl implements MemberInterviewSocketSe
 
         memberInterviews.forEach((memberInterview) -> {
             if (memberInterview.getStatus().equals(InterviewStatus.IN_PROGRESS)) {
-                memberInterview.changeStatus(InterviewStatus.DONE);
+                memberInterview.updateStatus(InterviewStatus.DONE);
                 cnt.getAndIncrement();
             } else if (memberInterview.getStatus().equals(InterviewStatus.SCHEDULED)) {
-                memberInterview.changeStatus(InterviewStatus.NO_SHOW);
+                memberInterview.updateStatus(InterviewStatus.NO_SHOW);
             }
         });
 
