@@ -44,7 +44,7 @@ public class InterviewRestController {
         InterviewResponseDTO.InterviewCreateResultDTO result = interviewCommandService.createInterview(request, memberId);
         return ApiResponse.onSuccess(result);
     }
-  
+
     @GetMapping("/group")
     @Operation(summary = "일대다 면접 모집글 조회 API", description = "일대다 면접 모집글을 조회합니다.")
     public ApiResponse<List<InterviewResponseDTO.InterviewGroupCardDTO>> getGroupInterviewCards() {
@@ -52,7 +52,7 @@ public class InterviewRestController {
         return ApiResponse.onSuccess(result);
     }
 
-    @GetMapping("/{interviewId}/start")
+    //@GetMapping("/{interviewId}/start")
     @Operation(summary = "면접 시작 API", description = "해당 API가 호출되면 AI서버에게 넘겨줄 면접의 모든 정보를 넘겨줍니다.")
     public ApiResponse<InterviewResponseDTO.InterviewStartResponseDTO> startInterview(@PathVariable @NotNull @ExistInterview Long interviewId) {
         InterviewResponseDTO.InterviewStartResponseDTO interviewStartResponse = interviewCommandService.startInterview(interviewId, false);

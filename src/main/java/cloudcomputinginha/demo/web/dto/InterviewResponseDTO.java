@@ -3,7 +3,6 @@ package cloudcomputinginha.demo.web.dto;
 import cloudcomputinginha.demo.domain.enums.InterviewFormat;
 import cloudcomputinginha.demo.domain.enums.InterviewType;
 import cloudcomputinginha.demo.domain.enums.StartType;
-import cloudcomputinginha.demo.domain.enums.VoiceType;
 import lombok.*;
 
 import java.time.LocalDateTime;
@@ -59,7 +58,7 @@ public class InterviewResponseDTO {
     public static class InterviewStartResponseDTO {
         private Long interviewId;
         private InterviewResponseDTO.InterviewDTO interview;
-        private InterviewOptionResponseDTO.InterviewOptionDTO options;
+        private InterviewOptionResponseDTO.InterviewOptionDetailDTO options;
         private List<MemberInterviewResponseDTO.ParticipantDTO> participants;
     }
 
@@ -116,5 +115,20 @@ public class InterviewResponseDTO {
         private String description;
         private Integer maxParticipants;
         private boolean isOpen;
+    }
+
+    @Getter
+    @Builder
+    @NoArgsConstructor(access = AccessLevel.PROTECTED)
+    @AllArgsConstructor
+    public static class InterviewCardDTO {
+        private Long interviewId;
+        private String name;
+        private String corporateName;
+        private String jobName;
+        private Integer currentParticipants;
+        private Integer maxParticipants;
+        private LocalDateTime startedAt;
+        private LocalDateTime endedAt;
     }
 }
