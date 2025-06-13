@@ -1,4 +1,4 @@
-package cloudcomputinginha.demo.service;
+package cloudcomputinginha.demo.service.qna;
 
 import cloudcomputinginha.demo.domain.Qna;
 

@@ -2,19 +2,19 @@ package cloudcomputinginha.demo.web.controller;
 
 import cloudcomputinginha.demo.apiPayload.exception.GeneralException;
 import cloudcomputinginha.demo.infra.messaging.WaitingRoomEventPublisher;
-import cloudcomputinginha.demo.service.MemberInterviewSocketService;
+import cloudcomputinginha.demo.service.memberInterview.MemberInterviewSocketService;
 import cloudcomputinginha.demo.web.dto.MemberInterviewSocketMessageDTO.WaitingRoomActionDTO;
+import cloudcomputinginha.demo.web.session.InterviewWaitingRoomSessionManager;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.event.EventListener;
 import org.springframework.messaging.handler.annotation.MessageExceptionHandler;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.Payload;
+import org.springframework.messaging.simp.SimpMessageHeaderAccessor;
 import org.springframework.messaging.simp.annotation.SendToUser;
 import org.springframework.messaging.simp.stomp.StompHeaderAccessor;
 import org.springframework.stereotype.Controller;
-import org.springframework.messaging.simp.SimpMessageHeaderAccessor;
-import cloudcomputinginha.demo.web.session.InterviewWaitingRoomSessionManager;
 import org.springframework.web.socket.messaging.SessionDisconnectEvent;
 
 @Slf4j
@@ -37,7 +37,7 @@ public class MemberInterviewSocketController {
     public void enter(@Payload WaitingRoomActionDTO waitingRoomActionDTO, SimpMessageHeaderAccessor accessor) {
 
         memberInterviewSocketService.enterWaitingRoom(
-            waitingRoomActionDTO, accessor.getSessionId());
+                waitingRoomActionDTO, accessor.getSessionId());
 
     }
 
@@ -57,9 +57,9 @@ public class MemberInterviewSocketController {
         if (sessionInfo == null) return;
 
         memberInterviewSocketService.leaveWaitingRoom(
-            sessionInfo.interviewId(),
-            sessionInfo.memberId(),
-            sessionId);
+                sessionInfo.interviewId(),
+                sessionInfo.memberId(),
+                sessionId);
 
         // 참가자 목록 갱신
         eventPublisher.broadcastParticipants(sessionInfo.interviewId());

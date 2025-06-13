@@ -1,4 +1,4 @@
-package cloudcomputinginha.demo.service;
+package cloudcomputinginha.demo.service.memberInterview;
 
 import cloudcomputinginha.demo.apiPayload.code.handler.DocumentHandler;
 import cloudcomputinginha.demo.apiPayload.code.handler.MemberHandler;
@@ -13,7 +13,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.time.LocalDateTime;
 import java.util.List;
 
 @Service
@@ -34,7 +33,7 @@ public class MemberInterviewCommandServiceImpl implements MemberInterviewCommand
 
         MemberInterview memberInterview = memberInterviewRepository.findByMemberIdAndInterviewId(memberId, interviewId)
                 .orElseThrow(() -> new MemberInterviewHandler(ErrorStatus.MEMBER_INTERVIEW_NOT_FOUND));
-        
+
         memberInterview.changeStatus(status);
 
         return memberInterview;
@@ -47,7 +46,7 @@ public class MemberInterviewCommandServiceImpl implements MemberInterviewCommand
 
         memberInterviewRepository.findByMemberIdAndInterviewId(memberId, interviewId)
                 .orElseThrow(() -> new MemberInterviewHandler(ErrorStatus.MEMBER_INTERVIEW_NOT_FOUND));
-        
+
         boolean alreadyExists = memberInterviewRepository.existsByMemberIdAndInterviewId(createMemberInterviewDTO.getMemberId(), interviewId);
         if (alreadyExists) {
             throw new MemberInterviewHandler(ErrorStatus.MEMBER_INTERVIEW_ALREADY_EXISTS);

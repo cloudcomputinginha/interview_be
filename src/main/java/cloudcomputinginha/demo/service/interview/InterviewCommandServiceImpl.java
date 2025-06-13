@@ -1,4 +1,4 @@
-package cloudcomputinginha.demo.service;
+package cloudcomputinginha.demo.service.interview;
 
 import cloudcomputinginha.demo.apiPayload.code.handler.CoverletterHandler;
 import cloudcomputinginha.demo.apiPayload.code.handler.InterviewHandler;
@@ -11,6 +11,8 @@ import cloudcomputinginha.demo.domain.*;
 import cloudcomputinginha.demo.domain.enums.InterviewFormat;
 import cloudcomputinginha.demo.repository.*;
 import cloudcomputinginha.demo.scheduler.InterviewScheduler;
+import cloudcomputinginha.demo.service.memberInterview.MemberInterviewCommandService;
+import cloudcomputinginha.demo.service.memberInterview.MemberInterviewSocketService;
 import cloudcomputinginha.demo.web.dto.InterviewRequestDTO;
 import cloudcomputinginha.demo.web.dto.InterviewResponseDTO;
 import lombok.RequiredArgsConstructor;

@@ -1,4 +1,4 @@
-package cloudcomputinginha.demo.service;
+package cloudcomputinginha.demo.service.interviewOption;
 
 import cloudcomputinginha.demo.apiPayload.code.handler.InterviewHandler;
 import cloudcomputinginha.demo.apiPayload.code.status.ErrorStatus;

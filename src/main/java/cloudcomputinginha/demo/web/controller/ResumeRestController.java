@@ -5,9 +5,9 @@ import cloudcomputinginha.demo.apiPayload.code.handler.ResumeHandler;
 import cloudcomputinginha.demo.apiPayload.code.status.ErrorStatus;
 import cloudcomputinginha.demo.converter.ResumeConverter;
 import cloudcomputinginha.demo.domain.Resume;
-import cloudcomputinginha.demo.service.ResumeCommandService;
-import cloudcomputinginha.demo.service.ResumeQueryService;
-import cloudcomputinginha.demo.service.S3PresignedService;
+import cloudcomputinginha.demo.service.resume.ResumeCommandService;
+import cloudcomputinginha.demo.service.resume.ResumeQueryService;
+import cloudcomputinginha.demo.service.resume.ResumeS3Service;
 import cloudcomputinginha.demo.validation.annotation.ExistMember;
 import cloudcomputinginha.demo.validation.annotation.ExistResume;
 import cloudcomputinginha.demo.web.dto.ResumeRequestDTO;
@@ -27,7 +27,7 @@ import java.util.List;
 @RequestMapping("/resumes/")
 @RequiredArgsConstructor
 public class ResumeRestController {
-    private final S3PresignedService s3PresignedService;
+    private final ResumeS3Service s3PresignedService;
     private final ResumeCommandService resumeCommandService;
     private final ResumeQueryService resumeQueryService;
 

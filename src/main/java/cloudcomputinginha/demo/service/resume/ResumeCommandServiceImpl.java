@@ -1,4 +1,4 @@
-package cloudcomputinginha.demo.service;
+package cloudcomputinginha.demo.service.resume;
 
 import cloudcomputinginha.demo.apiPayload.code.handler.ResumeHandler;
 import cloudcomputinginha.demo.apiPayload.code.status.ErrorStatus;

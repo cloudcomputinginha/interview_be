@@ -1,4 +1,4 @@
-package cloudcomputinginha.demo.service;
+package cloudcomputinginha.demo.service.coverletter;
 
 import cloudcomputinginha.demo.domain.Coverletter;
 import cloudcomputinginha.demo.web.dto.CoverletterRequestDTO;

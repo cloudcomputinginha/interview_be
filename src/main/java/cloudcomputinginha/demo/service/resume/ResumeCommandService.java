@@ -1,4 +1,4 @@
-package cloudcomputinginha.demo.service;
+package cloudcomputinginha.demo.service.resume;
 
 import cloudcomputinginha.demo.domain.Resume;
 import cloudcomputinginha.demo.web.dto.ResumeRequestDTO;

@@ -1,4 +1,4 @@
-package cloudcomputinginha.demo.service;
+package cloudcomputinginha.demo.service.coverletter;
 
 import cloudcomputinginha.demo.converter.CoverletterConverter;
 import cloudcomputinginha.demo.converter.QnaConverter;

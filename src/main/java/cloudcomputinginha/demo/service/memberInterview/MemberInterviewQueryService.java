@@ -1,4 +1,4 @@
-package cloudcomputinginha.demo.service;
+package cloudcomputinginha.demo.service.memberInterview;
 
 import cloudcomputinginha.demo.domain.MemberInterview;
 

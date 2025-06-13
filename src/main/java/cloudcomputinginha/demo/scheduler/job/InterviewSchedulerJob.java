@@ -1,6 +1,6 @@
 package cloudcomputinginha.demo.scheduler.job;
 
-import cloudcomputinginha.demo.service.InterviewCommandService;
+import cloudcomputinginha.demo.service.interview.InterviewCommandService;
 import lombok.RequiredArgsConstructor;
 import org.quartz.JobDataMap;
 import org.quartz.JobExecutionContext;

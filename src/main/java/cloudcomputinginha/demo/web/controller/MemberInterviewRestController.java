@@ -3,8 +3,8 @@ package cloudcomputinginha.demo.web.controller;
 import cloudcomputinginha.demo.apiPayload.ApiResponse;
 import cloudcomputinginha.demo.converter.MemberInterviewConverter;
 import cloudcomputinginha.demo.domain.MemberInterview;
-import cloudcomputinginha.demo.service.MemberInterviewCommandService;
-import cloudcomputinginha.demo.service.MemberInterviewQueryService;
+import cloudcomputinginha.demo.service.memberInterview.MemberInterviewCommandService;
+import cloudcomputinginha.demo.service.memberInterview.MemberInterviewQueryService;
 import cloudcomputinginha.demo.validation.annotation.ExistInterview;
 import cloudcomputinginha.demo.validation.annotation.ExistMember;
 import cloudcomputinginha.demo.web.dto.MemberInterviewRequestDTO;
@@ -31,7 +31,7 @@ public class MemberInterviewRestController {
     @PatchMapping("/interviews/{interviewId}/waiting-room")
     @Operation(summary = "면접 대기실 내 사용자의 상태를 변경하는 API", description = "면접, 사용자 id, 사용자 상태를 요청 받아 사용자 면접의 상태를 수정합니다.")
     public ApiResponse<MemberInterviewResponseDTO.MemberInterviewStatusDTO> changeParticipantsStatus(@PathVariable @ExistInterview Long interviewId, @RequestBody @Valid MemberInterviewRequestDTO.changeMemberStatusDTO changeMemberStatusDTO) {
-        MemberInterview memberInterview = memberInterviewCommandService.changeMemberInterviewStatus(interviewId,  changeMemberStatusDTO.getMemberId(), changeMemberStatusDTO.getStatus());
+        MemberInterview memberInterview = memberInterviewCommandService.changeMemberInterviewStatus(interviewId, changeMemberStatusDTO.getMemberId(), changeMemberStatusDTO.getStatus());
         return ApiResponse.onSuccess(MemberInterviewConverter.toMemberInterviewStatusDTO(memberInterview));
     }
 
