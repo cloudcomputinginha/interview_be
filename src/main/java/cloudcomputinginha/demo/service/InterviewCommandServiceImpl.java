@@ -57,7 +57,7 @@ public class InterviewCommandServiceImpl implements InterviewCommandService {
         memberInterviewCommandService.finalizeStatuses(interviewId);
 
         // InterviewOption 종료 시간 갱신
-        interview.changeEndedAt(endInterviewRequestDTO.getEndedAt());
+        interview.updateEndedAt(endInterviewRequestDTO.getEndedAt());
         interviewRepository.save(interview);
         return interview;
     }

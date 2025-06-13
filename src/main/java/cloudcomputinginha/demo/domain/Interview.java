@@ -62,7 +62,11 @@ public class Interview extends BaseEntity {
     @JoinColumn(name = "interview_option_id", unique = true, nullable = false)
     private InterviewOption interviewOption;
 
-    public void changeEndedAt(LocalDateTime endedAt) {
+    public void updateStartedAt(LocalDateTime startedAt) {
+        this.startedAt = startedAt;
+    }
+
+    public void updateEndedAt(LocalDateTime endedAt) {
         this.endedAt = endedAt;
     }
 
