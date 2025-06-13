@@ -31,7 +31,7 @@ public class MemberInterviewSocketServiceImpl implements MemberInterviewSocketSe
                 actionDTO.getMemberId(), actionDTO.getInterviewId())
             .orElseThrow(() -> new MemberInterviewHandler(ErrorStatus.MEMBER_INTERVIEW_NOT_FOUND));
 
-        if(hasInterviewStarted(memberInterview)) {
+        if(hasInterviewEnded(memberInterview)) {
             throw new MemberInterviewHandler(ErrorStatus.INTERVIEW_ALREADY_STARTED);
         }
 
@@ -49,7 +49,7 @@ public class MemberInterviewSocketServiceImpl implements MemberInterviewSocketSe
         MemberInterview memberInterview = memberInterviewRepository.findByMemberIdAndInterviewId(memberId, interviewId)
             .orElseThrow(() -> new MemberInterviewHandler(ErrorStatus.MEMBER_INTERVIEW_NOT_FOUND));
 
-        if(hasInterviewStarted(memberInterview)) {
+        if(hasInterviewEnded(memberInterview)) {
             throw new MemberInterviewHandler(ErrorStatus.INTERVIEW_ALREADY_STARTED);
         }
 
@@ -61,7 +61,7 @@ public class MemberInterviewSocketServiceImpl implements MemberInterviewSocketSe
     }
 
     @Override
-    public void enterInterview(Long interviewId, List<Long> memberIds) {
+    public void enterInterview(Long interviewId) {
 
         List<MemberInterview> memberInterviews = memberInterviewRepository.findByInterviewId(interviewId);
 
@@ -69,7 +69,7 @@ public class MemberInterviewSocketServiceImpl implements MemberInterviewSocketSe
 
         memberInterviews.forEach((memberInterview) -> {
             if(memberInterview.getStatus().equals(InterviewStatus.IN_PROGRESS)){
-                memberInterview.changeStatus(InterviewStatus.IN_PROGRESS);
+                memberInterview.changeStatus(InterviewStatus.DONE);
                 cnt.getAndIncrement();
             }else if(memberInterview.getStatus().equals(InterviewStatus.SCHEDULED)){
                 memberInterview.changeStatus(InterviewStatus.NO_SHOW);
@@ -83,7 +83,7 @@ public class MemberInterviewSocketServiceImpl implements MemberInterviewSocketSe
 
     }
 
-    private boolean hasInterviewStarted(MemberInterview memberInterview){
+    private boolean hasInterviewEnded(MemberInterview memberInterview){
         return memberInterview.getStatus().equals(InterviewStatus.DONE) || memberInterview.getStatus().equals(InterviewStatus.NO_SHOW);
     }
 

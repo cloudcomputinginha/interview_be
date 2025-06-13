@@ -25,7 +25,7 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
 
     @Bean
     public StompSubProtocolErrorHandler stompErrorHandler() {
-        return new SocketErrorHandler();
+        return socketErrorHandler;
     }
 
     @Override

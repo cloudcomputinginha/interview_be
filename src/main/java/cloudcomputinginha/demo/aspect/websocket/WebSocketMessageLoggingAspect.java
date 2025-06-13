@@ -25,7 +25,8 @@ public class WebSocketMessageLoggingAspect {
 
         Object result = joinPoint.proceed();
 
-        log.info("✅ WebSocket 처리 완료 - Destination: {}, 결과: {}", destination, result);
+        log.info("✅ WebSocket 처리 완료 - Destination: {}, 결과 타입: {}",
+            destination, result != null ? result.getClass().getSimpleName() : "null");
         return result;
     }
 }

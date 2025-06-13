@@ -54,12 +54,12 @@ public class MemberInterviewSocketController {
         String sessionId = StompHeaderAccessor.wrap(event.getMessage()).getSessionId();
         // 세션 제거
         var sessionInfo = sessionManager.remove(sessionId);
-        if (sessionInfo == null) return; // 이미 제거된 세션
+        if (sessionInfo == null) return;
 
         memberInterviewSocketService.leaveWaitingRoom(
             sessionInfo.interviewId(),
             sessionInfo.memberId(),
-            StompHeaderAccessor.wrap(event.getMessage()).getSessionId());
+            sessionId);
 
         // 참가자 목록 갱신
         eventPublisher.broadcastParticipants(sessionInfo.interviewId());

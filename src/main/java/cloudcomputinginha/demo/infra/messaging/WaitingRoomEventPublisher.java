@@ -5,8 +5,6 @@ import cloudcomputinginha.demo.web.dto.MemberInterviewSocketMessageDTO.Notificat
 import cloudcomputinginha.demo.web.dto.MemberInterviewSocketMessageDTO.NotificationDTO.Type;
 import cloudcomputinginha.demo.web.dto.MemberInterviewSocketMessageDTO.ParticipantsDTO;
 import cloudcomputinginha.demo.web.dto.MemberInterviewSocketMessageDTO.WaitingRoomActionDTO;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import jakarta.transaction.Transactional;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -17,7 +15,6 @@ import org.springframework.stereotype.Component;
 
 @Slf4j
 @Component
-@Transactional
 @RequiredArgsConstructor
 public class WaitingRoomEventPublisher {
 

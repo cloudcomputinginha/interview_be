@@ -12,7 +12,9 @@ import org.springframework.stereotype.Component;
 @Slf4j
 public class ExceptionLoggingAspect {
 
-    @Pointcut("execution(* cloudcomputinginha.demo..*(..))")
+    @Pointcut("execution(* cloudcomputinginha.demo..*(..)) && " +
+        "!within(@org.springframework.web.bind.annotation.RestController *) && " +
+        "!@annotation(org.springframework.messaging.handler.annotation.MessageMapping)")
     public void applicationPackagePointcut() {}
 
     @AfterThrowing(pointcut = "applicationPackagePointcut()", throwing = "ex")

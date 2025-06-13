@@ -1,5 +1,6 @@
 package cloudcomputinginha.demo.aspect;
 
+import java.util.Arrays;
 import lombok.extern.slf4j.Slf4j;
 import org.aspectj.lang.*;
 import org.aspectj.lang.annotation.*;
@@ -20,7 +21,7 @@ public class MethodLoggingAspect {
         log.info("➡️ 진입: {}.{}() args = {}",
             joinPoint.getSignature().getDeclaringTypeName(),
             joinPoint.getSignature().getName(),
-            joinPoint.getArgs());
+            sanitizeArgs(joinPoint.getArgs()));
 
         Object result = joinPoint.proceed();
 
@@ -32,5 +33,19 @@ public class MethodLoggingAspect {
             System.currentTimeMillis() - start);
 
         return result;
+    }
+
+    private Object[] sanitizeArgs(Object[] args) {
+        if (args == null) return null;
+        return Arrays.stream(args)
+            .map(arg -> arg != null && isSensitiveType(arg) ? "[FILTERED]" : arg)
+            .toArray();
+    }
+
+    private boolean isSensitiveType(Object arg) {
+        String className = arg.getClass().getSimpleName().toLowerCase();
+        return className.contains("password") ||
+            className.contains("token") ||
+            className.contains("credential");
     }
 }
