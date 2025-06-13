@@ -85,8 +85,8 @@ public class InterviewCommandServiceImpl implements InterviewCommandService {
 
         // 인터뷰 스케줄링
         interviewScheduler.scheduleInterviewStart(
-            interview.getId(),
-            interview.getStartedAt()
+                interview.getId(),
+                interview.getStartedAt()
         );
 
         return InterviewConverter.createInterview(interview);
@@ -105,14 +105,15 @@ public class InterviewCommandServiceImpl implements InterviewCommandService {
 
         List<Long> memberIds = memberInterviews.stream()
                 .map(mi -> mi.getMember().getId())
-            .toList();
+                .toList();
 
         // 참가자들에게 참가알림 발송
-        memberInterviewSocketService.enterInterview(interviewId, memberIds);
+        memberInterviewSocketService.enterInterview(interviewId);
 
-        // 만약 관리자가 임의로 시작했을 경우, 스케줄링 대상 제거.
-        if(!isAutoMaticStart){
+        // 만약 관리자가 임의로 시작했을 경우, 스케줄링 대상 제거 및 startedAt 수정
+        if (!isAutoMaticStart) {
             interviewScheduler.cancelScheduledInterview(interviewId);
+            interviewWithOption.updateStartedAt(LocalDateTime.now());
         }
 
         // 이 부분을 백엔드 -> AI로 바로 통신하는 것도 괜찮을 거 같습니다!(http request로)
