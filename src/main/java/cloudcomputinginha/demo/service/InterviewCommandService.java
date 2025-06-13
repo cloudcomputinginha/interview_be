@@ -9,7 +9,7 @@ public interface InterviewCommandService {
 
     InterviewResponseDTO.InterviewCreateResultDTO createInterview(InterviewRequestDTO.InterviewCreateDTO request, Long memberId);
 
-    public InterviewResponseDTO.InterviewStartResponseDTO startInterview(Long interviewId);
+    public InterviewResponseDTO.InterviewStartResponseDTO startInterview(Long interviewId, Boolean isAutoMaticStart);
 
     InterviewResponseDTO.InterviewUpdateResponseDTO updateInterview(Long memberId, Long interviewId, InterviewRequestDTO.InterviewUpdateDTO request);
 }

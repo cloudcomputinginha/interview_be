@@ -43,7 +43,8 @@ public enum ErrorStatus implements BaseErrorCode {
     INTERVIEW_STATUS_INVALID(HttpStatus.BAD_REQUEST, "MEMBERINTERVIEW4001", "올바른 인터뷰 상태가 아닙니다."),
     MEMBER_INTERVIEW_NOT_FOUND(HttpStatus.NOT_FOUND, "MEMBERINTERVIEW4002", "해당하는 사용자 인터뷰를 찾을 수 없습니다."),
     MEMBER_INTERVIEW_ALREADY_EXISTS(HttpStatus.CONFLICT, "MEMBERINTERVIEW4003", "이미 해당 인터뷰에 참여 신청이 완료된 회원입니다."),
-    INTERVIEW_CAPACITY_EXCEEDED(HttpStatus.BAD_REQUEST, "MEMBERINTERVIEW4004", "인터뷰 정원이 초과되어 더 이상 신청할 수 없습니다.");
+    INTERVIEW_CAPACITY_EXCEEDED(HttpStatus.BAD_REQUEST, "MEMBERINTERVIEW4004", "인터뷰 정원이 초과되어 더 이상 신청할 수 없습니다."),
+    INTERVIEW_ALREADY_STARTED(HttpStatus.BAD_REQUEST, "MEMBERINTERVIEW4005", "인터뷰가 이미 시작되어 입장할 수 없습니다.");
 
     private final HttpStatus httpStatus;
     private final String code;

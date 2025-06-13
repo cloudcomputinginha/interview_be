@@ -1,10 +1,12 @@
 package cloudcomputinginha.demo.service;
 
 import cloudcomputinginha.demo.domain.MemberInterview;
+import cloudcomputinginha.demo.domain.enums.InterviewStatus;
 import cloudcomputinginha.demo.web.dto.MemberInterviewRequestDTO;
 
+
 public interface MemberInterviewCommandService {
-    MemberInterview changeMemberInterviewStatus(Long interviewId, MemberInterviewRequestDTO.changeMemberStatusDTO memberInterviewRequestDTO);
+    MemberInterview changeMemberInterviewStatus(Long interviewId, Long memberId, InterviewStatus status);
 
     MemberInterview createMemberInterview(Long interviewId, MemberInterviewRequestDTO.createMemberInterviewDTO createMemberInterviewDTO);
 
