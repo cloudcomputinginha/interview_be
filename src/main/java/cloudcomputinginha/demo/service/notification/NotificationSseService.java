@@ -8,4 +8,6 @@ public interface NotificationSseService {
     public void sendNotification(SseEmitter emitter, String emitterId, String eventId, Object data);
 
     public String createId(Long memberId);
+
+    public void sendToMyAllEmitters(String memberId, String eventId, Object data);
 }

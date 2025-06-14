@@ -63,4 +63,15 @@ public class NotificationSseServiceImpl implements NotificationSseService {
     public String createId(Long memberId) {
         return memberId + "_" + System.currentTimeMillis();
     }
+
+    @Override
+    public void sendToMyAllEmitters(String memberId, String eventId, Object data) {
+        Map<String, SseEmitter> emitters = sseEmitterRepository.findAllEmitterStartWithMemberId(memberId);
+        emitters.forEach(
+                (emitterId, emitter) -> {
+                    sseEmitterRepository.saveEventCache(eventId, data);
+                    sendNotification(emitter, emitterId, eventId, data);
+                }
+        );
+    }
 }
