@@ -88,6 +88,10 @@ public class MemberInterviewCommandServiceImpl implements MemberInterviewCommand
         MemberInterview memberInterview = memberInterviewRepository.findByMemberIdAndInterviewId(memberId, interviewId)
                 .orElseThrow(() -> new MemberInterviewHandler(ErrorStatus.MEMBER_INTERVIEW_NOT_FOUND));
 
+        if (memberInterview.getStatus() == InterviewStatus.DONE) {
+            throw new MemberInterviewHandler(ErrorStatus.INTERVIEW_ALREADY_TERMINATED);
+        }
+
         Resume resume = validateResumeOwnership(updateDocumentDTO.getResumeId(), memberId);
         Coverletter coverletter = validateCoverletterOwnership(updateDocumentDTO.getCoverletterId(), memberId);
         memberInterview.updateDocument(resume, coverletter);
@@ -106,7 +110,7 @@ public class MemberInterviewCommandServiceImpl implements MemberInterviewCommand
 
     private Resume validateResumeOwnership(Long resumeId, Long memberId) {
         Resume resume = resumeRepository.getReferenceById(memberId);
-        if (!resume.getMember().getId().equals(resumeId)) {
+        if (!resume.getMember().getId().equals(memberId)) {
             throw new DocumentHandler(ErrorStatus.RESUME_NOT_OWNED);
         }
         return resume;
