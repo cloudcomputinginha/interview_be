@@ -1,4 +1,4 @@
-package cloudcomputinginha.demo.service;
+package cloudcomputinginha.demo.service.interview;
 
 import cloudcomputinginha.demo.apiPayload.code.handler.CoverletterHandler;
 import cloudcomputinginha.demo.apiPayload.code.handler.InterviewHandler;
@@ -11,6 +11,8 @@ import cloudcomputinginha.demo.domain.*;
 import cloudcomputinginha.demo.domain.enums.InterviewFormat;
 import cloudcomputinginha.demo.repository.*;
 import cloudcomputinginha.demo.scheduler.InterviewScheduler;
+import cloudcomputinginha.demo.service.memberInterview.MemberInterviewCommandService;
+import cloudcomputinginha.demo.service.memberInterview.MemberInterviewSocketService;
 import cloudcomputinginha.demo.web.dto.InterviewRequestDTO;
 import cloudcomputinginha.demo.web.dto.InterviewResponseDTO;
 import lombok.RequiredArgsConstructor;
@@ -57,7 +59,7 @@ public class InterviewCommandServiceImpl implements InterviewCommandService {
         memberInterviewCommandService.finalizeStatuses(interviewId);
 
         // InterviewOption 종료 시간 갱신
-        interview.changeEndedAt(endInterviewRequestDTO.getEndedAt());
+        interview.updateEndedAt(endInterviewRequestDTO.getEndedAt());
         interviewRepository.save(interview);
         return interview;
     }
@@ -85,8 +87,8 @@ public class InterviewCommandServiceImpl implements InterviewCommandService {
 
         // 인터뷰 스케줄링
         interviewScheduler.scheduleInterviewStart(
-            interview.getId(),
-            interview.getStartedAt()
+                interview.getId(),
+                interview.getStartedAt()
         );
 
         return InterviewConverter.createInterview(interview);
@@ -105,14 +107,15 @@ public class InterviewCommandServiceImpl implements InterviewCommandService {
 
         List<Long> memberIds = memberInterviews.stream()
                 .map(mi -> mi.getMember().getId())
-            .toList();
+                .toList();
 
         // 참가자들에게 참가알림 발송
-        memberInterviewSocketService.enterInterview(interviewId, memberIds);
+        memberInterviewSocketService.enterInterview(interviewId);
 
-        // 만약 관리자가 임의로 시작했을 경우, 스케줄링 대상 제거.
-        if(!isAutoMaticStart){
+        // 만약 관리자가 임의로 시작했을 경우, 스케줄링 대상 제거 및 startedAt 수정
+        if (!isAutoMaticStart) {
             interviewScheduler.cancelScheduledInterview(interviewId);
+            interviewWithOption.updateStartedAt(LocalDateTime.now());
         }
 
         // 이 부분을 백엔드 -> AI로 바로 통신하는 것도 괜찮을 거 같습니다!(http request로)

@@ -1,4 +1,4 @@
-package cloudcomputinginha.demo.service;
+package cloudcomputinginha.demo.service.interviewOption;
 
 import cloudcomputinginha.demo.web.dto.InterviewOptionRequestDTO;
 import cloudcomputinginha.demo.web.dto.InterviewOptionResponseDTO;

@@ -5,17 +5,17 @@ import cloudcomputinginha.demo.apiPayload.code.handler.ResumeHandler;
 import cloudcomputinginha.demo.apiPayload.code.status.ErrorStatus;
 import cloudcomputinginha.demo.converter.ResumeConverter;
 import cloudcomputinginha.demo.domain.Resume;
-import cloudcomputinginha.demo.service.ResumeCommandService;
-import cloudcomputinginha.demo.service.ResumeQueryService;
-import cloudcomputinginha.demo.service.S3PresignedService;
+import cloudcomputinginha.demo.service.resume.ResumeCommandService;
+import cloudcomputinginha.demo.service.resume.ResumeQueryService;
+import cloudcomputinginha.demo.service.resume.ResumeS3Service;
 import cloudcomputinginha.demo.validation.annotation.ExistMember;
 import cloudcomputinginha.demo.validation.annotation.ExistResume;
+import cloudcomputinginha.demo.validation.annotation.ValidFileName;
 import cloudcomputinginha.demo.web.dto.ResumeRequestDTO;
 import cloudcomputinginha.demo.web.dto.ResumeResponseDTO;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
-import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
@@ -27,13 +27,13 @@ import java.util.List;
 @RequestMapping("/resumes/")
 @RequiredArgsConstructor
 public class ResumeRestController {
-    private final S3PresignedService s3PresignedService;
+    private final ResumeS3Service s3PresignedService;
     private final ResumeCommandService resumeCommandService;
     private final ResumeQueryService resumeQueryService;
 
     @GetMapping("/upload")
     @Operation(summary = "이력서를 업로드할 presignedURL 발급", description = "업로드할 파일을 이름을 넘길 떄, 확장자를 포함합니다.")
-    public ApiResponse<ResumeResponseDTO.PresignedUploadDTO> getPresignedUploadUrl(@RequestParam @NotEmpty String fileName) {
+    public ApiResponse<ResumeResponseDTO.PresignedUploadDTO> getPresignedUploadUrl(@RequestParam @ValidFileName String fileName) {
         ResumeResponseDTO.PresignedUploadDTO uploadUrlDTO = s3PresignedService.getUploadPresignedURL(fileName);
         return ApiResponse.onSuccess(uploadUrlDTO);
     }

@@ -1,4 +1,4 @@
-package cloudcomputinginha.demo.service;
+package cloudcomputinginha.demo.service.interview;
 
 import cloudcomputinginha.demo.apiPayload.code.handler.InterviewHandler;
 import cloudcomputinginha.demo.apiPayload.code.status.ErrorStatus;
@@ -12,6 +12,7 @@ import cloudcomputinginha.demo.web.dto.InterviewResponseDTO;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+
 import java.util.List;
 
 @Service

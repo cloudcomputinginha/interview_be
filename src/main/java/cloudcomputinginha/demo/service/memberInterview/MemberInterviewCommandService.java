@@ -1,4 +1,4 @@
-package cloudcomputinginha.demo.service;
+package cloudcomputinginha.demo.service.memberInterview;
 
 import cloudcomputinginha.demo.domain.MemberInterview;
 import cloudcomputinginha.demo.domain.enums.InterviewStatus;
@@ -11,4 +11,6 @@ public interface MemberInterviewCommandService {
     MemberInterview createMemberInterview(Long interviewId, MemberInterviewRequestDTO.createMemberInterviewDTO createMemberInterviewDTO);
 
     void finalizeStatuses(Long interviewId);
+
+    MemberInterview changeMemberInterviewDocument(Long interviewId, MemberInterviewRequestDTO.updateDocumentDTO updateDocumentDTO);
 }

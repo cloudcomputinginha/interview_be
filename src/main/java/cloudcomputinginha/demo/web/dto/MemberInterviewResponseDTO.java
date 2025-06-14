@@ -61,4 +61,15 @@ public class MemberInterviewResponseDTO {
         private InterviewOptionResponseDTO.InterviewOptionPreviewDTO interviewOptionPreviewDTO;
         private MemberInterviewStatusDTO memberInterviewStatusDTO;
     }
+
+    @Getter
+    @Builder
+    @NoArgsConstructor(access = AccessLevel.PROTECTED)
+    @AllArgsConstructor
+    public static class MemberInterviewDocumentDTO {
+        private Long memberInterviewId;
+        private Long resumeId;
+        private Long coverLetterId;
+        private LocalDateTime updatedAt;
+    }
 }
