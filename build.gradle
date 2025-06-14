@@ -26,7 +26,6 @@ repositories {
 dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
     //implementation 'org.springframework.boot:spring-boot-starter-oauth2-client'
-    //implementation 'org.springframework.boot:spring-boot-starter-security'
     implementation 'org.springframework.boot:spring-boot-starter-validation'
     implementation 'org.springframework.boot:spring-boot-starter-web'
     implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.7.0'
@@ -55,6 +54,9 @@ dependencies {
 
     // Polling 방식이 아닌 정확히 그 시간에 시작하기 위해 새 의존성 도입
     implementation 'org.springframework.boot:spring-boot-starter-quartz'
+
+    // SSE
+    implementation 'org.springframework.boot:spring-boot-starter-web-services'
 
     //testing
     testImplementation 'org.springframework.boot:spring-boot-starter-test'

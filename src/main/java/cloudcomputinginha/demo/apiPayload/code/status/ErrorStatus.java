@@ -46,8 +46,11 @@ public enum ErrorStatus implements BaseErrorCode {
     INTERVIEW_CAPACITY_EXCEEDED(HttpStatus.BAD_REQUEST, "MEMBERINTERVIEW4004", "인터뷰 정원이 초과되어 더 이상 신청할 수 없습니다."),
     INTERVIEW_ALREADY_STARTED(HttpStatus.BAD_REQUEST, "MEMBERINTERVIEW4005", "인터뷰가 이미 시작되어 입장할 수 없습니다."),
 
-    //URL
-    URL_INVALID(HttpStatus.BAD_REQUEST, "URL4001", "URL 형식이 올바르지 않습니다.");
+    // URL
+    URL_INVALID(HttpStatus.BAD_REQUEST, "URL4001", "URL 형식이 올바르지 않습니다."),
+
+    // 알림 관련 에러
+    SSE_SEND_FAIL(HttpStatus.INTERNAL_SERVER_ERROR, "NOTIFICATION5001", "알림 전송에 실패했습니다.");
 
     private final HttpStatus httpStatus;
     private final String code;
