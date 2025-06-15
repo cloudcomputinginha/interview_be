@@ -22,8 +22,6 @@ public class InterviewScheduleInitializer {
     @EventListener(ApplicationReadyEvent.class)
     public void initializeScheduledInterviews() {
         List<Interview> upcoming = interviewRepository.findAllByStartedAtAfterAndEndedAtIsNull(LocalDateTime.now());
-        System.out.println("upcoming = " + upcoming.size());
-
         for (Interview interview : upcoming) {
             Long interviewId = interview.getId();
 

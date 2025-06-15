@@ -10,11 +10,11 @@ import cloudcomputinginha.demo.web.dto.MemberInterviewRequestDTO;
 public interface MemberInterviewCommandService {
     MemberInterview changeMemberInterviewStatus(Long interviewId, Long memberId, InterviewStatus status);
 
-    MemberInterview createMemberInterview(Long interviewId, MemberInterviewRequestDTO.createMemberInterviewDTO createMemberInterviewDTO);
+    MemberInterview createMemberInterview(Long interviewId, Long memberId, MemberInterviewRequestDTO.createMemberInterviewDTO createMemberInterviewDTO);
 
     void finalizeStatuses(Long interviewId);
 
-    MemberInterview changeMemberInterviewDocument(Long interviewId, MemberInterviewRequestDTO.updateDocumentDTO updateDocumentDTO);
+    MemberInterview changeMemberInterviewDocument(Long interviewId, Long memberId, MemberInterviewRequestDTO.updateDocumentDTO updateDocumentDTO);
 
     public Coverletter validateCoverletterOwnership(Long coverletterId, Long memberId);
 

@@ -1,7 +1,10 @@
 package cloudcomputinginha.demo.service.notification;
 
+import cloudcomputinginha.demo.apiPayload.code.handler.MemberHandler;
 import cloudcomputinginha.demo.apiPayload.code.handler.NotificationHandler;
 import cloudcomputinginha.demo.apiPayload.code.status.ErrorStatus;
+import cloudcomputinginha.demo.domain.Member;
+import cloudcomputinginha.demo.repository.MemberRepository;
 import cloudcomputinginha.demo.repository.SseEmitterRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -16,9 +19,13 @@ public class NotificationSseServiceImpl implements NotificationSseService {
 
     private static final Long DEFAULT_TIMEOUT = 60L * 1000 * 60; //1H
     private final SseEmitterRepository sseEmitterRepository;
+    private final MemberRepository memberRepository;
 
     @Override
     public SseEmitter subscribe(Long memberId, String lastEventId) {
+        Member member = memberRepository.findById(memberId)
+                .orElseThrow(() -> new MemberHandler(ErrorStatus.MEMBER_NOT_FOUND));
+
         // 고유한 SseEmitter 생성
         String emitterId = createId(memberId);
         SseEmitter emitter = new SseEmitter(DEFAULT_TIMEOUT);
@@ -53,9 +60,6 @@ public class NotificationSseServiceImpl implements NotificationSseService {
             emitter.send(SseEmitter.event()
                     .id(eventId)
                     .data(data));
-            System.out.println("emitter = " + emitter);
-            System.out.println("eventId = " + eventId);
-            System.out.println("data = " + data);
         } catch (IOException exception) {
             sseEmitterRepository.deleteById(emitterId);
             throw new NotificationHandler(ErrorStatus.NOTIFICATION_SEND_FAIL);
@@ -69,11 +73,7 @@ public class NotificationSseServiceImpl implements NotificationSseService {
 
     @Override
     public void sendToMyAllEmitters(String memberId, String eventId, Object data) {
-        System.out.println("sendToMyAllEmitters memberId = " + memberId);
-        System.out.println("eventId = " + eventId);
-        System.out.println("data = " + data);
         Map<String, SseEmitter> emitters = sseEmitterRepository.findAllEmitterStartWithMemberId(memberId);
-        System.out.println("emitters = " + emitters.size());
         sseEmitterRepository.saveEventCache(eventId, data);
         emitters.forEach(
                 (emitterId, emitter) -> {

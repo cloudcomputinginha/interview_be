@@ -27,10 +27,9 @@ public class Coverletter extends BaseEntity {
     @Column(length = 20)
     private String jobName;
 
-    public void validateOwner(Long currentMemberId) {
-        if (!this.member.getId().equals(currentMemberId)) {
+    public void validateOwnedBy(Long memberId) {
+        if (!this.member.getId().equals(memberId)) {
             throw new CoverletterHandler(ErrorStatus.COVERLETTER_NOT_OWNED);
         }
     }
-
 }

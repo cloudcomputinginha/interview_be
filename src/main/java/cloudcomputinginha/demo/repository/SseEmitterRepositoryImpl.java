@@ -15,14 +15,12 @@ public class SseEmitterRepositoryImpl implements SseEmitterRepository {
     @Override
     public SseEmitter save(String emitterId, SseEmitter sseEmitter) {
         emitters.put(emitterId, sseEmitter);
-        System.out.println("put emitterId = " + emitterId);
         return sseEmitter;
     }
 
     @Override
     public void saveEventCache(String eventId, Object event) {
         eventCache.put(eventId, event);
-        System.out.println("put eventId = " + eventId);
     }
 
     @Override

@@ -45,13 +45,12 @@ public class InterviewScheduler {
 
     public void scheduleInterviewReminderIfNotExists(Long interviewId, LocalDateTime startedAt) {
         validateInterviewIdAndScheduledTime(interviewId, startedAt);
-        // ✅ 리마인더 - 1일 전
+
         LocalDateTime oneDayBefore = startedAt.minusDays(1);
         if (oneDayBefore.isAfter(LocalDateTime.now())) {
             scheduleSingleReminderIfNotExists(interviewId, oneDayBefore, "D1");
         }
 
-        // ✅ 리마인더 - 30분 전
         LocalDateTime thirtyMinutesBefore = startedAt.minusMinutes(30);
         if (thirtyMinutesBefore.isAfter(LocalDateTime.now())) {
             scheduleSingleReminderIfNotExists(interviewId, thirtyMinutesBefore, "M30");

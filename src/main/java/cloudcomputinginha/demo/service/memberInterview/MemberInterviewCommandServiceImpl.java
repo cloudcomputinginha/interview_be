@@ -30,9 +30,8 @@ public class MemberInterviewCommandServiceImpl implements MemberInterviewCommand
 
     @Override
     public MemberInterview changeMemberInterviewStatus(Long interviewId, Long memberId, InterviewStatus status) {
-
-        // memberId가 존재하는지 확인(방어 코드)
-        memberRepository.findById(memberId).orElseThrow(() -> new MemberHandler(ErrorStatus.MEMBER_NOT_FOUND));
+        Member member = memberRepository.findById(memberId)
+                .orElseThrow(() -> new MemberHandler(ErrorStatus.MEMBER_NOT_FOUND));
 
         MemberInterview memberInterview = memberInterviewRepository.findByMemberIdAndInterviewId(memberId, interviewId)
                 .orElseThrow(() -> new MemberInterviewHandler(ErrorStatus.MEMBER_INTERVIEW_NOT_FOUND));
@@ -43,15 +42,15 @@ public class MemberInterviewCommandServiceImpl implements MemberInterviewCommand
     }
 
     @Override
-    public MemberInterview createMemberInterview(Long interviewId, MemberInterviewRequestDTO.createMemberInterviewDTO createMemberInterviewDTO) {
-        Long memberId = createMemberInterviewDTO.getMemberId();
+    public MemberInterview createMemberInterview(Long interviewId, Long memberId, MemberInterviewRequestDTO.createMemberInterviewDTO createMemberInterviewDTO) {
+        Member member = memberRepository.findById(memberId)
+                .orElseThrow(() -> new MemberHandler(ErrorStatus.MEMBER_NOT_FOUND));
 
-        boolean alreadyExists = memberInterviewRepository.existsByMemberIdAndInterviewId(createMemberInterviewDTO.getMemberId(), interviewId);
+        boolean alreadyExists = memberInterviewRepository.existsByMemberIdAndInterviewId(memberId, interviewId);
         if (alreadyExists) {
             throw new MemberInterviewHandler(ErrorStatus.MEMBER_INTERVIEW_ALREADY_EXISTS);
         }
 
-        Member member = memberRepository.getReferenceById(createMemberInterviewDTO.getMemberId());
         Interview interview = interviewRepository.getReferenceById(interviewId);
 
         if (!interview.getIsOpen()) {
@@ -64,9 +63,6 @@ public class MemberInterviewCommandServiceImpl implements MemberInterviewCommand
         MemberInterview memberInterview = MemberInterviewConverter.toMemberInterview(member, interview, resume, coverletter);
         interview.increaseCurrentParticipants(); //이 메서드 내부에서 동시성을 보호하고, 정원이 넘치면 예외를 발생시킵니다.
 
-        System.out.println("-------------------");
-        System.out.println("interview = " + interview);
-        System.out.println("member = " + member);
         sendEntryNotificationToAllParticipants(interview, member);
 
         return memberInterviewRepository.save(memberInterview);
@@ -87,8 +83,9 @@ public class MemberInterviewCommandServiceImpl implements MemberInterviewCommand
     }
 
     @Override
-    public MemberInterview changeMemberInterviewDocument(Long interviewId, MemberInterviewRequestDTO.updateDocumentDTO updateDocumentDTO) {
-        Long memberId = updateDocumentDTO.getMemberId();
+    public MemberInterview changeMemberInterviewDocument(Long interviewId, Long memberId, MemberInterviewRequestDTO.updateDocumentDTO updateDocumentDTO) {
+        Member member = memberRepository.findById(memberId)
+                .orElseThrow(() -> new MemberHandler(ErrorStatus.MEMBER_NOT_FOUND));
 
         MemberInterview memberInterview = memberInterviewRepository.findByMemberIdAndInterviewId(memberId, interviewId)
                 .orElseThrow(() -> new MemberInterviewHandler(ErrorStatus.MEMBER_INTERVIEW_NOT_FOUND));
@@ -97,8 +94,12 @@ public class MemberInterviewCommandServiceImpl implements MemberInterviewCommand
             throw new MemberInterviewHandler(ErrorStatus.INTERVIEW_ALREADY_TERMINATED);
         }
 
-        Resume resume = validateResumeOwnership(updateDocumentDTO.getResumeId(), memberId);
-        Coverletter coverletter = validateCoverletterOwnership(updateDocumentDTO.getCoverletterId(), memberId);
+        Resume resume = resumeRepository.getReferenceById(updateDocumentDTO.getResumeId());
+        resume.validateOwnedBy(memberId);
+
+        Coverletter coverletter = coverletterRepository.getReferenceById(updateDocumentDTO.getCoverletterId());
+        coverletter.validateOwnedBy(memberId);
+
         memberInterview.updateDocument(resume, coverletter);
 
         memberInterviewRepository.save(memberInterview);
@@ -127,8 +128,6 @@ public class MemberInterviewCommandServiceImpl implements MemberInterviewCommand
         String redirectUrl = "/interviews/group/" + interview.getId();
 
         List<MemberInterview> participants = memberInterviewRepository.findByInterviewId(interview.getId());
-        System.out.println(participants.size());
-        System.out.println("participants = " + participants);
         participants.stream()
                 .map(MemberInterview::getMember)
                 .forEach(member ->
