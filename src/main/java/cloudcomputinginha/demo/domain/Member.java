@@ -3,6 +3,7 @@ package cloudcomputinginha.demo.domain;
 import cloudcomputinginha.demo.domain.common.BaseEntity;
 import cloudcomputinginha.demo.domain.enums.SocialProvider;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotNull;
 import lombok.*;
 
 @Entity
@@ -19,7 +20,7 @@ public class Member extends BaseEntity {
     @Column(length = 30, nullable = false)
     private String name;
 
-    @Column(length = 15, nullable = false, unique = true)
+    @Column(length = 15, unique = true)
     private String phone;
 
     @Column(length = 30, nullable = false, unique = true)
@@ -40,4 +41,8 @@ public class Member extends BaseEntity {
 
     @Column(columnDefinition = "TEXT")
     private String refreshToken;
+
+    public void setRefreshToken(String refreshToken) {
+        this.refreshToken = refreshToken;
+    }
 }
