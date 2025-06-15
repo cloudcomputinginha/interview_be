@@ -116,9 +116,10 @@ public class InterviewConverter {
                 .build();
     }
 
-    public static InterviewResponseDTO.GroupInterviewDetailDTO toInterviewGroupDetailDTO(Interview interview, List<MemberInterview> memberInterviewList) {
+    public static InterviewResponseDTO.GroupInterviewDetailDTO toInterviewGroupDetailDTO(Interview interview, MemberInterview memberInterview, List<MemberInterview> memberInterviewList) {
         return InterviewResponseDTO.GroupInterviewDetailDTO.builder()
                 .interviewId(interview.getId())
+                .memberInterviewId(memberInterview.getId())
                 .name(interview.getName())
                 .description(interview.getDescription())
                 .sessionName(interview.getSessionName())
