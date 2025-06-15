@@ -25,7 +25,6 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
             if (jwtProvider.validateToken(token)) {
                 Long memberId = jwtProvider.getMemberIdFromToken(token);
-                System.out.println("✅ JWT 필터 인증 성공 - memberId: " + memberId);
 
                 UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(memberId, null, List.of());
                 SecurityContextHolder.getContext().setAuthentication(authentication);

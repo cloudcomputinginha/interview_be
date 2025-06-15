@@ -22,12 +22,14 @@ public class OauthController {
     private final MemberRepository memberRepository;
 
     @GetMapping(value = "/{socialProvider}")
+    @Operation(summary = "소셜 로그인 시작 API", description = "소셜 로그인 시작합니다.")
     public void socialProvider(@PathVariable(name = "socialProvider")SocialProvider socialProvider) {
         log.info(">> 사용자로부터 SNS 로그인 요청을 받음 :: {} Social Login", socialProvider);
         oauthService.request(socialProvider);
     }
 
     @GetMapping(value = "/{socialProvider}/callback")
+    @Operation(summary = "소셜 로그인 콜백 API", description = "소셜 로그인 콜백 처리합니다.")
     public void callback(@PathVariable(name = "socialProvider")SocialProvider socialProvider, @RequestParam(name = "code") String code) {
         log.info(">> 소셜 로그인 API 서버로부터 받은 code :: {}", code);
 
