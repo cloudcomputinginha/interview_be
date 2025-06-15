@@ -29,9 +29,9 @@ public class NotificationCommandServiceImpl implements NotificationCommandServic
         Notification notification = NotificationConverter.toNotification(receiver, notificationType, content, url);
         notificationRepository.save(notification);
 
-        String eventId = notificationSseService.createId(receiver.getId());
         String receiverId = String.valueOf(receiver.getId());
-        notificationSseService.sendToMyAllEmitters(eventId, receiverId, NotificationConverter.toNotificationDTO(notification));
+        String eventId = notificationSseService.createId(receiver.getId());
+        notificationSseService.sendToMyAllEmitters(receiverId, eventId, NotificationConverter.toNotificationDTO(notification));
     }
 
     /**
@@ -42,8 +42,8 @@ public class NotificationCommandServiceImpl implements NotificationCommandServic
      */
     @Override
     public void send(Member receiver, Notification notification) {
-        String eventId = notificationSseService.createId(receiver.getId());
         String receiverId = String.valueOf(receiver.getId());
-        notificationSseService.sendToMyAllEmitters(eventId, receiverId, NotificationConverter.toNotificationDTO(notification));
+        String eventId = notificationSseService.createId(receiver.getId());
+        notificationSseService.sendToMyAllEmitters(receiverId, eventId, NotificationConverter.toNotificationDTO(notification));
     }
 }
