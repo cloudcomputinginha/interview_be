@@ -50,13 +50,9 @@ public class InterviewCommandServiceImpl implements InterviewCommandService {
             throw new InterviewHandler(ErrorStatus.INTERVIEW_ALREADY_TERMINATED);
         }
 
-
         if (endInterviewRequestDTO.getEndedAt().isBefore(interview.getStartedAt())) {
             throw new InterviewHandler(INTERVIEW_END_TIME_INVALID);
         }
-
-        // 사용자 상태 업데이트는 MemberInterviewService에 위임
-        memberInterviewCommandService.finalizeStatuses(interviewId);
 
         // InterviewOption 종료 시간 갱신
         interview.updateEndedAt(endInterviewRequestDTO.getEndedAt());
@@ -76,10 +72,14 @@ public class InterviewCommandServiceImpl implements InterviewCommandService {
         Coverletter coverletter = coverletterRepository.findById(request.getCoverLetterId())
                 .orElseThrow(() -> new CoverletterHandler(ErrorStatus.COVERLETTER_NOT_FOUND));
 
+        memberInterviewCommandService.validateCoverletterOwnership(coverletter.getId(), memberId);
+        memberInterviewCommandService.validateResumeOwnership(resume.getId(), memberId);
+
         InterviewOption interviewOption = InterviewConverter.toInterviewOption(request);
         interviewOptionRepository.save(interviewOption);
 
         Interview interview = InterviewConverter.toInterview(request, interviewOption, member);
+        // TODO: 초대 메일 검증 코드 + 초대 알림 전송
         interviewRepository.save(interview);
 
         MemberInterview memberInterview = MemberInterviewConverter.toMemberInterview(member, interview, resume, coverletter);
@@ -87,6 +87,12 @@ public class InterviewCommandServiceImpl implements InterviewCommandService {
 
         // 인터뷰 스케줄링
         interviewScheduler.scheduleInterviewStart(
+                interview.getId(),
+                interview.getStartedAt()
+        );
+
+        // 인터뷰 리마인드 스케줄링
+        interviewScheduler.scheduleInterviewReminderIfNotExists(
                 interview.getId(),
                 interview.getStartedAt()
         );
@@ -118,9 +124,9 @@ public class InterviewCommandServiceImpl implements InterviewCommandService {
             interviewWithOption.updateStartedAt(LocalDateTime.now());
         }
 
-        // 이 부분을 백엔드 -> AI로 바로 통신하는 것도 괜찮을 거 같습니다!(http request로)
-        // 면접 조회는 따로 하도록 프론트에서 변경
-        // 준비 완료시 AI -> 프론트로 소켓 통신 통해 정보 받아오는게 좋아보여요!
+        /* TODO: 이 부분을 백엔드 -> AI로 바로 통신하는 것도 괜찮을 거 같습니다!(http request로)
+            면접 조회는 따로 하도록 프론트에서 변경
+            준비 완료시 AI -> 프론트로 소켓 통신 통해 정보 받아오는게 좋아보여요! */
         return InterviewConverter.toInterviewStartResponseDTO(interviewWithOption, memberInterviews, allQnas);
     }
 

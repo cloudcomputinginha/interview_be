@@ -55,6 +55,9 @@ dependencies {
     // Polling 방식이 아닌 정확히 그 시간에 시작하기 위해 새 의존성 도입
     implementation 'org.springframework.boot:spring-boot-starter-quartz'
 
+    // SSE
+    implementation 'org.springframework.boot:spring-boot-starter-web-services'
+
     //testing
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
     //testImplementation 'org.springframework.security:spring-security-test'

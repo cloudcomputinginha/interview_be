@@ -23,13 +23,13 @@ VALUES (1, 'GROUP', 'TECHNICAL', 'MALE30', 3, 3, '2025-05-31 14:50:46', '2025-05
        (3, 'GROUP', 'TECHNICAL', 'MALE30', 3, 4, '2025-05-31 14:50:46', '2025-05-31 14:50:46');
 
 INSERT INTO interview (interview_id, name, description, corporate_name, job_name, host_id, max_participants,
-                       is_open, interview_option_id, start_type, created_at, updated_at)
+                       is_open, interview_option_id, start_type, created_at, updated_at, current_participants)
 VALUES (1, '백엔드 기술 면접', '서버/DB 기술 관련 인터뷰', '카카오', '백엔드 개발자', 1, 4, False, 1,
-        'NOW', '2025-05-31 14:50:46', '2025-05-31 14:50:46'),
+        'NOW', '2025-05-31 14:50:46', '2025-05-31 14:50:46', 1),
        (2, '프론트엔드 기술 면접', 'React, Vue 등 프론트엔드 기술 검증', '네이버', '프론트엔드 개발자', 2, 4,
-        True, 2, 'SCHEDULED', '2025-05-31 14:50:46', '2025-05-31 14:50:46'),
+        True, 2, 'SCHEDULED', '2025-05-31 14:50:46', '2025-05-31 14:50:46', 2),
        (3, 'AI 실무 인터뷰', 'AI 모델 설계 및 적용 능력 검증', '토스', '데이터 엔지니어', 3, 2, False, 3, 'SCHEDULED',
-        '2025-05-31 14:50:46', '2025-05-31 14:50:46');
+        '2025-05-31 14:50:46', '2025-05-31 14:50:46', 2);
 
 INSERT INTO resume (resume_id, member_id, file_name, file_url, file_size, created_at, updated_at)
 VALUES (1, 1, 'resume1.pdf', '/files/resume1.pdf', 321, '2025-05-31 14:50:46', '2025-05-31 14:50:46'),

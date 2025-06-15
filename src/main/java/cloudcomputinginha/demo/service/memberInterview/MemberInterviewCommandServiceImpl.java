@@ -7,7 +7,9 @@ import cloudcomputinginha.demo.apiPayload.code.status.ErrorStatus;
 import cloudcomputinginha.demo.converter.MemberInterviewConverter;
 import cloudcomputinginha.demo.domain.*;
 import cloudcomputinginha.demo.domain.enums.InterviewStatus;
+import cloudcomputinginha.demo.domain.enums.NotificationType;
 import cloudcomputinginha.demo.repository.*;
+import cloudcomputinginha.demo.service.notification.NotificationCommandService;
 import cloudcomputinginha.demo.web.dto.MemberInterviewRequestDTO;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -24,6 +26,7 @@ public class MemberInterviewCommandServiceImpl implements MemberInterviewCommand
     private final InterviewRepository interviewRepository;
     private final CoverletterRepository coverletterRepository;
     private final ResumeRepository resumeRepository;
+    private final NotificationCommandService notificationCommandService;
 
     @Override
     public MemberInterview changeMemberInterviewStatus(Long interviewId, Long memberId, InterviewStatus status) {
@@ -41,11 +44,7 @@ public class MemberInterviewCommandServiceImpl implements MemberInterviewCommand
 
     @Override
     public MemberInterview createMemberInterview(Long interviewId, MemberInterviewRequestDTO.createMemberInterviewDTO createMemberInterviewDTO) {
-
         Long memberId = createMemberInterviewDTO.getMemberId();
-
-        memberInterviewRepository.findByMemberIdAndInterviewId(memberId, interviewId)
-                .orElseThrow(() -> new MemberInterviewHandler(ErrorStatus.MEMBER_INTERVIEW_NOT_FOUND));
 
         boolean alreadyExists = memberInterviewRepository.existsByMemberIdAndInterviewId(createMemberInterviewDTO.getMemberId(), interviewId);
         if (alreadyExists) {
@@ -64,6 +63,12 @@ public class MemberInterviewCommandServiceImpl implements MemberInterviewCommand
 
         MemberInterview memberInterview = MemberInterviewConverter.toMemberInterview(member, interview, resume, coverletter);
         interview.increaseCurrentParticipants(); //이 메서드 내부에서 동시성을 보호하고, 정원이 넘치면 예외를 발생시킵니다.
+
+        System.out.println("-------------------");
+        System.out.println("interview = " + interview);
+        System.out.println("member = " + member);
+        sendEntryNotificationToAllParticipants(interview, member);
+
         return memberInterviewRepository.save(memberInterview);
     }
 
@@ -100,7 +105,7 @@ public class MemberInterviewCommandServiceImpl implements MemberInterviewCommand
         return memberInterview;
     }
 
-    private Coverletter validateCoverletterOwnership(Long coverletterId, Long memberId) {
+    public Coverletter validateCoverletterOwnership(Long coverletterId, Long memberId) {
         Coverletter coverletter = coverletterRepository.getReferenceById(coverletterId);
         if (!coverletter.getMember().getId().equals(memberId)) {
             throw new DocumentHandler(ErrorStatus.COVERLETTER_NOT_OWNED);
@@ -108,12 +113,31 @@ public class MemberInterviewCommandServiceImpl implements MemberInterviewCommand
         return coverletter;
     }
 
-    private Resume validateResumeOwnership(Long resumeId, Long memberId) {
-        Resume resume = resumeRepository.getReferenceById(memberId);
+    public Resume validateResumeOwnership(Long resumeId, Long memberId) {
+        Resume resume = resumeRepository.getReferenceById(resumeId);
         if (!resume.getMember().getId().equals(memberId)) {
             throw new DocumentHandler(ErrorStatus.RESUME_NOT_OWNED);
         }
         return resume;
     }
 
+    private void sendEntryNotificationToAllParticipants(Interview interview, Member newMember) {
+        String interviewTitle = interview.getName();
+        String message = newMember.getName() + "님이 " + interviewTitle + " 모의면접 방에 입장하셨습니다.";
+        String redirectUrl = "/interviews/group/" + interview.getId();
+
+        List<MemberInterview> participants = memberInterviewRepository.findByInterviewId(interview.getId());
+        System.out.println(participants.size());
+        System.out.println("participants = " + participants);
+        participants.stream()
+                .map(MemberInterview::getMember)
+                .forEach(member ->
+                        notificationCommandService.createNotificationAndSend(
+                                member,
+                                NotificationType.ROOM_ENTRY,
+                                message,
+                                redirectUrl
+                        )
+                );
+    }
 }
