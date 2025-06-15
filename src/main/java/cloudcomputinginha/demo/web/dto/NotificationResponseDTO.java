@@ -1,6 +1,5 @@
 package cloudcomputinginha.demo.web.dto;
 
-import cloudcomputinginha.demo.domain.embedded.RelatedUrl;
 import cloudcomputinginha.demo.domain.enums.NotificationType;
 import lombok.*;
 
@@ -13,7 +12,7 @@ public class NotificationResponseDTO {
     @AllArgsConstructor
     public static class NotificationeDTO {
         private NotificationType type;
-        private RelatedUrl url;
+        private String url;
         private String message;
         private LocalDateTime createdAt;
     }

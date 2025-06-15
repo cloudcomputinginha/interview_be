@@ -19,7 +19,7 @@ public class NotificationConverter {
     public static NotificationResponseDTO.NotificationeDTO toNotificationDTO(Notification notification) {
         return NotificationResponseDTO.NotificationeDTO.builder()
                 .type(notification.getType())
-                .url(notification.getUrl())
+                .url(notification.getUrl().getUrl())
                 .message(notification.getMessage())
                 .createdAt(notification.getCreatedAt())
                 .build();
