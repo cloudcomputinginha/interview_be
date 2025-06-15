@@ -1,5 +1,7 @@
 package cloudcomputinginha.demo.domain;
 
+import cloudcomputinginha.demo.apiPayload.code.handler.MemberInterviewHandler;
+import cloudcomputinginha.demo.apiPayload.code.status.ErrorStatus;
 import cloudcomputinginha.demo.domain.common.BaseEntity;
 import cloudcomputinginha.demo.domain.enums.StartType;
 import jakarta.persistence.*;
@@ -43,6 +45,10 @@ public class Interview extends BaseEntity {
     private Long hostId;
 
     @Builder.Default
+    @Column(nullable = false)
+    private Integer currentParticipants = 1;
+
+    @Builder.Default
     private Integer maxParticipants = 1; //일대일 면접을 기준으로 초기화
 
     @Builder.Default
@@ -56,23 +62,34 @@ public class Interview extends BaseEntity {
     @JoinColumn(name = "interview_option_id", unique = true, nullable = false)
     private InterviewOption interviewOption;
 
-    public void changeEndedAt(LocalDateTime endedAt) {
+    public void updateStartedAt(LocalDateTime startedAt) {
+        this.startedAt = startedAt;
+    }
+
+    public void updateEndedAt(LocalDateTime endedAt) {
         this.endedAt = endedAt;
     }
 
-    public void updateName(String name){
+    public void updateName(String name) {
         this.name = name;
     }
 
-    public void updateDescription(String description){
+    public void updateDescription(String description) {
         this.description = description;
     }
 
-    public void updateMaxParticipants(Integer maxParticipants){
+    public void updateMaxParticipants(Integer maxParticipants) {
         this.maxParticipants = maxParticipants;
     }
 
-    public void updateIsOpen(Boolean isOpen){
+    public void updateIsOpen(Boolean isOpen) {
         this.isOpen = isOpen;
+    }
+
+    public synchronized void increaseCurrentParticipants() {
+        if (this.currentParticipants >= this.maxParticipants) {
+            throw new MemberInterviewHandler(ErrorStatus.INTERVIEW_CAPACITY_EXCEEDED);
+        }
+        this.currentParticipants += 1;
     }
 }

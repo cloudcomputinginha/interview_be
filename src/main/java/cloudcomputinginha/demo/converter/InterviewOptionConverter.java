@@ -2,11 +2,10 @@ package cloudcomputinginha.demo.converter;
 
 import cloudcomputinginha.demo.domain.InterviewOption;
 import cloudcomputinginha.demo.web.dto.InterviewOptionResponseDTO;
-import cloudcomputinginha.demo.web.dto.InterviewResponseDTO;
 
 public class InterviewOptionConverter {
-    public static InterviewOptionResponseDTO.InterviewOptionDTO toInterviewOptionDTO(InterviewOption interviewOption) {
-        return InterviewOptionResponseDTO.InterviewOptionDTO.builder()
+    public static InterviewOptionResponseDTO.InterviewOptionDetailDTO toInterviewOptionDTO(InterviewOption interviewOption) {
+        return InterviewOptionResponseDTO.InterviewOptionDetailDTO.builder()
                 .interviewFormat(interviewOption.getInterviewFormat())
                 .interviewType(interviewOption.getInterviewType())
                 .voiceType(interviewOption.getVoiceType())
@@ -22,6 +21,13 @@ public class InterviewOptionConverter {
                 .voiceType(interviewOption.getVoiceType())
                 .questionNumber(interviewOption.getQuestionNumber())
                 .answerTime(interviewOption.getAnswerTime())
+                .build();
+    }
+
+    public static InterviewOptionResponseDTO.InterviewOptionPreviewDTO toInterviewOptionPreviewDTO(InterviewOption option) {
+        return InterviewOptionResponseDTO.InterviewOptionPreviewDTO.builder()
+                .interviewFormat(option.getInterviewFormat())
+                .interviewType(option.getInterviewType())
                 .build();
     }
 }

@@ -1,5 +1,7 @@
 package cloudcomputinginha.demo.domain;
 
+import cloudcomputinginha.demo.apiPayload.code.handler.ResumeHandler;
+import cloudcomputinginha.demo.apiPayload.code.status.ErrorStatus;
 import cloudcomputinginha.demo.domain.common.BaseEntity;
 import cloudcomputinginha.demo.domain.enums.FileType;
 import jakarta.persistence.*;
@@ -32,4 +34,10 @@ public class Resume extends BaseEntity {
     @Enumerated(EnumType.STRING)
     @Column(length = 4, nullable = false)
     private FileType fileType;
+
+    public void validateOwnedBy(Long memberId) {
+        if (!this.member.getId().equals(memberId)) {
+            throw new ResumeHandler(ErrorStatus.RESUME_NOT_OWNED);
+        }
+    }
 }

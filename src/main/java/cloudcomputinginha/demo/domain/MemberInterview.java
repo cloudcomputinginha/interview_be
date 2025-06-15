@@ -37,7 +37,12 @@ public class MemberInterview extends BaseEntity {
     @Builder.Default
     private InterviewStatus status = InterviewStatus.SCHEDULED;
 
-    public void changeStatus(InterviewStatus status) {
+    public void updateStatus(InterviewStatus status) {
         this.status = status;
+    }
+
+    public void updateDocument(Resume resume, Coverletter coverletter) {
+        this.resume = resume;
+        this.coverletter = coverletter;
     }
 }
