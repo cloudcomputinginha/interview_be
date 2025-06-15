@@ -17,7 +17,7 @@ public class RelatedUrl {
         if (url == null || url.isBlank()) {
             throw new NotificationHandler(ErrorStatus.URL_INVALID);
         }
-        if (!url.startsWith("http") && !url.startsWith("https")) {
+        if (!url.startsWith("/")) {
             throw new NotificationHandler(ErrorStatus.URL_INVALID);
         }
         this.url = url;
