@@ -1,4 +1,4 @@
-package cloudcomputinginha.demo.config;
+package cloudcomputinginha.demo.config.auth;
 
 import jakarta.servlet.http.HttpServletRequest;
 import java.util.Collections;
@@ -10,6 +10,7 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 
@@ -17,6 +18,8 @@ import org.springframework.web.cors.CorsConfigurationSource;
 @EnableWebSecurity
 @RequiredArgsConstructor
 public class SecurityConfig {
+
+    private final JwtProvider jwtProvider;
 
 
     @Bean
@@ -54,10 +57,12 @@ public class SecurityConfig {
                 //http basic 인증 방식 disable
                 .httpBasic(AbstractHttpConfigurer::disable)
 
+                .addFilterBefore(new JwtAuthenticationFilter(jwtProvider), UsernamePasswordAuthenticationFilter.class)
+
 
                 //경로별 인가 작업
                 .authorizeHttpRequests((auth) -> auth
-                        .requestMatchers("/").permitAll()
+                        .requestMatchers("/auth/google").permitAll()
                         .requestMatchers("/v3/api-docs/**",
                                 "/swagger-ui/**",
                                 "/swagger-resources/**",
@@ -65,7 +70,6 @@ public class SecurityConfig {
                         ).permitAll()
                         .anyRequest().authenticated()
                 )
-
         ;
 
          return httpSecurity.build();
