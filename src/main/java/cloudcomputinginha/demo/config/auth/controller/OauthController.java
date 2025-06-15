@@ -1,7 +1,9 @@
 package cloudcomputinginha.demo.config.auth.controller;
 
+import cloudcomputinginha.demo.apiPayload.ApiResponse;
 import cloudcomputinginha.demo.config.auth.JwtProvider;
 import cloudcomputinginha.demo.config.auth.dto.TokenReissueRequestDto;
+import cloudcomputinginha.demo.config.auth.dto.TokenReissueResponseDto;
 import cloudcomputinginha.demo.config.auth.service.OauthService;
 import cloudcomputinginha.demo.domain.Member;
 import cloudcomputinginha.demo.domain.enums.SocialProvider;
@@ -56,7 +58,7 @@ public class OauthController {
 
     @PostMapping(value = "/reissue")
     @Operation(summary = "토큰 재발급 API", description = "refresh token을 통해 새로운 access token을 발급 받습니다.")
-    public ResponseEntity<?> reissueToken(@RequestBody TokenReissueRequestDto tokenReissueRequestDto) {
+    public ApiResponse<TokenReissueResponseDto> reissueToken(@RequestBody TokenReissueRequestDto tokenReissueRequestDto) {
         String oldRefreshToken = tokenReissueRequestDto.getRefreshToken();
 
         if (!jwtProvider.validateToken(oldRefreshToken)) {
@@ -70,6 +72,12 @@ public class OauthController {
         Map<String, String> tokens = jwtProvider.reissueTokens(oldRefreshToken, member);
         memberRepository.save(member);
 
-        return ResponseEntity.ok(tokens);
+        TokenReissueResponseDto responseDto = new TokenReissueResponseDto(
+                tokens.get("accessToken"),
+                tokens.get("refreshToken")
+        );
+
+        return ApiResponse.onSuccess(responseDto);
+
     }
 }
