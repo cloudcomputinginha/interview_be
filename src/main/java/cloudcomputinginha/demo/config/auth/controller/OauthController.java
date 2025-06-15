@@ -1,15 +1,20 @@
 package cloudcomputinginha.demo.config.auth.controller;
 
+import cloudcomputinginha.demo.config.auth.JwtProvider;
+import cloudcomputinginha.demo.config.auth.dto.TokenReissueRequestDto;
 import cloudcomputinginha.demo.config.auth.service.OauthService;
 import cloudcomputinginha.demo.domain.Member;
 import cloudcomputinginha.demo.domain.enums.SocialProvider;
 import cloudcomputinginha.demo.repository.MemberRepository;
+import io.jsonwebtoken.JwtException;
 import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.Map;
 
 
 @RestController
@@ -20,6 +25,7 @@ import org.springframework.web.bind.annotation.*;
 public class OauthController {
     private final OauthService oauthService;
     private final MemberRepository memberRepository;
+    private final JwtProvider jwtProvider;
 
     @GetMapping(value = "/{socialProvider}")
     @Operation(summary = "소셜 로그인 시작 API", description = "소셜 로그인 시작합니다.")
@@ -46,5 +52,24 @@ public class OauthController {
         memberRepository.save(member);
 
         return ResponseEntity.ok("성공적으로 로그아웃 되었습니다.");
+    }
+
+    @PostMapping(value = "/reissue")
+    @Operation(summary = "토큰 재발급 API", description = "refresh token을 통해 새로운 access token을 발급 받습니다.")
+    public ResponseEntity<?> reissueToken(@RequestBody TokenReissueRequestDto tokenReissueRequestDto) {
+        String oldRefreshToken = tokenReissueRequestDto.getRefreshToken();
+
+        if (!jwtProvider.validateToken(oldRefreshToken)) {
+            throw new JwtException("유효하지 않은 refresh token 입니다.");
+        }
+
+        Long memberId = jwtProvider.getMemberIdFromToken(oldRefreshToken);
+        Member member = memberRepository.findById(memberId)
+                .orElseThrow(() -> new JwtException("존재하지 않는 사용자입니다."));
+
+        Map<String, String> tokens = jwtProvider.reissueTokens(oldRefreshToken, member);
+        memberRepository.save(member);
+
+        return ResponseEntity.ok(tokens);
     }
 }
