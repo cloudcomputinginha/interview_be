@@ -43,7 +43,7 @@ public class InterviewCommandServiceImpl implements InterviewCommandService {
 
     @Override
     @Transactional
-    public Interview terminateInterview(Long interviewId, InterviewRequestDTO.endInterviewRequestDTO endInterviewRequestDTO) {
+    public Interview terminateInterview(Long memberId, Long interviewId, InterviewRequestDTO.endInterviewRequestDTO endInterviewRequestDTO) {
         Interview interview = interviewRepository.getReferenceWithInterviewOptionById(interviewId);
 
         if (interview.getEndedAt() != null) {
@@ -101,7 +101,7 @@ public class InterviewCommandServiceImpl implements InterviewCommandService {
     }
 
     @Override
-    public InterviewResponseDTO.InterviewStartResponseDTO startInterview(Long interviewId, Boolean isAutoMaticStart) {
+    public InterviewResponseDTO.InterviewStartResponseDTO startInterview(Long memberId, Long interviewId, Boolean isAutoMaticStart) {
         Interview interviewWithOption = interviewRepository.getReferenceWithInterviewOptionById(interviewId);
 
         List<MemberInterview> memberInterviews = memberInterviewRepository.findInprogressByInterviewId(interviewId);

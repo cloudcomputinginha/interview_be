@@ -4,5 +4,5 @@ import cloudcomputinginha.demo.domain.Coverletter;
 import cloudcomputinginha.demo.web.dto.CoverletterRequestDTO;
 
 public interface CoverletterCommandService {
-    public Coverletter saveCoverletter(CoverletterRequestDTO.createCoverletterDTO coverletterDTO);
+    public Coverletter saveCoverletter(Long memberId, CoverletterRequestDTO.createCoverletterDTO coverletterDTO);
 }

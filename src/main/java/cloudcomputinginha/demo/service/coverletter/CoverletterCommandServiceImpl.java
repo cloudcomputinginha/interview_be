@@ -24,7 +24,7 @@ public class CoverletterCommandServiceImpl implements CoverletterCommandService 
     private final QnaRepository qnaRepository;
 
     @Override
-    public Coverletter saveCoverletter(CoverletterRequestDTO.createCoverletterDTO requestDTO) {
+    public Coverletter saveCoverletter(Long memberId, CoverletterRequestDTO.createCoverletterDTO requestDTO) {
         Member member = memberRepository.getReferenceById(requestDTO.getMemberId());
         Coverletter coverletter = CoverletterConverter.toCoverletter(requestDTO, member);
         coverletterRepository.save(coverletter);

@@ -1,5 +1,7 @@
 package cloudcomputinginha.demo.domain;
 
+import cloudcomputinginha.demo.apiPayload.code.handler.CoverletterHandler;
+import cloudcomputinginha.demo.apiPayload.code.status.ErrorStatus;
 import cloudcomputinginha.demo.domain.common.BaseEntity;
 import jakarta.persistence.*;
 import lombok.*;
@@ -24,4 +26,11 @@ public class Coverletter extends BaseEntity {
 
     @Column(length = 20)
     private String jobName;
+
+    public void validateOwner(Long currentMemberId) {
+        if (!this.member.getId().equals(currentMemberId)) {
+            throw new CoverletterHandler(ErrorStatus.COVERLETTER_NOT_OWNED);
+        }
+    }
+
 }

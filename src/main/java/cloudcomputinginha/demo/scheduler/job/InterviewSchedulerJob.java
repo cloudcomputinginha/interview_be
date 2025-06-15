@@ -17,7 +17,8 @@ public class InterviewSchedulerJob extends QuartzJobBean {
     protected void executeInternal(JobExecutionContext context) {
         JobDataMap dataMap = context.getMergedJobDataMap();
         Long interviewId = dataMap.getLong("interviewId");
+        Long memberId = dataMap.getLong("memberId");
 
-        interviewCommandService.startInterview(interviewId, true);
+        interviewCommandService.startInterview(memberId, interviewId, true);
     }
 }

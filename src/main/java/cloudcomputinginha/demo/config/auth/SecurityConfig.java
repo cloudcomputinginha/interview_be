@@ -65,8 +65,8 @@ public class SecurityConfig {
                         .requestMatchers("/auth/google").permitAll()
                         .requestMatchers("/v3/api-docs/**",
                                 "/swagger-ui/**",
-                                "/swagger-resources/**",
-                                "/**"
+                                "/swagger-resources/**"
+//                                "/**"
                         ).permitAll()
                         .anyRequest().authenticated()
                 )

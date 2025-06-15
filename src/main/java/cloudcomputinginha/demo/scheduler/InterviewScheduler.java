@@ -22,32 +22,44 @@ public class InterviewScheduler {
     public void scheduleInterviewStart(Long interviewId, LocalDateTime scheduledTime) {
         validateInterviewIdAndScheduledTime(interviewId, scheduledTime);
 
-        try {
-            JobDetail jobDetail = JobBuilder.newJob(InterviewSchedulerJob.class)
-                    .withIdentity("interview-start-job-" + interviewId)
-                    .usingJobData("interviewId", interviewId)
-                    .storeDurably()
-                    .build();
+        if (scheduledTime.isAfter(LocalDateTime.now())) {
+            try {
+                JobDetail jobDetail = JobBuilder.newJob(InterviewSchedulerJob.class)
+                        .withIdentity("interview-start-job-" + interviewId)
+                        .usingJobData("interviewId", interviewId)
+                        .storeDurably()
+                        .build();
 
-            Trigger trigger = TriggerBuilder.newTrigger()
-                    .forJob(jobDetail)
-                    .withIdentity("interview-start-trigger-" + interviewId)
-                    .startAt(Timestamp.valueOf(scheduledTime))
-                    .build();
+                Trigger trigger = TriggerBuilder.newTrigger()
+                        .forJob(jobDetail)
+                        .withIdentity("interview-start-trigger-" + interviewId)
+                        .startAt(Timestamp.valueOf(scheduledTime))
+                        .build();
 
-            scheduler.scheduleJob(jobDetail, trigger);
-        } catch (SchedulerException e) {
-            throw new RuntimeException("Failed to schedule interview start job", e);
+                scheduler.scheduleJob(jobDetail, trigger);
+            } catch (SchedulerException e) {
+                throw new RuntimeException("Failed to schedule interview start job", e);
+            }
         }
     }
 
     public void scheduleInterviewReminderIfNotExists(Long interviewId, LocalDateTime startedAt) {
-        scheduleSingleReminderIfNotExists(interviewId, startedAt.minusDays(1), "D1");
-        scheduleSingleReminderIfNotExists(interviewId, startedAt.minusMinutes(30), "M30");
+        validateInterviewIdAndScheduledTime(interviewId, startedAt);
+        // ✅ 리마인더 - 1일 전
+        LocalDateTime oneDayBefore = startedAt.minusDays(1);
+        if (oneDayBefore.isAfter(LocalDateTime.now())) {
+            scheduleSingleReminderIfNotExists(interviewId, oneDayBefore, "D1");
+        }
+
+        // ✅ 리마인더 - 30분 전
+        LocalDateTime thirtyMinutesBefore = startedAt.minusMinutes(30);
+        if (thirtyMinutesBefore.isAfter(LocalDateTime.now())) {
+            scheduleSingleReminderIfNotExists(interviewId, thirtyMinutesBefore, "M30");
+        }
     }
 
     public void scheduleSingleReminderIfNotExists(Long interviewId, LocalDateTime time, String type) {
-        validateInterviewIdAndScheduledTime(interviewId, time);
+        // scheduleSingleReminderIfNotExists를 사용하기 전 검증을 하고 호출함
         try {
             String jobName = String.format("interview-reminder-%s-job-%d", type, interviewId); //interview-reminder-M30-job-1
             String triggerName = String.format("interview-reminder-%s-trigger-%d", type, interviewId);
@@ -114,10 +126,6 @@ public class InterviewScheduler {
     private void validateInterviewIdAndScheduledTime(Long interviewId, LocalDateTime scheduledTime) {
         if (interviewId == null || scheduledTime == null) {
             throw new IllegalArgumentException("Interview id and scheduled time cannot be null");
-        }
-
-        if (scheduledTime.isBefore(LocalDateTime.now())) {
-            throw new IllegalArgumentException("Interview id and scheduled time cannot be before current time");
         }
     }
 }
