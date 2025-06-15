@@ -26,9 +26,10 @@ public class Notification extends BaseEntity {
     private NotificationType type;
 
     @Embedded
-    @Column(length = 255, nullable = false)
+    @AttributeOverride(name = "url", column = @Column(name = "related_url", length = 255, nullable = false))
     private RelatedUrl url;
 
+    @Column(nullable = false, length = 100)
     private String message;
 
     //TODO: 알림 읽음 처리

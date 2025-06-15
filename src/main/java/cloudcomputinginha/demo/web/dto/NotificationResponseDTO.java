@@ -10,7 +10,7 @@ public class NotificationResponseDTO {
     @Builder
     @NoArgsConstructor(access = AccessLevel.PROTECTED)
     @AllArgsConstructor
-    public static class NotificationeDTO {
+    public static class NotificationDTO {
         private NotificationType type;
         private String url;
         private String message;

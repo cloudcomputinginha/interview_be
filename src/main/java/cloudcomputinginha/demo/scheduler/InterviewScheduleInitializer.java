@@ -27,20 +27,22 @@ public class InterviewScheduleInitializer {
         for (Interview interview : upcoming) {
             Long interviewId = interview.getId();
 
+            // ✅ 면접 시작 스케줄
             if (!isAlreadyScheduled("interview-start-job-" + interviewId)) {
-                // 면접 시작 스케쥴
-                interviewScheduler.scheduleInterviewStart(interview.getId(), interview.getStartedAt());
+                interviewScheduler.scheduleInterviewStart(interviewId, interview.getStartedAt());
             }
 
-            // 리마인더 스케줄- 1일 전
+            // ✅ 리마인더 - 1일 전
             LocalDateTime oneDayBefore = interview.getStartedAt().minusDays(1);
-            if (oneDayBefore.isAfter(LocalDateTime.now()) && !isAlreadyScheduled("interview-reminder-D1-job-" + interviewId)) {
+            String jobD1 = generateReminderJobName("D1", interviewId);
+            if (oneDayBefore.isAfter(LocalDateTime.now()) && !isAlreadyScheduled(jobD1)) {
                 interviewScheduler.scheduleSingleReminderIfNotExists(interviewId, oneDayBefore, "D1");
             }
 
-            // 리마인더 스케줄 - 30분 전
+            // ✅ 리마인더 - 30분 전
             LocalDateTime thirtyMinutesBefore = interview.getStartedAt().minusMinutes(30);
-            if (thirtyMinutesBefore.isAfter(LocalDateTime.now()) && !isAlreadyScheduled("interview-reminder-M30-job-" + interviewId)) {
+            String jobM30 = generateReminderJobName("M30", interviewId);
+            if (thirtyMinutesBefore.isAfter(LocalDateTime.now()) && !isAlreadyScheduled(jobM30)) {
                 interviewScheduler.scheduleSingleReminderIfNotExists(interviewId, thirtyMinutesBefore, "M30");
             }
         }
@@ -53,6 +55,10 @@ public class InterviewScheduleInitializer {
         } catch (SchedulerException e) {
             throw new RuntimeException("Failed to check job existence", e);
         }
+    }
+
+    private String generateReminderJobName(String type, Long interviewId) {
+        return String.format("interview-reminder-%s-job-%d", type, interviewId);
     }
 
 }

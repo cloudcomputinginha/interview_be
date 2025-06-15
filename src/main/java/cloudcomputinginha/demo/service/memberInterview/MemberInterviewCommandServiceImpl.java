@@ -114,7 +114,7 @@ public class MemberInterviewCommandServiceImpl implements MemberInterviewCommand
     }
 
     public Resume validateResumeOwnership(Long resumeId, Long memberId) {
-        Resume resume = resumeRepository.getReferenceById(memberId);
+        Resume resume = resumeRepository.getReferenceById(resumeId);
         if (!resume.getMember().getId().equals(memberId)) {
             throw new DocumentHandler(ErrorStatus.RESUME_NOT_OWNED);
         }

@@ -58,7 +58,7 @@ public class NotificationSseServiceImpl implements NotificationSseService {
             System.out.println("data = " + data);
         } catch (IOException exception) {
             sseEmitterRepository.deleteById(emitterId);
-            throw new NotificationHandler(ErrorStatus.SSE_SEND_FAIL);
+            throw new NotificationHandler(ErrorStatus.NOTIFICATION_SEND_FAIL);
         }
     }
 
@@ -74,9 +74,9 @@ public class NotificationSseServiceImpl implements NotificationSseService {
         System.out.println("data = " + data);
         Map<String, SseEmitter> emitters = sseEmitterRepository.findAllEmitterStartWithMemberId(memberId);
         System.out.println("emitters = " + emitters.size());
+        sseEmitterRepository.saveEventCache(eventId, data);
         emitters.forEach(
                 (emitterId, emitter) -> {
-                    sseEmitterRepository.saveEventCache(eventId, data);
                     sendNotification(emitter, emitterId, eventId, data);
                 }
         );
