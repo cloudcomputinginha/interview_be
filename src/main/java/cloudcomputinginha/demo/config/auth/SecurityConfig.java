@@ -68,6 +68,7 @@ public class SecurityConfig {
                                 "/swagger-resources/**"
 //                                "/**"
                         ).permitAll()
+                        .requestMatchers("/ws-waiting-room/**").permitAll()
                         .anyRequest().authenticated()
                 )
         ;
