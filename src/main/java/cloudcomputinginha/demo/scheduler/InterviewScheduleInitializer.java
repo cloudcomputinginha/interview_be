@@ -22,17 +22,33 @@ public class InterviewScheduleInitializer {
     @EventListener(ApplicationReadyEvent.class)
     public void initializeScheduledInterviews() {
         List<Interview> upcoming = interviewRepository.findAllByStartedAtAfterAndEndedAtIsNull(LocalDateTime.now());
+        System.out.println("upcoming = " + upcoming.size());
 
         for (Interview interview : upcoming) {
-            if (!isAlreadyScheduled(interview.getId())) {
+            Long interviewId = interview.getId();
+
+            if (!isAlreadyScheduled("interview-start-job-" + interviewId)) {
+                // 면접 시작 스케쥴
                 interviewScheduler.scheduleInterviewStart(interview.getId(), interview.getStartedAt());
+            }
+
+            // 리마인더 스케줄- 1일 전
+            LocalDateTime oneDayBefore = interview.getStartedAt().minusDays(1);
+            if (oneDayBefore.isAfter(LocalDateTime.now()) && !isAlreadyScheduled("interview-reminder-D1-job-" + interviewId)) {
+                interviewScheduler.scheduleSingleReminderIfNotExists(interviewId, oneDayBefore, "D1");
+            }
+
+            // 리마인더 스케줄 - 30분 전
+            LocalDateTime thirtyMinutesBefore = interview.getStartedAt().minusMinutes(30);
+            if (thirtyMinutesBefore.isAfter(LocalDateTime.now()) && !isAlreadyScheduled("interview-reminder-M30-job-" + interviewId)) {
+                interviewScheduler.scheduleSingleReminderIfNotExists(interviewId, thirtyMinutesBefore, "M30");
             }
         }
     }
 
-    private boolean isAlreadyScheduled(Long interviewId) {
+    private boolean isAlreadyScheduled(String jobName) {
         try {
-            JobKey jobKey = JobKey.jobKey("interview-start-job-" + interviewId);
+            JobKey jobKey = JobKey.jobKey(jobName);
             return interviewScheduler.getScheduler().checkExists(jobKey);
         } catch (SchedulerException e) {
             throw new RuntimeException("Failed to check job existence", e);

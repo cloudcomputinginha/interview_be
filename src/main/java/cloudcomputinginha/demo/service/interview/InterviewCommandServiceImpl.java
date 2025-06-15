@@ -91,6 +91,12 @@ public class InterviewCommandServiceImpl implements InterviewCommandService {
                 interview.getStartedAt()
         );
 
+        // 인터뷰 리마인드 스케줄링
+        interviewScheduler.scheduleInterviewReminderIfNotExists(
+                interview.getId(),
+                interview.getStartedAt()
+        );
+
         return InterviewConverter.createInterview(interview);
     }
 

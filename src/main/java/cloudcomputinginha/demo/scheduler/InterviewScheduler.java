@@ -1,20 +1,15 @@
 package cloudcomputinginha.demo.scheduler;
 
+import cloudcomputinginha.demo.scheduler.job.InterviewReminderJob;
 import cloudcomputinginha.demo.scheduler.job.InterviewSchedulerJob;
-import java.sql.Timestamp;
-import java.time.LocalDateTime;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.quartz.JobBuilder;
-import org.quartz.JobDetail;
-import org.quartz.JobKey;
-import org.quartz.Scheduler;
-import org.quartz.SchedulerException;
-import org.quartz.Trigger;
-import org.quartz.TriggerBuilder;
-import org.quartz.TriggerKey;
+import org.quartz.*;
 import org.springframework.stereotype.Service;
+
+import java.sql.Timestamp;
+import java.time.LocalDateTime;
 
 @Slf4j
 @Service
@@ -25,27 +20,20 @@ public class InterviewScheduler {
     private final Scheduler scheduler;
 
     public void scheduleInterviewStart(Long interviewId, LocalDateTime scheduledTime) {
-
-        if (interviewId == null || scheduledTime == null) {
-            throw new IllegalArgumentException("Interview id and scheduled time cannot be null");
-        }
-
-        if(scheduledTime.isBefore(LocalDateTime.now())) {
-            throw new IllegalArgumentException("Interview id and scheduled time cannot be before current time");
-        }
+        validateInterviewIdAndScheduledTime(interviewId, scheduledTime);
 
         try {
             JobDetail jobDetail = JobBuilder.newJob(InterviewSchedulerJob.class)
-                .withIdentity("interview-start-job-" + interviewId)
-                .usingJobData("interviewId", interviewId)
-                .storeDurably()
-                .build();
+                    .withIdentity("interview-start-job-" + interviewId)
+                    .usingJobData("interviewId", interviewId)
+                    .storeDurably()
+                    .build();
 
             Trigger trigger = TriggerBuilder.newTrigger()
-                .forJob(jobDetail)
-                .withIdentity("interview-start-trigger-" + interviewId)
-                .startAt(Timestamp.valueOf(scheduledTime))
-                .build();
+                    .forJob(jobDetail)
+                    .withIdentity("interview-start-trigger-" + interviewId)
+                    .startAt(Timestamp.valueOf(scheduledTime))
+                    .build();
 
             scheduler.scheduleJob(jobDetail, trigger);
         } catch (SchedulerException e) {
@@ -53,24 +41,83 @@ public class InterviewScheduler {
         }
     }
 
+    public void scheduleInterviewReminderIfNotExists(Long interviewId, LocalDateTime startedAt) {
+        scheduleSingleReminderIfNotExists(interviewId, startedAt.minusDays(1), "D1");
+        scheduleSingleReminderIfNotExists(interviewId, startedAt.minusMinutes(30), "M30");
+    }
+
+    public void scheduleSingleReminderIfNotExists(Long interviewId, LocalDateTime time, String type) {
+        validateInterviewIdAndScheduledTime(interviewId, time);
+        try {
+            String jobName = String.format("interview-reminder-%s-job-%d", type, interviewId); //interview-reminder-M30-job-1
+            String triggerName = String.format("interview-reminder-%s-trigger-%d", type, interviewId);
+
+            JobDetail jobDetail = JobBuilder.newJob(InterviewReminderJob.class)
+                    .withIdentity(jobName)
+                    .usingJobData("interviewId", interviewId)
+                    .usingJobData("reminderType", type)
+                    .storeDurably()
+                    .build();
+
+            Trigger trigger = TriggerBuilder.newTrigger()
+                    .forJob(jobDetail)
+                    .withIdentity(triggerName)
+                    .startAt(Timestamp.valueOf(time))
+                    .build();
+
+            scheduler.scheduleJob(jobDetail, trigger);
+        } catch (SchedulerException e) {
+            throw new RuntimeException("Failed to schedule interview reminder job", e);
+        }
+    }
+
+
     public void cancelScheduledInterview(Long interviewId) {
 
-        if(interviewId == null) {
+        if (interviewId == null) {
             throw new IllegalArgumentException("Interview id cannot be null");
         }
 
-        try {
-            log.info("Canceling scheduled interview for interviewId: {}", interviewId);
-            JobKey jobKey = new JobKey("interview-start-job-" + interviewId);
-            TriggerKey triggerKey = new TriggerKey("interview-start-trigger-" + interviewId);
+        log.info("Canceling scheduled interview for interviewId: {}", interviewId);
 
-            scheduler.pauseTrigger(triggerKey);
-            scheduler.unscheduleJob(triggerKey);
-            scheduler.deleteJob(jobKey);
+        try {
+            // 면접 시작 Job 삭제
+            deleteJobAndTrigger("interview-start-job-" + interviewId, "interview-start-trigger-" + interviewId);
+
+            // 1일 전 리마인더 삭제
+            deleteJobAndTrigger("interview-reminder-D1-job-" + interviewId, "interview-reminder-D1-trigger-" + interviewId);
+
+            // 30분 전 리마인더 삭제
+            deleteJobAndTrigger("interview-reminder-M30-job-" + interviewId, "interview-reminder-M30-trigger-" + interviewId);
+
             log.info("Successfully canceled scheduled interview for interviewId: {}", interviewId);
         } catch (SchedulerException e) {
             log.error("Failed to cancel scheduled interview for interviewId: {}", interviewId, e);
             throw new RuntimeException("Failed to cancel scheduled interview for interviewId: " + interviewId, e);
+        }
+    }
+
+    private void deleteJobAndTrigger(String jobName, String triggerName) throws SchedulerException {
+        JobKey jobKey = JobKey.jobKey(jobName);
+        TriggerKey triggerKey = TriggerKey.triggerKey(triggerName);
+
+        if (scheduler.checkExists(triggerKey)) {
+            scheduler.pauseTrigger(triggerKey);
+            scheduler.unscheduleJob(triggerKey);
+        }
+
+        if (scheduler.checkExists(jobKey)) {
+            scheduler.deleteJob(jobKey);
+        }
+    }
+
+    private void validateInterviewIdAndScheduledTime(Long interviewId, LocalDateTime scheduledTime) {
+        if (interviewId == null || scheduledTime == null) {
+            throw new IllegalArgumentException("Interview id and scheduled time cannot be null");
+        }
+
+        if (scheduledTime.isBefore(LocalDateTime.now())) {
+            throw new IllegalArgumentException("Interview id and scheduled time cannot be before current time");
         }
     }
 }

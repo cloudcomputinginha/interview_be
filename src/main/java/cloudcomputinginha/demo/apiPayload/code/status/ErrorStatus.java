@@ -50,7 +50,9 @@ public enum ErrorStatus implements BaseErrorCode {
     URL_INVALID(HttpStatus.BAD_REQUEST, "URL4001", "URL 형식이 올바르지 않습니다."),
 
     // 알림 관련 에러
-    SSE_SEND_FAIL(HttpStatus.INTERNAL_SERVER_ERROR, "NOTIFICATION5001", "알림 전송에 실패했습니다.");
+    SSE_SEND_FAIL(HttpStatus.INTERNAL_SERVER_ERROR, "NOTIFICATION5001", "알림 전송에 실패했습니다."),
+    NOTIFICATION_TYPE_INVALID(HttpStatus.INTERNAL_SERVER_ERROR, "NOTIFICATION5002", "알림 타입이 올바르지 않습니다.");
+
 
     private final HttpStatus httpStatus;
     private final String code;
