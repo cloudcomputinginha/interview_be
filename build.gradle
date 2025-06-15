@@ -31,11 +31,12 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-web'
     implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.7.0'
     implementation 'software.amazon.awssdk:s3:2.21.5'
+    implementation 'org.springframework.boot:spring-boot-starter-actuator'
     compileOnly 'org.projectlombok:lombok'
     runtimeOnly 'com.mysql:mysql-connector-j'
     annotationProcessor 'org.projectlombok:lombok'
-    testImplementation 'org.springframework.boot:spring-boot-starter-test'
-    //testImplementation 'org.springframework.security:spring-security-test'
+
+
     testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
 
     implementation 'com.querydsl:querydsl-jpa:5.0.0:jakarta'
@@ -45,6 +46,26 @@ dependencies {
 
     //security
     implementation 'org.springframework.boot:spring-boot-starter-security'
+
+    //websocket
+    implementation 'org.springframework.boot:spring-boot-starter-websocket'
+
+    //h2 for test DB
+    implementation 'com.h2database:h2'
+
+    // Polling 방식이 아닌 정확히 그 시간에 시작하기 위해 새 의존성 도입
+    implementation 'org.springframework.boot:spring-boot-starter-quartz'
+
+    //testing
+    testImplementation 'org.springframework.boot:spring-boot-starter-test'
+    //testImplementation 'org.springframework.security:spring-security-test'
+    testImplementation 'org.springframework:spring-messaging'
+    testImplementation 'org.springframework:spring-websocket'
+    testImplementation 'org.springframework.boot:spring-boot-starter-websocket'
+    testImplementation 'org.springframework:spring-test'
+    testImplementation 'com.h2database:h2'
+    // LocalDateTime 역직렬화 문제를 해결하는 의존성
+    testImplementation 'com.fasterxml.jackson.datatype:jackson-datatype-jsr310'
 
     implementation 'io.jsonwebtoken:jjwt-api:0.11.5'
     runtimeOnly 'io.jsonwebtoken:jjwt-impl:0.11.5'
