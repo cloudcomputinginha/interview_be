@@ -105,7 +105,7 @@ public class MemberInterviewCommandServiceImpl implements MemberInterviewCommand
         return memberInterview;
     }
 
-    private Coverletter validateCoverletterOwnership(Long coverletterId, Long memberId) {
+    public Coverletter validateCoverletterOwnership(Long coverletterId, Long memberId) {
         Coverletter coverletter = coverletterRepository.getReferenceById(coverletterId);
         if (!coverletter.getMember().getId().equals(memberId)) {
             throw new DocumentHandler(ErrorStatus.COVERLETTER_NOT_OWNED);
@@ -113,7 +113,7 @@ public class MemberInterviewCommandServiceImpl implements MemberInterviewCommand
         return coverletter;
     }
 
-    private Resume validateResumeOwnership(Long resumeId, Long memberId) {
+    public Resume validateResumeOwnership(Long resumeId, Long memberId) {
         Resume resume = resumeRepository.getReferenceById(memberId);
         if (!resume.getMember().getId().equals(memberId)) {
             throw new DocumentHandler(ErrorStatus.RESUME_NOT_OWNED);
