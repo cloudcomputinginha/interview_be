@@ -36,4 +36,19 @@ public class MemberInterviewRequestDTO {
         @NotNull
         private Long coverletterId;
     }
+
+    @Getter
+    public static class updateDocumentDTO {
+        // 기존 ID 값 -> 유지
+        // 새로운 ID 값 - > 변경
+        @ExistMember
+        @NotNull
+        private Long memberId;
+        @ExistResume
+        @NotNull
+        private Long resumeId;
+        @ExistCoverletter
+        @NotNull
+        private Long coverletterId;
+    }
 }

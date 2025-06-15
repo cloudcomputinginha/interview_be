@@ -71,7 +71,7 @@ public class InterviewConverter {
         return LocalDateTime.parse(request.getScheduledDate() + "T" + request.getScheduledTime() + ":00");
     }
 
-    public static InterviewResponseDTO.InterviewGroupCardDTO toInterviewGroupCardDTO(Interview interview, int currentParticipants) {
+    public static InterviewResponseDTO.InterviewGroupCardDTO toInterviewGroupCardDTO(Interview interview) {
         return InterviewResponseDTO.InterviewGroupCardDTO.builder()
                 .interviewId(interview.getId())
                 .name(interview.getName())
@@ -79,7 +79,7 @@ public class InterviewConverter {
                 .sessionName(interview.getSessionName())
                 .jobName(interview.getJobName())
                 .interviewType(interview.getInterviewOption().getInterviewType())
-                .currentParticipants(currentParticipants)
+                .currentParticipants(interview.getCurrentParticipants().intValue())
                 .maxParticipants(interview.getMaxParticipants())
                 .startedAt(interview.getStartedAt())
                 .build();
@@ -105,7 +105,7 @@ public class InterviewConverter {
                 .collect(Collectors.groupingBy(q -> q.getCoverletter().getId()));
 
         InterviewResponseDTO.InterviewDTO interviewDTO = InterviewConverter.toInterviewDTO(interview, memberInterviews.size());
-        InterviewOptionResponseDTO.InterviewOptionDTO interviewOptionDTO = InterviewOptionConverter.toInterviewOptionDTO(interview.getInterviewOption());
+        InterviewOptionResponseDTO.InterviewOptionDetailDTO interviewOptionDTO = InterviewOptionConverter.toInterviewOptionDTO(interview.getInterviewOption());
         List<MemberInterviewResponseDTO.ParticipantDTO> participantDTOs = MemberInterviewConverter.toParticipantDTOs(memberInterviews, qnaMap);
 
         return InterviewResponseDTO.InterviewStartResponseDTO.builder()
@@ -125,7 +125,7 @@ public class InterviewConverter {
                 .jobName(interview.getJobName())
                 .interviewType(interview.getInterviewOption().getInterviewType())
                 .maxParticipants(interview.getMaxParticipants())
-                .currentParticipants(memberInterviewList.size())
+                .currentParticipants(interview.getCurrentParticipants().intValue())
                 .startedAt(interview.getStartedAt())
                 .hostName(
                         memberInterviewList.stream()
@@ -154,6 +154,19 @@ public class InterviewConverter {
                 .description(interview.getDescription())
                 .maxParticipants(interview.getMaxParticipants())
                 .isOpen(interview.getIsOpen())
+                .build();
+    }
+
+    public static InterviewResponseDTO.InterviewCardDTO toInterviewCardDTO(Interview interview) {
+        return InterviewResponseDTO.InterviewCardDTO.builder()
+                .interviewId(interview.getId())
+                .name(interview.getName())
+                .corporateName(interview.getCorporateName())
+                .jobName(interview.getJobName())
+                .currentParticipants(interview.getCurrentParticipants().intValue())
+                .maxParticipants(interview.getMaxParticipants())
+                .startedAt(interview.getStartedAt())
+                .endedAt(interview.getEndedAt())
                 .build();
     }
 }

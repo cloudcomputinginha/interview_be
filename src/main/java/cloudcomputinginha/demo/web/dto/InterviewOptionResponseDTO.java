@@ -10,7 +10,16 @@ public class InterviewOptionResponseDTO {
     @Builder
     @NoArgsConstructor(access = AccessLevel.PROTECTED)
     @AllArgsConstructor
-    public static class InterviewOptionDTO {
+    public static class InterviewOptionPreviewDTO {
+        private InterviewFormat interviewFormat;
+        private InterviewType interviewType;
+    }
+
+    @Getter
+    @Builder
+    @NoArgsConstructor(access = AccessLevel.PROTECTED)
+    @AllArgsConstructor
+    public static class InterviewOptionDetailDTO {
         private InterviewFormat interviewFormat;
         private InterviewType interviewType;
         private VoiceType voiceType;
