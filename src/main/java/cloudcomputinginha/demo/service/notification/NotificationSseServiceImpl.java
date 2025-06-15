@@ -3,8 +3,12 @@ package cloudcomputinginha.demo.service.notification;
 import cloudcomputinginha.demo.apiPayload.code.handler.NotificationHandler;
 import cloudcomputinginha.demo.apiPayload.code.status.ErrorStatus;
 import cloudcomputinginha.demo.repository.SseEmitterRepository;
+import cloudcomputinginha.demo.service.notification.event.NotificationEvent;
 import lombok.RequiredArgsConstructor;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.event.TransactionPhase;
+import org.springframework.transaction.event.TransactionalEventListener;
 import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 
 import java.io.IOException;
@@ -16,6 +20,12 @@ public class NotificationSseServiceImpl implements NotificationSseService {
 
     private static final Long DEFAULT_TIMEOUT = 60L * 1000 * 60; //1H
     private final SseEmitterRepository sseEmitterRepository;
+
+    @TransactionalEventListener(phase = TransactionPhase.AFTER_COMMIT)
+    @Async
+    public void handleCreateNotification(NotificationEvent event) {
+        sendToMyAllEmitters(event.getReceiverId(), event.getEventId(), event.getNotificationDTO());
+    }
 
     @Override
     public SseEmitter subscribe(Long memberId, String lastEventId) {
