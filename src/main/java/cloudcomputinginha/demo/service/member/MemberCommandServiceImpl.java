@@ -17,12 +17,29 @@ public class MemberCommandServiceImpl implements MemberCommandService {
 
     @Override
     @Transactional
-    public MemberInfoResponseDTO updateBasicInfo(Long memberId, MemberInfoRequestDTO request) {
+    public MemberInfoResponseDTO registerBasicInfo(Long memberId, MemberInfoRequestDTO.registerInfoDTO request) {
         Member member = memberRepository.findById(memberId)
                 .orElseThrow(() -> new MemberHandler(ErrorStatus.MEMBER_NOT_FOUND));
 
-        member.updateInfo(request.getPhone(), request.getJobType(), request.getIntroduction());
+        member.registerInfo(request.getPhone(), request.getJobType(), request.getIntroduction());
 
+        return MemberInfoResponseDTO.builder()
+                .memberId(memberId)
+                .name(member.getName())
+                .email(member.getEmail())
+                .phone(member.getPhone())
+                .jobType(member.getJobType())
+                .introduction(member.getIntroduction())
+                .build();
+    }
+
+    @Override
+    @Transactional
+    public MemberInfoResponseDTO updateBasicInfo(Long memberId, MemberInfoRequestDTO.updateInfoDTO request) {
+        Member member = memberRepository.findById(memberId)
+                .orElseThrow(() -> new MemberHandler(ErrorStatus.MEMBER_NOT_FOUND));
+
+        member.updateInfo(request.getName(), request.getPhone(), request.getJobType(), request.getIntroduction());
 
         return MemberInfoResponseDTO.builder()
                 .memberId(memberId)
