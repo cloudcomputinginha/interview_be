@@ -1,6 +1,6 @@
 package cloudcomputinginha.demo.web.dto;
 
-import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -11,10 +11,10 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class MemberInfoRequestDTO {
-    @NotBlank
+    @NotNull
     private String phone;
-    @NotBlank
+    @NotNull
     private String jobType;
-    @NotBlank
+    @NotNull
     private String introduction;
 }
