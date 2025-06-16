@@ -33,4 +33,6 @@ public interface MemberInterviewRepository extends JpaRepository<MemberInterview
             "JOIN FETCH mi.interview i JOIN FETCH i.interviewOption o " +
             "WHERE mi.member.id = :memberId ORDER BY i.startedAt DESC ")
     List<MemberInterview> findAllForMyPage(Long memberId);
+
+    Optional<MemberInterview> findWithMemberAndInterviewByIdAndInterviewId(Long memberInterviewId, Long interviewId);
 }

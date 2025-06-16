@@ -1,9 +1,8 @@
 package cloudcomputinginha.demo.config.auth;
 
 import jakarta.servlet.http.HttpServletRequest;
-import java.util.Collections;
-import java.util.List;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -14,13 +13,17 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 
+import java.util.Collections;
+import java.util.List;
+
 @Configuration
 @EnableWebSecurity
 @RequiredArgsConstructor
 public class SecurityConfig {
 
     private final JwtProvider jwtProvider;
-
+    @Value("${notification.domain.interview-ai}")
+    private String interviewAiDomain;
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity httpSecurity) throws Exception {
@@ -32,8 +35,9 @@ public class SecurityConfig {
                                 CorsConfiguration configuration = new CorsConfiguration();
                                 configuration.setAllowedOrigins(List.of(
                                         "http://localhost:3000",
-                                    "https://cloud-computing-fe-two.vercel.app",
-                                    "http://127.0.0.1:5500"
+                                        "https://cloud-computing-fe-two.vercel.app",
+                                        "http://127.0.0.1:5500",
+                                        interviewAiDomain
                                 ));
 
                                 configuration.setAllowedMethods(
@@ -65,21 +69,21 @@ public class SecurityConfig {
 
                 //경로별 인가 작업
                 .authorizeHttpRequests((auth) -> auth
-                        .requestMatchers("/auth/GOOGLE", "/auth/google/callback").permitAll()
-                        .requestMatchers("/v3/api-docs/**",
-                                "/swagger-ui/**",
-                                "/swagger-resources/**"
+                                .requestMatchers("/auth/GOOGLE", "/auth/google/callback").permitAll()
+                                .requestMatchers("/v3/api-docs/**",
+                                        "/swagger-ui/**",
+                                        "/swagger-resources/**",
+                                        "/notifications/feedback"
 //                                "/**"
-                        ).permitAll()
-                        .requestMatchers("/ws-waiting-room/**").permitAll()
-                        .anyRequest().authenticated()
+                                ).permitAll()
+                                .requestMatchers("/ws-waiting-room/**").permitAll()
+                                .anyRequest().authenticated()
                 )
         ;
 
-         return httpSecurity.build();
+        return httpSecurity.build();
 
     }
-
 
 
 }

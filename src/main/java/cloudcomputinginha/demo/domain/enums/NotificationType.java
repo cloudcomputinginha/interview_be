@@ -21,8 +21,8 @@ public enum NotificationType {
             "/interviews/group/%s" //interview.getId()
     ), //모의면접 30분 전 리마인드
     FEEDBACK_RECEIVED(
-            "% 모의면접 AI 피드백이 도착했습니다.", //interview.getName()
-            "/interview/session/%s/%s"
+            "%s 모의면접 AI 피드백이 도착했습니다.", //interview.getName()
+            "/interview/session/%s/%s" //interview.getId(), memberInterview.getId()
     ); //비동기 피드백 도착 알림
 
     private final String messageTemplate;
