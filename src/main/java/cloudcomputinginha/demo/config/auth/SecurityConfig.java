@@ -51,6 +51,9 @@ public class SecurityConfig {
                 //csrf disable
                 .csrf(AbstractHttpConfigurer::disable)
 
+                // SavedCookie 관련 에러 해결 : stateless 환경에서는 request cache 불필요
+                .requestCache(requestCache -> requestCache.disable())
+
                 //form login 방식 disable
                 .formLogin(AbstractHttpConfigurer::disable)
 
