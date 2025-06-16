@@ -1,11 +1,10 @@
-package cloudcomputinginha.demo.service.notification;
+package cloudcomputinginha.demo.web.sse;
 
 import cloudcomputinginha.demo.apiPayload.code.handler.MemberHandler;
 import cloudcomputinginha.demo.apiPayload.code.handler.NotificationHandler;
 import cloudcomputinginha.demo.apiPayload.code.status.ErrorStatus;
 import cloudcomputinginha.demo.domain.Member;
 import cloudcomputinginha.demo.repository.MemberRepository;
-import cloudcomputinginha.demo.repository.SseEmitterRepository;
 import cloudcomputinginha.demo.service.notification.event.NotificationEvent;
 import lombok.RequiredArgsConstructor;
 import org.springframework.scheduling.annotation.Async;
@@ -19,7 +18,7 @@ import java.util.Map;
 
 @Service
 @RequiredArgsConstructor
-public class NotificationSseServiceImpl implements NotificationSseService {
+public class SseServiceImpl implements SseService {
 
     private static final Long DEFAULT_TIMEOUT = 60L * 1000 * 60; //1H
     private final SseEmitterRepository sseEmitterRepository;
