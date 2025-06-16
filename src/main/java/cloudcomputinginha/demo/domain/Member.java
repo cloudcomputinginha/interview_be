@@ -45,4 +45,10 @@ public class Member extends BaseEntity {
     public void setRefreshToken(String refreshToken) {
         this.refreshToken = refreshToken;
     }
+
+    public void updateInfo(String phone, String jobType, String introduction) {
+        this.phone = phone;
+        this.jobType = jobType;
+        this.introduction = introduction;
+    }
 }
