@@ -2,7 +2,7 @@ package cloudcomputinginha.demo.converter;
 
 import cloudcomputinginha.demo.domain.Member;
 import cloudcomputinginha.demo.domain.Notification;
-import cloudcomputinginha.demo.domain.embedded.RelatedUrl;
+import cloudcomputinginha.demo.domain.embedded.Url;
 import cloudcomputinginha.demo.domain.enums.NotificationType;
 import cloudcomputinginha.demo.web.dto.NotificationResponseDTO;
 
@@ -11,7 +11,7 @@ public class NotificationConverter {
         return Notification.builder()
                 .receiver(receiver)
                 .type(notificationType)
-                .url(new RelatedUrl(url))
+                .url(new Url(url))
                 .message(message)
                 .build();
     }

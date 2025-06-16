@@ -1,4 +1,4 @@
-package cloudcomputinginha.demo.service.notification.event;
+package cloudcomputinginha.demo.web.sse.event;
 
 import cloudcomputinginha.demo.web.dto.NotificationResponseDTO;
 import lombok.AllArgsConstructor;

@@ -33,7 +33,6 @@ public class InterviewReminderJob extends QuartzJobBean {
         Interview interview = interviewRepository.findById(interviewId)
                 .orElseThrow(() -> new InterviewHandler(ErrorStatus.INTERVIEW_NOT_FOUND));
 
-
         List<MemberInterview> memberInterviews = memberInterviewRepository.findWithMemberByInterviewId(interviewId);
 
         NotificationType notificationType = switch (type) {
@@ -42,13 +41,9 @@ public class InterviewReminderJob extends QuartzJobBean {
             default -> throw new NotificationHandler(ErrorStatus.NOTIFICATION_TYPE_INVALID);
         };
 
-        String message = switch (type) {
-            case "D1" -> "1일 후 " + interview.getName() + " 모의면접 시작 예정입니다.";
-            case "M30" -> "30분 후 " + interview.getName() + "모의면접 시작 예정입니다.";
-            default -> throw new NotificationHandler(ErrorStatus.NOTIFICATION_TYPE_INVALID);
-        };
+        String message = notificationType.generateMessage(interview.getName());
 
-        String url = "/interviews/group/" + interview.getId();
+        String url = notificationType.generateUrl(interview.getId());
 
         memberInterviews.stream()
                 .map(MemberInterview::getMember)
