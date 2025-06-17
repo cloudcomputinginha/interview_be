@@ -22,7 +22,7 @@ public class ResumeCommandServiceImpl implements ResumeCommandService {
     @Override
     public Resume saveResume(Long memberId, ResumeRequestDTO.ResumeCreateDTO resumeCreateDTO) {
         if (!resumeCreateDTO.getFileName().toLowerCase().endsWith(".pdf") || !resumeCreateDTO.getFileUrl().toLowerCase().endsWith(".pdf")) {
-            throw new ResumeHandler(ErrorStatus.RESUME_FILE_TPYE_INVALID);
+            throw new ResumeHandler(ErrorStatus.RESUME_FILE_TYPE_INVALID);
         }
         Member member = memberRepository.getReferenceById(resumeCreateDTO.getMemberId());
         Resume resume = Resume.builder()

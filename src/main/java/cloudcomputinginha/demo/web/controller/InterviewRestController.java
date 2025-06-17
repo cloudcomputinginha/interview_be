@@ -4,7 +4,6 @@ package cloudcomputinginha.demo.web.controller;
 import cloudcomputinginha.demo.apiPayload.ApiResponse;
 import cloudcomputinginha.demo.converter.InterviewConverter;
 import cloudcomputinginha.demo.domain.Interview;
-import cloudcomputinginha.demo.domain.Member;
 import cloudcomputinginha.demo.service.interview.InterviewCommandService;
 import cloudcomputinginha.demo.service.interview.InterviewQueryService;
 import cloudcomputinginha.demo.service.interviewOption.InterviewOptionCommandService;
@@ -19,6 +18,7 @@ import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -27,6 +27,7 @@ import java.util.List;
 @Tag(name = "인터뷰 API")
 @RequiredArgsConstructor
 @RequestMapping("/interviews")
+@Validated
 public class InterviewRestController {
     private final InterviewCommandService interviewCommandService;
     private final InterviewQueryService interviewQueryService;

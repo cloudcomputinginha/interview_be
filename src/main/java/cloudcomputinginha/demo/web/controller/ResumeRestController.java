@@ -11,7 +11,6 @@ import cloudcomputinginha.demo.repository.MemberRepository;
 import cloudcomputinginha.demo.service.resume.ResumeCommandService;
 import cloudcomputinginha.demo.service.resume.ResumeQueryService;
 import cloudcomputinginha.demo.service.resume.ResumeS3Service;
-import cloudcomputinginha.demo.validation.annotation.ExistMember;
 import cloudcomputinginha.demo.validation.annotation.ExistResume;
 import cloudcomputinginha.demo.validation.annotation.ValidFileName;
 import cloudcomputinginha.demo.web.dto.ResumeRequestDTO;
@@ -22,6 +21,7 @@ import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -30,6 +30,7 @@ import java.util.List;
 @Tag(name = "이력서 API")
 @RequestMapping("/resumes/")
 @RequiredArgsConstructor
+@Validated
 public class ResumeRestController {
     private final ResumeS3Service s3PresignedService;
     private final ResumeCommandService resumeCommandService;

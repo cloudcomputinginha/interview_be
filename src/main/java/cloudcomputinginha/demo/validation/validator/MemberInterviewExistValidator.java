@@ -24,7 +24,7 @@ public class MemberInterviewExistValidator implements ConstraintValidator<ExistM
 
         if (!isValid) {
             context.disableDefaultConstraintViolation();
-            context.buildConstraintViolationWithTemplate(ErrorStatus.MEMBER_INTERVIEW_NOT_FOUND.toString()).addConstraintViolation();
+            context.buildConstraintViolationWithTemplate(ErrorStatus.MEMBER_INTERVIEW_NOT_FOUND.name()).addConstraintViolation();
         }
 
         return isValid;

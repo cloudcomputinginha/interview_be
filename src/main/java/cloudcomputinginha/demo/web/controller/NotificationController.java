@@ -20,6 +20,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 
@@ -28,6 +29,7 @@ import java.util.List;
 @Tag(name = "알림 API")
 @RestController
 @RequiredArgsConstructor
+@Validated
 public class NotificationController {
     private final SseService notificationSseService;
     private final NotificationPreprocessor notificationPreprocessor;

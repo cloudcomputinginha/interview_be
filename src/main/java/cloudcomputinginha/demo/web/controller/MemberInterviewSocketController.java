@@ -15,11 +15,13 @@ import org.springframework.messaging.simp.SimpMessageHeaderAccessor;
 import org.springframework.messaging.simp.annotation.SendToUser;
 import org.springframework.messaging.simp.stomp.StompHeaderAccessor;
 import org.springframework.stereotype.Controller;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.socket.messaging.SessionDisconnectEvent;
 
 @Slf4j
 @Controller
 @RequiredArgsConstructor
+@Validated
 public class MemberInterviewSocketController {
 
     private final InterviewWaitingRoomSessionManager sessionManager;
