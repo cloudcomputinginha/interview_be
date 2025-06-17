@@ -12,6 +12,7 @@ import cloudcomputinginha.demo.service.notification.NotificationCommandService;
 import cloudcomputinginha.demo.web.dto.NotificationRequestDTO;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 
 @Component
 @RequiredArgsConstructor
@@ -19,6 +20,7 @@ public class NotificationPreprocessor {
     private final MemberInterviewRepository memberInterviewRepository;
     private final NotificationCommandService notificationCommandService;
 
+    @Transactional // 트랜잭션 범위를 명확하게 하기 위해 붙였습니다 TODO: 한 번 트랜잭션 전파 관련해서 공부해야 할 것 같아요
     public void preprocessFeedbackDTO(NotificationRequestDTO.FeedbackArrivedDTO feedBackArrivedDTO) {
         MemberInterview memberInterview = memberInterviewRepository.findWithMemberAndInterviewByIdAndInterviewId(feedBackArrivedDTO.getMemberInterviewId(), feedBackArrivedDTO.getInterviewId())
                 .orElseThrow(() -> new MemberInterviewHandler(ErrorStatus.MEMBER_INTERVIEW_NOT_FOUND)); // memberInterview 속 interviewId가 맞는지 한 번에 검증한다.

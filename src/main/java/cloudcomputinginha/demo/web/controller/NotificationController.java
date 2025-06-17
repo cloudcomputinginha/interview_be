@@ -6,6 +6,7 @@ import cloudcomputinginha.demo.web.dto.NotificationRequestDTO;
 import cloudcomputinginha.demo.web.sse.SseService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
@@ -28,7 +29,7 @@ public class NotificationController {
     // jwt token 없어도 허용
     @PostMapping("/notifications/feedback")
     @Operation(summary = "전체 피드백 생성 완료 알림 전송", description = "AI 서버에서 전체 피드백 생성을 완료하면 모의 면접 참가자에게 알림을 전송합니다.")
-    public ApiResponse<Void> notifyFeedbackCreated(@RequestBody NotificationRequestDTO.FeedbackArrivedDTO feedBackArrivedDTO) {
+    public ApiResponse<Void> notifyFeedbackCreated(@RequestBody @Valid NotificationRequestDTO.FeedbackArrivedDTO feedBackArrivedDTO) {
         notificationPreprocessor.preprocessFeedbackDTO(feedBackArrivedDTO);
         return ApiResponse.onSuccess(null);
     }
