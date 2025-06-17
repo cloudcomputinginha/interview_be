@@ -8,6 +8,9 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
@@ -21,9 +24,15 @@ public class NotificationController {
 
     @Operation(summary = "SSE 알림 구독", description = "앞으로 서버로부터 실시간 알림을 수신합니다.")
     @GetMapping(value = "/notifications/subscribe", produces = "text/event-stream")
-    public SseEmitter subscribeNotifications(@AuthenticationPrincipal Long memberId,
-                                             @RequestHeader(value = "Last-Event-ID", required = false, defaultValue = "") String lastEventId) {
-        return notificationSseService.subscribe(memberId, lastEventId);
+    public ResponseEntity<SseEmitter> subscribeNotifications(@AuthenticationPrincipal Long memberId,
+                                                             @RequestHeader(value = "Last-Event-ID", required = false, defaultValue = "") String lastEventId) {
+        SseEmitter sseEmitter = notificationSseService.subscribe(memberId, lastEventId);
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.add("Cache-Control", "no-cache");
+        headers.add("X-Accel-Buffering", "no");
+
+        return new ResponseEntity<>(sseEmitter, headers, HttpStatus.OK);
     }
 
     // jwt token 없어도 허용
