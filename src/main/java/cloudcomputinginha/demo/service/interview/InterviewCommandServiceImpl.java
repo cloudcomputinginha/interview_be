@@ -104,7 +104,11 @@ public class InterviewCommandServiceImpl implements InterviewCommandService {
     public InterviewResponseDTO.InterviewStartResponseDTO startInterview(Long memberId, Long interviewId, Boolean isAutoMaticStart) {
         Interview interviewWithOption = interviewRepository.getReferenceWithInterviewOptionById(interviewId);
 
-        List<MemberInterview> memberInterviews = memberInterviewRepository.findInprogressByInterviewId(interviewId);
+        boolean isGroupInterview = interviewWithOption.getInterviewOption().getInterviewFormat().equals(InterviewFormat.GROUP);
+
+        List<MemberInterview> memberInterviews = isGroupInterview ?
+            memberInterviewRepository.findInprogressByInterviewId(interviewId) :
+            memberInterviewRepository.findByInterviewId(interviewId);
 
         List<Long> coverletterIds = memberInterviews.stream()
                 .map(mi -> mi.getCoverletter().getId())
@@ -115,18 +119,17 @@ public class InterviewCommandServiceImpl implements InterviewCommandService {
                 .map(mi -> mi.getMember().getId())
                 .toList();
 
-        // 참가자들에게 참가알림 발송
-        memberInterviewSocketService.enterInterview(interviewId);
+        if(isGroupInterview) {
 
-        // 만약 관리자가 임의로 시작했을 경우, 스케줄링 대상 제거 및 startedAt 수정
+            // 참가자들에게 참가알림 발송
+            memberInterviewSocketService.enterInterview(interviewId);
+        }
+
         if (!isAutoMaticStart) {
             interviewScheduler.cancelScheduledInterview(interviewId);
             interviewWithOption.updateStartedAt(LocalDateTime.now());
         }
 
-        /* TODO: 이 부분을 백엔드 -> AI로 바로 통신하는 것도 괜찮을 거 같습니다!(http request로)
-            면접 조회는 따로 하도록 프론트에서 변경
-            준비 완료시 AI -> 프론트로 소켓 통신 통해 정보 받아오는게 좋아보여요! */
         return InterviewConverter.toInterviewStartResponseDTO(interviewWithOption, memberInterviews, allQnas);
     }
 
