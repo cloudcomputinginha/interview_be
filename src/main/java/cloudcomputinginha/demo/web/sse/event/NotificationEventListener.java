@@ -15,6 +15,7 @@ public class NotificationEventListener {
     @TransactionalEventListener(phase = TransactionPhase.AFTER_COMMIT)
     @Async
     public void handleCreateNotification(NotificationEvent event) {
+
         sseService.sendToMyAllEmitters(event.getReceiverId(), event.getEventId(), event.getNotificationDTO());
     }
 }

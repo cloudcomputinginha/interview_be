@@ -1,5 +1,7 @@
 package cloudcomputinginha.demo.service.notification;
 
+import cloudcomputinginha.demo.apiPayload.code.handler.NotificationHandler;
+import cloudcomputinginha.demo.apiPayload.code.status.ErrorStatus;
 import cloudcomputinginha.demo.converter.NotificationConverter;
 import cloudcomputinginha.demo.domain.Member;
 import cloudcomputinginha.demo.domain.Notification;
@@ -37,15 +39,23 @@ public class NotificationCommandServiceImpl implements NotificationCommandServic
         Notification notification = NotificationConverter.toNotification(receiver, notificationType, message, url);
         notificationRepository.save(notification);
 
-        String receiverId = String.valueOf(receiver.getId());
         String eventId = sseService.createId(receiver.getId());
 
         // 이벤트 전송은 commit 이후로 비동기 작업(위임)
         NotificationEvent notificationEvent = NotificationEvent.builder()
-                .receiverId(receiverId)
+                .receiverId(receiver.getId())
                 .eventId(eventId)
                 .notificationDTO(NotificationConverter.toNotificationDTO(notification))
                 .build();
         eventPublisher.publishEvent(notificationEvent);
+    }
+
+    @Override
+    @Transactional
+    public void markAsRead(Long memberId, Long notificationId) {
+        Notification notification = notificationRepository.findByIdAndReceiverId(notificationId, memberId)
+                .orElseThrow(() -> new NotificationHandler(ErrorStatus.NOTIFICATION_NOT_OWNED));
+
+        notification.markAsRead();
     }
 }
