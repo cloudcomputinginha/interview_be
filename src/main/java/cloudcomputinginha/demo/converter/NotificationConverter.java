@@ -23,6 +23,7 @@ public class NotificationConverter {
                 .type(notification.getType())
                 .url(notification.getUrl().getUrl())
                 .message(notification.getMessage())
+                .isRead(notification.getIsRead())
                 .createdAt(notification.getCreatedAt())
                 .build();
     }

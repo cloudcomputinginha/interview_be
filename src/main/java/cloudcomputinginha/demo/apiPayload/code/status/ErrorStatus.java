@@ -51,7 +51,8 @@ public enum ErrorStatus implements BaseErrorCode {
 
     // 알림 관련 에러
     NOTIFICATION_SEND_FAIL(HttpStatus.INTERNAL_SERVER_ERROR, "NOTIFICATION5001", "알림 전송에 실패했습니다."),
-    NOTIFICATION_TYPE_INVALID(HttpStatus.INTERNAL_SERVER_ERROR, "NOTIFICATION5002", "알림 타입이 올바르지 않습니다.");
+    NOTIFICATION_TYPE_INVALID(HttpStatus.INTERNAL_SERVER_ERROR, "NOTIFICATION5002", "알림 타입이 올바르지 않습니다."),
+    NOTIFICATION_NOT_OWNED(HttpStatus.FORBIDDEN, "NOTIFICATION4001", "알림은 해당 회원의 소유가 아닙니다.");
 
 
     private final HttpStatus httpStatus;

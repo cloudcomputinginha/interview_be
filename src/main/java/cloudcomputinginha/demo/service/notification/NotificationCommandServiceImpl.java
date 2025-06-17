@@ -1,5 +1,7 @@
 package cloudcomputinginha.demo.service.notification;
 
+import cloudcomputinginha.demo.apiPayload.code.handler.NotificationHandler;
+import cloudcomputinginha.demo.apiPayload.code.status.ErrorStatus;
 import cloudcomputinginha.demo.converter.NotificationConverter;
 import cloudcomputinginha.demo.domain.Member;
 import cloudcomputinginha.demo.domain.Notification;
@@ -47,5 +49,14 @@ public class NotificationCommandServiceImpl implements NotificationCommandServic
                 .notificationDTO(NotificationConverter.toNotificationDTO(notification))
                 .build();
         eventPublisher.publishEvent(notificationEvent);
+    }
+
+    @Override
+    @Transactional
+    public void markAsRead(Long memberId, Long notificationId) {
+        Notification notification = notificationRepository.findByIdAndReceiverId(notificationId, memberId)
+                .orElseThrow(() -> new NotificationHandler(ErrorStatus.NOTIFICATION_NOT_OWNED));
+
+        notification.markAsRead();
     }
 }

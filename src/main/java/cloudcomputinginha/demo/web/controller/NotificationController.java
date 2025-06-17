@@ -7,6 +7,7 @@ import cloudcomputinginha.demo.converter.NotificationConverter;
 import cloudcomputinginha.demo.domain.Notification;
 import cloudcomputinginha.demo.preprocessor.NotificationPreprocessor;
 import cloudcomputinginha.demo.repository.MemberRepository;
+import cloudcomputinginha.demo.service.notification.NotificationCommandService;
 import cloudcomputinginha.demo.service.notification.NotificationQueryService;
 import cloudcomputinginha.demo.web.dto.NotificationRequestDTO;
 import cloudcomputinginha.demo.web.dto.NotificationResponseDTO;
@@ -28,6 +29,7 @@ public class NotificationController {
     private final SseService notificationSseService;
     private final NotificationPreprocessor notificationPreprocessor;
     private final NotificationQueryService notificationQueryService;
+    private final NotificationCommandService notificationCommandService;
     private final MemberRepository memberRepository;
 
     @Operation(summary = "SSE 알림 구독", description = "앞으로 서버로부터 실시간 알림을 수신합니다.")
@@ -55,5 +57,18 @@ public class NotificationController {
 
         List<Notification> recentNotifications = notificationQueryService.findRecentNotifications(memberId);
         return ApiResponse.onSuccess(NotificationConverter.toNotificationListDTO(recentNotifications));
+    }
+
+    @PatchMapping("/notifications/{notificationId}/read")
+    @Operation(summary = "단일 알림 읽음 처리", description = "알림을 읽음 처리합니다.")
+    public ApiResponse<Void> readNotification(
+            @AuthenticationPrincipal Long memberId,
+            @PathVariable Long notificationId) {
+        // TODO: member 인증 과정 validator나 AOP 일괄처리
+        if (!memberRepository.existsById(memberId)) {
+            throw new MemberHandler(ErrorStatus.MEMBER_NOT_FOUND);
+        }
+        notificationCommandService.markAsRead(memberId, notificationId);
+        return ApiResponse.onSuccess(null);
     }
 }
