@@ -38,8 +38,8 @@ public class NotificationController {
     // jwt token 없어도 허용
     @PostMapping("/notifications/feedback")
     @Operation(summary = "전체 피드백 생성 완료 알림 전송", description = "AI 서버에서 전체 피드백 생성을 완료하면 모의 면접 참가자에게 알림을 전송합니다.")
-    public ApiResponse<Void> notifyFeedbackCreated(@RequestBody @Valid NotificationRequestDTO.FeedbackArrivedDTO feedBackArrivedDTO) {
+    public ApiResponse<String> notifyFeedbackCreated(@RequestBody @Valid NotificationRequestDTO.FeedbackArrivedDTO feedBackArrivedDTO) {
         notificationPreprocessor.preprocessFeedbackDTO(feedBackArrivedDTO);
-        return ApiResponse.onSuccess(null);
+        return ApiResponse.onSuccess("알림 생성이 완료되었습니다.");
     }
 }
