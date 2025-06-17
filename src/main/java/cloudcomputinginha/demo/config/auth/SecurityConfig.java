@@ -5,8 +5,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
-import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
@@ -24,6 +22,8 @@ import java.util.List;
 public class SecurityConfig {
 
     private final JwtProvider jwtProvider;
+    @Value("${notification.domain.interview}")
+    private String interviewDomain;
     @Value("${notification.domain.interview-ai}")
     private String interviewAiDomain;
 
@@ -39,6 +39,7 @@ public class SecurityConfig {
                                         "http://localhost:3000",
                                         "https://cloud-computing-fe-two.vercel.app",
                                         "http://127.0.0.1:5500",
+                                        interviewDomain,
                                         interviewAiDomain
                                 ));
 
