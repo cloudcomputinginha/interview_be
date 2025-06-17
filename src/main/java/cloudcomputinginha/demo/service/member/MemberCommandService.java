@@ -4,5 +4,7 @@ import cloudcomputinginha.demo.web.dto.MemberInfoRequestDTO;
 import cloudcomputinginha.demo.web.dto.MemberInfoResponseDTO;
 
 public interface MemberCommandService {
-    MemberInfoResponseDTO updateBasicInfo(Long memberId, MemberInfoRequestDTO request);
+    MemberInfoResponseDTO registerBasicInfo(Long memberId, MemberInfoRequestDTO.registerInfoDTO request);
+
+    MemberInfoResponseDTO updateBasicInfo(Long memberId, MemberInfoRequestDTO.updateInfoDTO request);
 }
