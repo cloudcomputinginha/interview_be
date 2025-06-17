@@ -24,6 +24,11 @@ public class SseEmitterRepositoryImpl implements SseEmitterRepository {
     }
 
     @Override
+    public Map<String, SseEmitter> findAllEmitters() {
+        return emitters;
+    }
+
+    @Override
     public Map<String, SseEmitter> findAllEmitterStartWithMemberId(Long memberId) {
         return emitters.entrySet().stream()
                 .filter(entry -> entry.getKey().startsWith(memberId + "_"))
@@ -39,7 +44,16 @@ public class SseEmitterRepositoryImpl implements SseEmitterRepository {
 
     @Override
     public void deleteById(String emitterId) {
-        emitters.remove(emitterId);
+        SseEmitter sseEmitter = emitters.get(emitterId);
+        if (sseEmitter != null) {
+            try {
+                sseEmitter.complete();
+            } catch (IllegalStateException e) {
+
+            } finally {
+                emitters.remove(emitterId);
+            }
+        }
     }
 
     @Override
@@ -47,7 +61,7 @@ public class SseEmitterRepositoryImpl implements SseEmitterRepository {
         emitters.forEach(
                 (key, emitter) -> {
                     if (key.startsWith(memberId)) {
-                        emitters.remove(key);
+                        deleteById(key);
                     }
                 }
         );
