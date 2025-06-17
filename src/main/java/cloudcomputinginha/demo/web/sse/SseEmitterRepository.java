@@ -1,4 +1,4 @@
-package cloudcomputinginha.demo.repository;
+package cloudcomputinginha.demo.web.sse;
 
 import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 
