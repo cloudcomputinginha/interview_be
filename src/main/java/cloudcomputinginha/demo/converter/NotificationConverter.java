@@ -6,6 +6,8 @@ import cloudcomputinginha.demo.domain.embedded.Url;
 import cloudcomputinginha.demo.domain.enums.NotificationType;
 import cloudcomputinginha.demo.web.dto.NotificationResponseDTO;
 
+import java.util.List;
+
 public class NotificationConverter {
     public static Notification toNotification(Member receiver, NotificationType notificationType, String message, String url) {
         return Notification.builder()
@@ -22,6 +24,16 @@ public class NotificationConverter {
                 .url(notification.getUrl().getUrl())
                 .message(notification.getMessage())
                 .createdAt(notification.getCreatedAt())
+                .build();
+    }
+
+    public static NotificationResponseDTO.NotificationListDTO toNotificationListDTO(List<Notification> notifications) {
+        List<NotificationResponseDTO.NotificationDTO> notificationList = notifications.stream()
+                .map(NotificationConverter::toNotificationDTO)
+                .toList();
+        return NotificationResponseDTO.NotificationListDTO.builder()
+                .notifications(notificationList)
+                .size(notificationList.size())
                 .build();
     }
 }
