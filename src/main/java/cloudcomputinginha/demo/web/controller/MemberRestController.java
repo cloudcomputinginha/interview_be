@@ -31,4 +31,11 @@ public class MemberRestController {
         MemberInfoResponseDTO result = memberCommandService.updateBasicInfo(memberId, request);
         return ApiResponse.onSuccess(result);
     }
+
+    @GetMapping
+    @Operation(summary = "사용자 프로필 조회 API", description = "사용자의 프로필을 조회합니다.")
+    public ApiResponse<MemberInfoResponseDTO> getBasicInfo(@AuthenticationPrincipal Long memberId) {
+        MemberInfoResponseDTO result = memberCommandService.getBasicInfo(memberId);
+        return ApiResponse.onSuccess(result);
+    }
 }
