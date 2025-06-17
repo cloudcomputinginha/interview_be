@@ -3,8 +3,8 @@ package cloudcomputinginha.demo.domain;
 import cloudcomputinginha.demo.domain.common.BaseEntity;
 import cloudcomputinginha.demo.domain.enums.SocialProvider;
 import jakarta.persistence.*;
-import jakarta.validation.constraints.NotNull;
 import lombok.*;
+import java.util.UUID;
 
 @Entity
 @Getter
@@ -33,10 +33,10 @@ public class Member extends BaseEntity {
     private String introduction;
 
     @Enumerated(EnumType.STRING)
-    @Column(length = 10, nullable = false)
+    @Column(length = 10)
     private SocialProvider socialProvider;
 
-    @Column(length = 100, nullable = false)
+    @Column(length = 100)
     private String providerId;
 
     @Column(columnDefinition = "TEXT")
@@ -57,5 +57,16 @@ public class Member extends BaseEntity {
         this.phone = phone;
         this.jobType = jobType;
         this.introduction = introduction;
+    }
+
+    // 게스트 로그인
+    private boolean isGuest;
+
+    public static Member createGuest(String randomName) {
+        Member member = new Member();
+        member.email = "guest_" + UUID.randomUUID().toString().substring(0, 5)+ "@guest.com";
+        member.name = randomName;
+        member.isGuest = true;
+        return member;
     }
 }
