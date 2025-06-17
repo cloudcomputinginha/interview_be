@@ -3,6 +3,7 @@ package cloudcomputinginha.demo.repository;
 import cloudcomputinginha.demo.domain.Notification;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -17,5 +18,5 @@ public interface NotificationRepository extends JpaRepository<Notification, Long
             "WHERE n.receiver.id = :memberId " +
             "AND n.createdAt >= :localDateTime " +
             "AND n.isRead = false")
-    Long countUnread(Long memberId, LocalDateTime localDateTime);
+    Long countUnread(@Param("memberId") Long memberId, @Param("localDateTime") LocalDateTime localDateTime);
 }

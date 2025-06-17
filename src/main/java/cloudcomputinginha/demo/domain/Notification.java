@@ -34,7 +34,7 @@ public class Notification extends BaseEntity {
 
     @Builder.Default
     @Column(nullable = false)
-    private Boolean isRead = false;
+    private boolean isRead = false;
 
     public void markAsRead() {
         this.isRead = true;

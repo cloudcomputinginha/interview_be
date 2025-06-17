@@ -62,7 +62,11 @@ public class SseServiceImpl implements SseService {
 
         emitters.forEach(
                 (emitterId, emitter) -> {
-                    sendNotification(emitter, emitterId, eventId, sseData);
+                    try {
+                        sendNotification(emitter, emitterId, eventId, sseData);
+                    } catch (NotificationHandler ignored) {
+                        // 하나의 emitter가 실패하더라도 다른 emitter는 정상적으로 동작하게 한다.
+                    }
                 }
         );
     }
@@ -79,7 +83,13 @@ public class SseServiceImpl implements SseService {
         Map<String, Object> eventCaches = sseEmitterRepository.findAllEventCacheStartWithMemberId(String.valueOf(memberId));
         eventCaches.entrySet().stream()
                 .filter(entry -> lastEventId.compareTo(entry.getKey()) < 0)
-                .forEach(entry -> sendNotification(emitter, entry.getKey(), emitterId, entry.getValue()));
+                .forEach(entry -> {
+                    try {
+                        sendNotification(emitter, emitterId, entry.getKey(), entry.getValue());
+                    } catch (NotificationHandler ignored) {
+                        // 하나의 emitter가 실패하더라도 다른 emitter는 정상적으로 동작하게 한다.
+                    }
+                });
     }
 
     /**
