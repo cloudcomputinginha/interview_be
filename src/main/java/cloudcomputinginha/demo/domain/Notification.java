@@ -32,5 +32,11 @@ public class Notification extends BaseEntity {
     @Column(nullable = false, length = 100)
     private String message;
 
-    //TODO: 알림 읽음 처리
+    @Builder.Default
+    @Column(nullable = false)
+    private boolean isRead = false;
+
+    public void markAsRead() {
+        this.isRead = true;
+    }
 }

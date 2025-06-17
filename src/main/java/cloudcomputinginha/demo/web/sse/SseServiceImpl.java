@@ -3,13 +3,17 @@ package cloudcomputinginha.demo.web.sse;
 import cloudcomputinginha.demo.apiPayload.code.handler.MemberHandler;
 import cloudcomputinginha.demo.apiPayload.code.handler.NotificationHandler;
 import cloudcomputinginha.demo.apiPayload.code.status.ErrorStatus;
+import cloudcomputinginha.demo.converter.NotificationConverter;
 import cloudcomputinginha.demo.domain.Member;
 import cloudcomputinginha.demo.repository.MemberRepository;
+import cloudcomputinginha.demo.repository.NotificationRepository;
+import cloudcomputinginha.demo.web.dto.NotificationResponseDTO;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 
 import java.io.IOException;
+import java.time.LocalDateTime;
 import java.util.Map;
 
 @Service
@@ -19,6 +23,7 @@ public class SseServiceImpl implements SseService {
     private static final Long DEFAULT_TIMEOUT = 60L * 1000 * 60; //1H
     private final SseEmitterRepository sseEmitterRepository;
     private final MemberRepository memberRepository;
+    private final NotificationRepository notificationRepository;
 
     @Override
     public SseEmitter subscribe(Long memberId, String lastEventId) {
@@ -45,16 +50,52 @@ public class SseServiceImpl implements SseService {
         return emitter;
     }
 
+    @Override
+    /**
+     * 현재 나와 연결된 모든 emitter에 data를 보냅니다. -> sendNotification 호출
+     */
+    public void sendToMyAllEmitters(Long memberId, String eventId, Object data) {
+        Map<String, SseEmitter> emitters = sseEmitterRepository.findAllEmitterStartWithMemberId(memberId);
+        sseEmitterRepository.saveEventCache(eventId, data);
+
+        Object sseData = preprocessData(memberId, data);
+
+        emitters.forEach(
+                (emitterId, emitter) -> {
+                    try {
+                        sendNotification(emitter, emitterId, eventId, sseData);
+                    } catch (NotificationHandler ignored) {
+                        // 하나의 emitter가 실패하더라도 다른 emitter는 정상적으로 동작하게 한다.
+                    }
+                }
+        );
+    }
+
+    @Override
+    public String createId(Long memberId) {
+        return memberId + "_" + System.currentTimeMillis();
+    }
+
+    /**
+     * eventCache를 기반으로 놓친 data를 전송합니다. -> sendNotification 호출
+     */
     private void sendLostData(String lastEventId, Long memberId, String emitterId, SseEmitter emitter) {
         Map<String, Object> eventCaches = sseEmitterRepository.findAllEventCacheStartWithMemberId(String.valueOf(memberId));
         eventCaches.entrySet().stream()
                 .filter(entry -> lastEventId.compareTo(entry.getKey()) < 0)
-                .forEach(entry -> sendNotification(emitter, entry.getKey(), emitterId, entry.getValue()));
+                .forEach(entry -> {
+                    try {
+                        sendNotification(emitter, emitterId, entry.getKey(), entry.getValue());
+                    } catch (NotificationHandler ignored) {
+                        // 하나의 emitter가 실패하더라도 다른 emitter는 정상적으로 동작하게 한다.
+                    }
+                });
     }
 
-    @Override
-    // SseEmitter가 연결된 클라이언트에 data(string 또는 Notification)을 전송
-    public void sendNotification(SseEmitter emitter, String emitterId, String eventId, Object data) {
+    /**
+     * SseEmitter가 연결된 클라이언트에 data(string 또는 Notification)을 전송
+     */
+    private void sendNotification(SseEmitter emitter, String emitterId, String eventId, Object data) {
         try {
             emitter.send(SseEmitter.event()
                     .id(eventId)
@@ -65,19 +106,11 @@ public class SseServiceImpl implements SseService {
         }
     }
 
-    @Override
-    public String createId(Long memberId) {
-        return memberId + "_" + System.currentTimeMillis();
-    }
-
-    @Override
-    public void sendToMyAllEmitters(String memberId, String eventId, Object data) {
-        Map<String, SseEmitter> emitters = sseEmitterRepository.findAllEmitterStartWithMemberId(memberId);
-        sseEmitterRepository.saveEventCache(eventId, data);
-        emitters.forEach(
-                (emitterId, emitter) -> {
-                    sendNotification(emitter, emitterId, eventId, data);
-                }
-        );
+    private Object preprocessData(Long memberId, Object data) {
+        if (data instanceof NotificationResponseDTO.NotificationDTO) {
+            Long unReadCount = notificationRepository.countUnread(memberId, LocalDateTime.now().minusMonths(1));
+            return NotificationConverter.toNotificationSSEDTO((NotificationResponseDTO.NotificationDTO) data, unReadCount);
+        }
+        return data;
     }
 }

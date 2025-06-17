@@ -24,7 +24,7 @@ public class SseEmitterRepositoryImpl implements SseEmitterRepository {
     }
 
     @Override
-    public Map<String, SseEmitter> findAllEmitterStartWithMemberId(String memberId) {
+    public Map<String, SseEmitter> findAllEmitterStartWithMemberId(Long memberId) {
         return emitters.entrySet().stream()
                 .filter(entry -> entry.getKey().startsWith(memberId + "_"))
                 .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
