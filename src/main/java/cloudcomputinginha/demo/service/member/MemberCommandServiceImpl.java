@@ -2,6 +2,7 @@ package cloudcomputinginha.demo.service.member;
 
 import cloudcomputinginha.demo.apiPayload.code.handler.MemberHandler;
 import cloudcomputinginha.demo.apiPayload.code.status.ErrorStatus;
+import cloudcomputinginha.demo.converter.MemberConverter;
 import cloudcomputinginha.demo.domain.Member;
 import cloudcomputinginha.demo.repository.MemberRepository;
 import cloudcomputinginha.demo.web.dto.MemberInfoRequestDTO;
@@ -23,14 +24,7 @@ public class MemberCommandServiceImpl implements MemberCommandService {
 
         member.registerInfo(request.getPhone(), request.getJobType(), request.getIntroduction());
 
-        return MemberInfoResponseDTO.builder()
-                .memberId(memberId)
-                .name(member.getName())
-                .email(member.getEmail())
-                .phone(member.getPhone())
-                .jobType(member.getJobType())
-                .introduction(member.getIntroduction())
-                .build();
+        return MemberConverter.toMemberInfoResponseDTO(member);
     }
 
     @Override
@@ -41,13 +35,6 @@ public class MemberCommandServiceImpl implements MemberCommandService {
 
         member.updateInfo(request.getName(), request.getPhone(), request.getJobType(), request.getIntroduction());
 
-        return MemberInfoResponseDTO.builder()
-                .memberId(memberId)
-                .name(member.getName())
-                .email(member.getEmail())
-                .phone(member.getPhone())
-                .jobType(member.getJobType())
-                .introduction(member.getIntroduction())
-                .build();
+        return MemberConverter.toMemberInfoResponseDTO(member);
     }
 }
