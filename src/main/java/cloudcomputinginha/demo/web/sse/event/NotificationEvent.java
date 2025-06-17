@@ -9,7 +9,7 @@ import lombok.Getter;
 @Builder
 @AllArgsConstructor
 public class NotificationEvent {
-    private final String receiverId;
+    private final Long receiverId;
     private final String eventId;
     private final NotificationResponseDTO.NotificationDTO notificationDTO;
 }

@@ -39,12 +39,11 @@ public class NotificationCommandServiceImpl implements NotificationCommandServic
         Notification notification = NotificationConverter.toNotification(receiver, notificationType, message, url);
         notificationRepository.save(notification);
 
-        String receiverId = String.valueOf(receiver.getId());
         String eventId = sseService.createId(receiver.getId());
 
         // 이벤트 전송은 commit 이후로 비동기 작업(위임)
         NotificationEvent notificationEvent = NotificationEvent.builder()
-                .receiverId(receiverId)
+                .receiverId(receiver.getId())
                 .eventId(eventId)
                 .notificationDTO(NotificationConverter.toNotificationDTO(notification))
                 .build();

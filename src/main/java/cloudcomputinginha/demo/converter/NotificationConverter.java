@@ -37,4 +37,11 @@ public class NotificationConverter {
                 .size(notificationList.size())
                 .build();
     }
+
+    public static NotificationResponseDTO.NotificationSSEDTO toNotificationSSEDTO(NotificationResponseDTO.NotificationDTO notificationDTO, Long unreadCount) {
+        return NotificationResponseDTO.NotificationSSEDTO.builder()
+                .notification(notificationDTO)
+                .unreadCount(unreadCount)
+                .build();
+    }
 }

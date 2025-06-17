@@ -11,6 +11,15 @@ public class NotificationResponseDTO {
     @Builder
     @NoArgsConstructor(access = AccessLevel.PROTECTED)
     @AllArgsConstructor
+    public static class NotificationSSEDTO {
+        private NotificationDTO notification;
+        private Long unreadCount; // 한달 간 알림 중 읽지 않은 알림을 카운트합니다.
+    }
+
+    @Getter
+    @Builder
+    @NoArgsConstructor(access = AccessLevel.PROTECTED)
+    @AllArgsConstructor
     public static class NotificationDTO {
         private NotificationType type;
         private String url;
