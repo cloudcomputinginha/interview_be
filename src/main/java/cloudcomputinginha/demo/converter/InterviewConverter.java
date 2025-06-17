@@ -47,7 +47,7 @@ public class InterviewConverter {
                 .startedAt(combineStartAt(request))
                 .isOpen(request.getIsOpen() != null ? request.getIsOpen() : false)
                 .maxParticipants(request.getMaxParticipants())
-                .hostId(member.getId())
+                .host(member)
                 .build();
     }
 
@@ -130,7 +130,7 @@ public class InterviewConverter {
                 .startedAt(interview.getStartedAt())
                 .hostName(
                         memberInterviewList.stream()
-                                .filter(mi -> mi.getMember().getId().equals(interview.getHostId()))
+                                .filter(mi -> mi.getMember().getId().equals(interview.getHost().getId()))
                                 .findFirst()
                                 .map(mi -> mi.getMember().getName())
                                 .orElse("호스트의 이름을 알 수 없습니다.")
@@ -140,7 +140,7 @@ public class InterviewConverter {
                                 .map(mi -> InterviewResponseDTO.GroupInterviewParticipantDTO.builder()
                                         .memberId(mi.getMember().getId())
                                         .name(mi.getMember().getName())
-                                        .isHost(mi.getMember().getId().equals(interview.getHostId()))
+                                        .isHost(mi.getMember().getId().equals(interview.getHost().getId()))
                                         .isSubmitted(mi.getResume() != null && mi.getCoverletter() != null)
                                         .build()
                                 ).toList()

@@ -4,6 +4,8 @@ import cloudcomputinginha.demo.domain.common.BaseEntity;
 import cloudcomputinginha.demo.domain.enums.SocialProvider;
 import jakarta.persistence.*;
 import lombok.*;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
 @Entity
@@ -41,6 +43,19 @@ public class Member extends BaseEntity {
 
     @Column(columnDefinition = "TEXT")
     private String refreshToken;
+
+    @OneToMany(mappedBy = "member", cascade = CascadeType.REMOVE, orphanRemoval = true)
+    private List<Coverletter> coverLetters = new ArrayList<>();
+
+    @OneToMany(mappedBy = "member", cascade = CascadeType.REMOVE, orphanRemoval = true)
+    private List<Resume> resumes = new ArrayList<>();
+
+    @OneToMany(mappedBy = "member", cascade = CascadeType.REMOVE, orphanRemoval = true)
+    private List<MemberInterview> memberInterviews = new ArrayList<>();
+
+    @OneToMany(mappedBy = "host", cascade = CascadeType.REMOVE, orphanRemoval = true)
+    private List<Interview> hostedInterviews = new ArrayList<>();
+
 
     public void setRefreshToken(String refreshToken) {
         this.refreshToken = refreshToken;

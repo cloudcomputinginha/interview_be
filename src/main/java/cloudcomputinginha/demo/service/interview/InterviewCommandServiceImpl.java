@@ -136,7 +136,7 @@ public class InterviewCommandServiceImpl implements InterviewCommandService {
         Interview interview = interviewRepository.findById(interviewId)
                 .orElseThrow(() -> new InterviewHandler(ErrorStatus.INTERVIEW_NOT_FOUND));
 
-        if (!interview.getHostId().equals(memberId)) {
+        if (!interview.getHost().getId().equals(memberId)) {
             throw new InterviewHandler(ErrorStatus.INTERVIEW_NO_PERMISSION);
         }
 
