@@ -80,6 +80,7 @@ public class InterviewResponseDTO {
     @AllArgsConstructor
     public static class GroupInterviewDetailDTO {
         private Long interviewId;
+        private Long memberInterviewId;
         private String name;
         private String description;
         private String sessionName;

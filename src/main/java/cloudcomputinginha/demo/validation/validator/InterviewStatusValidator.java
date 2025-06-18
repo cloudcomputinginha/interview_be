@@ -20,7 +20,7 @@ public class InterviewStatusValidator implements ConstraintValidator<ValidInterv
 
         if (!isValid) {
             context.disableDefaultConstraintViolation();
-            context.buildConstraintViolationWithTemplate(ErrorStatus.INTERVIEW_STATUS_INVALID.toString()).addConstraintViolation();
+            context.buildConstraintViolationWithTemplate(ErrorStatus.INTERVIEW_STATUS_INVALID.name()).addConstraintViolation();
         }
 
         return isValid;

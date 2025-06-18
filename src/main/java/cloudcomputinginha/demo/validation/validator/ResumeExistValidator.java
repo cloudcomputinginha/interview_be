@@ -25,7 +25,7 @@ public class ResumeExistValidator implements ConstraintValidator<ExistResume, Lo
 
         if (!isValid) {
             context.disableDefaultConstraintViolation();
-            context.buildConstraintViolationWithTemplate(ErrorStatus.RESUME_NOT_FOUND.toString()).addConstraintViolation();
+            context.buildConstraintViolationWithTemplate(ErrorStatus.RESUME_NOT_FOUND.name()).addConstraintViolation();
         }
 
         return isValid;

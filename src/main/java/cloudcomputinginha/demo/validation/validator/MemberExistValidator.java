@@ -25,7 +25,7 @@ public class MemberExistValidator implements ConstraintValidator<ExistMember, Lo
 
         if (!isValid) {
             context.disableDefaultConstraintViolation();
-            context.buildConstraintViolationWithTemplate(ErrorStatus.MEMBER_NOT_FOUND.toString()).addConstraintViolation();
+            context.buildConstraintViolationWithTemplate(ErrorStatus.MEMBER_NOT_FOUND.name()).addConstraintViolation();
         }
 
         return isValid;

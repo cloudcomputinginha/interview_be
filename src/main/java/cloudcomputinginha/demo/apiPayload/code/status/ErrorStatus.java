@@ -6,6 +6,8 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import org.springframework.http.HttpStatus;
 
+import java.util.Arrays;
+
 @Getter
 @AllArgsConstructor
 public enum ErrorStatus implements BaseErrorCode {
@@ -27,7 +29,8 @@ public enum ErrorStatus implements BaseErrorCode {
     // 이력서 관련
     RESUME_NOT_FOUND(HttpStatus.NOT_FOUND, "RESUME4001", "해당하는 이력서를 찾을 수 없습니다."),
     RESUME_NOT_OWNED(HttpStatus.FORBIDDEN, "RESUME4002", "이력서는 해당 회원의 소유가 아닙니다."),
-    RESUME_FILE_TPYE_INVALID(HttpStatus.BAD_REQUEST, "RESUME4003", "이력서는 PDF 파일만 업로드할 수 있습니다."),
+    RESUME_FILE_TYPE_INVALID(HttpStatus.BAD_REQUEST, "RESUME4003", "이력서는 PDF 파일만 업로드할 수 있습니다."),
+    RESUME_FILE_NAME_INVALID(HttpStatus.BAD_REQUEST, "RESUME4004", "파일 이름은 한글, 영문, 숫자, 언더바(_), 대시(-), 공백만 허용하며 .pdf로 끝나야 합니다."),
 
     // 자소서 + 이력서 관련
     AT_LEAST_ONE_PRESENT_DOCUMENTS(HttpStatus.BAD_REQUEST, "DOCUMENT4001", "이력서 또는 자기소개서 중 하나는 반드시 입력해야 합니다."),
@@ -51,12 +54,17 @@ public enum ErrorStatus implements BaseErrorCode {
 
     // 알림 관련 에러
     NOTIFICATION_SEND_FAIL(HttpStatus.INTERNAL_SERVER_ERROR, "NOTIFICATION5001", "알림 전송에 실패했습니다."),
-    NOTIFICATION_TYPE_INVALID(HttpStatus.INTERNAL_SERVER_ERROR, "NOTIFICATION5002", "알림 타입이 올바르지 않습니다.");
+    NOTIFICATION_TYPE_INVALID(HttpStatus.INTERNAL_SERVER_ERROR, "NOTIFICATION5002", "알림 타입이 올바르지 않습니다."),
+    NOTIFICATION_NOT_OWNED(HttpStatus.FORBIDDEN, "NOTIFICATION4001", "알림은 해당 회원의 소유가 아닙니다.");
 
 
     private final HttpStatus httpStatus;
     private final String code;
     private final String message;
+
+    public static boolean contains(String name) {
+        return Arrays.stream(values()).anyMatch(e -> e.name().equals(name));
+    }
 
     @Override
     public ErrorReasonDTO getReason() {

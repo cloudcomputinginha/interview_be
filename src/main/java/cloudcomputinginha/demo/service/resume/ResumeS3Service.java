@@ -26,7 +26,7 @@ public class ResumeS3Service {
 
     public ResumeResponseDTO.PresignedUploadDTO getUploadPresignedURL(String fileName) {
         if (!fileName.toLowerCase().endsWith(".pdf")) {
-            throw new ResumeHandler(ErrorStatus.RESUME_FILE_TPYE_INVALID);
+            throw new ResumeHandler(ErrorStatus.RESUME_FILE_TYPE_INVALID);
         }
 
 

@@ -4,7 +4,6 @@ package cloudcomputinginha.demo.web.controller;
 import cloudcomputinginha.demo.apiPayload.ApiResponse;
 import cloudcomputinginha.demo.converter.InterviewConverter;
 import cloudcomputinginha.demo.domain.Interview;
-import cloudcomputinginha.demo.domain.Member;
 import cloudcomputinginha.demo.service.interview.InterviewCommandService;
 import cloudcomputinginha.demo.service.interview.InterviewQueryService;
 import cloudcomputinginha.demo.service.interviewOption.InterviewOptionCommandService;
@@ -19,6 +18,7 @@ import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -27,6 +27,7 @@ import java.util.List;
 @Tag(name = "인터뷰 API")
 @RequiredArgsConstructor
 @RequestMapping("/interviews")
+@Validated
 public class InterviewRestController {
     private final InterviewCommandService interviewCommandService;
     private final InterviewQueryService interviewQueryService;
@@ -53,7 +54,6 @@ public class InterviewRestController {
         return ApiResponse.onSuccess(result);
     }
 
-    @Deprecated
     @GetMapping("/{interviewId}/start")
     @Operation(summary = "면접 시작 API", description = "해당 API가 호출되면 AI서버에게 넘겨줄 면접의 모든 정보를 넘겨줍니다.")
     public ApiResponse<InterviewResponseDTO.InterviewStartResponseDTO> startInterview(@AuthenticationPrincipal Long memberId, @PathVariable @NotNull @ExistInterview Long interviewId) {

@@ -2,6 +2,7 @@ package cloudcomputinginha.demo.service.interview;
 
 import cloudcomputinginha.demo.apiPayload.code.handler.InterviewHandler;
 import cloudcomputinginha.demo.apiPayload.code.handler.MemberHandler;
+import cloudcomputinginha.demo.apiPayload.code.handler.MemberInterviewHandler;
 import cloudcomputinginha.demo.apiPayload.code.status.ErrorStatus;
 import cloudcomputinginha.demo.converter.InterviewConverter;
 import cloudcomputinginha.demo.domain.Interview;
@@ -45,6 +46,11 @@ public class InterviewQueryServiceImpl implements InterviewQueryService {
                 .orElseThrow(() -> new MemberHandler(ErrorStatus.MEMBER_NOT_FOUND));
 
         List<MemberInterview> memberInterviewList = memberInterviewRepository.findByInterviewId(interviewId);
-        return InterviewConverter.toInterviewGroupDetailDTO(interview, memberInterviewList);
+        MemberInterview myMemberInterview = memberInterviewList.stream()
+                .filter(memberInterview -> memberInterview.getMember().getId().equals(memberId))
+                .findFirst()
+                .orElseThrow(() -> new MemberInterviewHandler(ErrorStatus.MEMBER_INTERVIEW_NOT_FOUND)); //데이터 구조상 하나만 존재할 수 있다.
+
+        return InterviewConverter.toInterviewGroupDetailDTO(interview, myMemberInterview, memberInterviewList);
     }
 }

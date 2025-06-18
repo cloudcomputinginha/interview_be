@@ -64,7 +64,7 @@ public class CoverletterRestController {
                 .orElseThrow(() -> new MemberHandler(ErrorStatus.MEMBER_NOT_FOUND));
 
         Coverletter coverletter = coverletterQueryService.getCoverletter(coverletterId);
-        coverletter.validateOwner(memberId);
+        coverletter.validateOwnedBy(memberId);
         List<Qna> qnaList = qnaQueryService.getQnasByCoverletter(coverletterId);
 
         return ApiResponse.onSuccess(CoverletterConverter.toDetailDTO(coverletter, qnaList));

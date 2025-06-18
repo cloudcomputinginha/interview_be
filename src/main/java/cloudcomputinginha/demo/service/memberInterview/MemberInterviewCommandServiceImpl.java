@@ -52,7 +52,6 @@ public class MemberInterviewCommandServiceImpl implements MemberInterviewCommand
         }
 
         Interview interview = interviewRepository.getReferenceById(interviewId);
-
         if (!interview.getIsOpen()) {
             throw new MemberInterviewHandler(ErrorStatus.INTERVIEW_NOT_ACCEPTING_MEMBERS);
         }
@@ -63,7 +62,27 @@ public class MemberInterviewCommandServiceImpl implements MemberInterviewCommand
         MemberInterview memberInterview = MemberInterviewConverter.toMemberInterview(member, interview, resume, coverletter);
         interview.increaseCurrentParticipants(); //이 메서드 내부에서 동시성을 보호하고, 정원이 넘치면 예외를 발생시킵니다.
 
-        sendEntryNotificationToAllParticipants(interview, member);
+        // 기존 참가자 목록 조회 (자기 자신 제외)
+        List<MemberInterview> otherParticipants = memberInterviewRepository.findByInterviewId(interviewId).stream()
+                .filter(mi -> !mi.getMember().getId().equals(memberId))
+                .toList();
+
+        // 알림 메시지 생성
+        NotificationType notificationType = NotificationType.ROOM_ENTRY;
+        String message = notificationType.generateMessage(member.getName(), interview.getName());
+        String url = notificationType.generateUrl(interview.getId());
+        System.out.println("message = " + message);
+        System.out.println("url = " + url);
+
+        // 알림 전송 (비동기 + AFTER_COMMIT)
+        otherParticipants.forEach(participant ->
+                notificationCommandService.createNotificationAndSend(
+                        participant.getMember(),
+                        NotificationType.ROOM_ENTRY,
+                        message,
+                        url
+                )
+        );
 
         return memberInterviewRepository.save(memberInterview);
     }
@@ -122,21 +141,4 @@ public class MemberInterviewCommandServiceImpl implements MemberInterviewCommand
         return resume;
     }
 
-    private void sendEntryNotificationToAllParticipants(Interview interview, Member newMember) {
-        String interviewTitle = interview.getName();
-        String message = newMember.getName() + "님이 " + interviewTitle + " 모의면접 방에 입장하셨습니다.";
-        String redirectUrl = "/interviews/group/" + interview.getId();
-
-        List<MemberInterview> participants = memberInterviewRepository.findByInterviewId(interview.getId());
-        participants.stream()
-                .map(MemberInterview::getMember)
-                .forEach(member ->
-                        notificationCommandService.createNotificationAndSend(
-                                member,
-                                NotificationType.ROOM_ENTRY,
-                                message,
-                                redirectUrl
-                        )
-                );
-    }
 }

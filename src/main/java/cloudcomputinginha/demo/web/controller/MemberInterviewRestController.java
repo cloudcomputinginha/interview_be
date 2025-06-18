@@ -19,7 +19,6 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-// TODO: 인증 토큰 기반
 @Validated
 @RestController
 @Tag(name = "사용자 인터뷰 API")

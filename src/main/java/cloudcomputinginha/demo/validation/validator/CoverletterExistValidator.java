@@ -24,7 +24,7 @@ public class CoverletterExistValidator implements ConstraintValidator<ExistCover
 
         if (!isValid) {
             context.disableDefaultConstraintViolation();
-            context.buildConstraintViolationWithTemplate(ErrorStatus.COVERLETTER_NOT_FOUND.toString()).addConstraintViolation();
+            context.buildConstraintViolationWithTemplate(ErrorStatus.COVERLETTER_NOT_FOUND.name()).addConstraintViolation();
         }
 
         return isValid;

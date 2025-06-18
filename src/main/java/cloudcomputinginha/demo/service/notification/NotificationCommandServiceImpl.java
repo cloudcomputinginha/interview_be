@@ -1,11 +1,14 @@
 package cloudcomputinginha.demo.service.notification;
 
+import cloudcomputinginha.demo.apiPayload.code.handler.NotificationHandler;
+import cloudcomputinginha.demo.apiPayload.code.status.ErrorStatus;
 import cloudcomputinginha.demo.converter.NotificationConverter;
 import cloudcomputinginha.demo.domain.Member;
 import cloudcomputinginha.demo.domain.Notification;
 import cloudcomputinginha.demo.domain.enums.NotificationType;
 import cloudcomputinginha.demo.repository.NotificationRepository;
-import cloudcomputinginha.demo.service.notification.event.NotificationEvent;
+import cloudcomputinginha.demo.web.sse.SseService;
+import cloudcomputinginha.demo.web.sse.event.NotificationEvent;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
@@ -15,45 +18,44 @@ import org.springframework.transaction.annotation.Transactional;
 @RequiredArgsConstructor
 public class NotificationCommandServiceImpl implements NotificationCommandService {
     private final NotificationRepository notificationRepository;
-    private final NotificationSseService notificationSseService;
+    private final SseService sseService;
     private final ApplicationEventPublisher eventPublisher;
 
     /**
-     * Notification을 지금 생성하고 바로 알림을 주고 싶을 때 사용
+     * 1. Notification을 생성 및 DB 저장
+     * 2. NotificationEvent 발행
+     * 3. @TransactionalEventListener가 커밋 이후 이벤트 감지
+     * 4. 비동기로 sendToMyAllEmitters 실행
+     * 5. SSE 알림 전송 완료
      *
      * @param receiver
      * @param notificationType
-     * @param content
+     * @param message
      * @param url
      */
     @Transactional
     @Override
-    public void createNotificationAndSend(Member receiver, NotificationType notificationType, String content, String url) {
-        Notification notification = NotificationConverter.toNotification(receiver, notificationType, content, url);
+    public void createNotificationAndSend(Member receiver, NotificationType notificationType, String message, String url) {
+        Notification notification = NotificationConverter.toNotification(receiver, notificationType, message, url);
         notificationRepository.save(notification);
 
-        String receiverId = String.valueOf(receiver.getId());
-        String eventId = notificationSseService.createId(receiver.getId());
+        String eventId = sseService.createId(receiver.getId());
 
         // 이벤트 전송은 commit 이후로 비동기 작업(위임)
         NotificationEvent notificationEvent = NotificationEvent.builder()
-                .receiverId(receiverId)
+                .receiverId(receiver.getId())
                 .eventId(eventId)
                 .notificationDTO(NotificationConverter.toNotificationDTO(notification))
                 .build();
         eventPublisher.publishEvent(notificationEvent);
     }
 
-    /**
-     * Notification을 미리 생성해두고 나중에 또는 정해진 시간에 알림을 주고 싶을 때 사용
-     *
-     * @param receiver
-     * @param notification
-     */
     @Override
-    public void send(Member receiver, Notification notification) {
-        String receiverId = String.valueOf(receiver.getId());
-        String eventId = notificationSseService.createId(receiver.getId());
-        notificationSseService.sendToMyAllEmitters(receiverId, eventId, NotificationConverter.toNotificationDTO(notification));
+    @Transactional
+    public void markAsRead(Long memberId, Long notificationId) {
+        Notification notification = notificationRepository.findByIdAndReceiverId(notificationId, memberId)
+                .orElseThrow(() -> new NotificationHandler(ErrorStatus.NOTIFICATION_NOT_OWNED));
+
+        notification.markAsRead();
     }
 }

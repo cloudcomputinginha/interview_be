@@ -1,5 +1,6 @@
 package cloudcomputinginha.demo.validation.validator;
 
+import cloudcomputinginha.demo.apiPayload.code.status.ErrorStatus;
 import cloudcomputinginha.demo.validation.annotation.ValidFileName;
 import jakarta.validation.ConstraintValidator;
 import jakarta.validation.ConstraintValidatorContext;
@@ -20,6 +21,13 @@ public class FileNameValidator implements ConstraintValidator<ValidFileName, Str
 
     @Override
     public boolean isValid(String value, ConstraintValidatorContext context) {
-        return value != null && FILE_PATTERN.matcher(value).matches();
+        boolean isValid = value != null && FILE_PATTERN.matcher(value).matches();
+
+        if (!isValid) {
+            context.disableDefaultConstraintViolation();
+            context.buildConstraintViolationWithTemplate(ErrorStatus.RESUME_FILE_NAME_INVALID.name()).addConstraintViolation();
+        }
+
+        return isValid;
     }
 }
