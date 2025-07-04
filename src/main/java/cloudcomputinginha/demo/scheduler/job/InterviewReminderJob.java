@@ -6,8 +6,8 @@ import cloudcomputinginha.demo.apiPayload.code.status.ErrorStatus;
 import cloudcomputinginha.demo.domain.Interview;
 import cloudcomputinginha.demo.domain.MemberInterview;
 import cloudcomputinginha.demo.domain.enums.NotificationType;
-import cloudcomputinginha.demo.repository.InterviewRepository;
 import cloudcomputinginha.demo.repository.MemberInterviewRepository;
+import cloudcomputinginha.demo.service.interview.InterviewQueryService;
 import cloudcomputinginha.demo.service.notification.NotificationCommandService;
 import lombok.RequiredArgsConstructor;
 import org.quartz.JobDataMap;
@@ -21,7 +21,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class InterviewReminderJob extends QuartzJobBean {
     private final NotificationCommandService notificationCommandService;
-    private final InterviewRepository interviewRepository;
+    private final InterviewQueryService interviewQueryService;
     private final MemberInterviewRepository memberInterviewRepository;
 
     @Override
@@ -30,7 +30,7 @@ public class InterviewReminderJob extends QuartzJobBean {
         Long interviewId = dataMap.getLong("interviewId");
         String type = dataMap.getString("reminderType"); // D1 or M30
 
-        Interview interview = interviewRepository.findById(interviewId)
+        Interview interview = interviewQueryService.getInterview(interviewId)
                 .orElseThrow(() -> new InterviewHandler(ErrorStatus.INTERVIEW_NOT_FOUND));
 
         List<MemberInterview> memberInterviews = memberInterviewRepository.findWithMemberByInterviewId(interviewId);

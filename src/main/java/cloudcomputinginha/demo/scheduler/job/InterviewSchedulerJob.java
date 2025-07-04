@@ -13,6 +13,11 @@ public class InterviewSchedulerJob extends QuartzJobBean {
 
     private final InterviewCommandService interviewCommandService;
 
+    /**
+     * interviewId와 memberId에 해당하는 면접을 시스템에서 자동으로 시작시킨다.
+     *
+     * @param context
+     */
     @Override
     protected void executeInternal(JobExecutionContext context) {
         JobDataMap dataMap = context.getMergedJobDataMap();

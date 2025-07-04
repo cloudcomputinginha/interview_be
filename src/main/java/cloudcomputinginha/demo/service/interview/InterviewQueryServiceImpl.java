@@ -13,11 +13,13 @@ import cloudcomputinginha.demo.repository.InterviewRepository;
 import cloudcomputinginha.demo.repository.MemberInterviewRepository;
 import cloudcomputinginha.demo.repository.MemberRepository;
 import cloudcomputinginha.demo.web.dto.InterviewResponseDTO;
-import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -28,7 +30,7 @@ public class InterviewQueryServiceImpl implements InterviewQueryService {
     private final MemberRepository memberRepository;
 
     @Override
-    @Transactional
+    @Transactional(readOnly = true)
     public List<InterviewResponseDTO.InterviewGroupCardDTO> getGroupInterviewCards(Long memberId) {
         Member member = memberRepository.findById(memberId)
                 .orElseThrow(() -> new MemberHandler(ErrorStatus.MEMBER_NOT_FOUND));
@@ -37,7 +39,7 @@ public class InterviewQueryServiceImpl implements InterviewQueryService {
     }
 
     @Override
-    @Transactional
+    @Transactional(readOnly = true)
     public InterviewResponseDTO.GroupInterviewDetailDTO getGroupInterviewDetail(Long memberId, Long interviewId) {
         Interview interview = interviewRepository.findById(interviewId)
                 .orElseThrow(() -> new InterviewHandler(ErrorStatus.INTERVIEW_NOT_FOUND));
@@ -52,5 +54,17 @@ public class InterviewQueryServiceImpl implements InterviewQueryService {
                 .orElseThrow(() -> new MemberInterviewHandler(ErrorStatus.MEMBER_INTERVIEW_NOT_FOUND)); //데이터 구조상 하나만 존재할 수 있다.
 
         return InterviewConverter.toInterviewGroupDetailDTO(interview, myMemberInterview, memberInterviewList);
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public List<Interview> getUpcomingInterviews(LocalDateTime currentTime) {
+        return interviewRepository.findAllByStartedAtAfterAndEndedAtIsNull(LocalDateTime.now());
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public Optional<Interview> getInterview(Long interviewId) {
+        return interviewRepository.findById(interviewId);
     }
 }
