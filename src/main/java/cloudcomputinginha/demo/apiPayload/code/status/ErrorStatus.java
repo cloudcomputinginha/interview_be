@@ -17,7 +17,6 @@ public enum ErrorStatus implements BaseErrorCode {
     _UNAUTHORIZED(HttpStatus.UNAUTHORIZED, "COMMON401", "인증이 필요합니다."),
     _FORBIDDEN(HttpStatus.FORBIDDEN, "COMMON403", "금지된 요청입니다."),
 
-
     // 멤버 관려 에러
     MEMBER_NOT_FOUND(HttpStatus.BAD_REQUEST, "MEMBER4001", "사용자가 없습니다."),
     NICKNAME_NOT_EXIST(HttpStatus.BAD_REQUEST, "MEMBER4002", "닉네임은 필수 입니다."),
@@ -55,8 +54,16 @@ public enum ErrorStatus implements BaseErrorCode {
     // 알림 관련 에러
     NOTIFICATION_SEND_FAIL(HttpStatus.INTERNAL_SERVER_ERROR, "NOTIFICATION5001", "알림 전송에 실패했습니다."),
     NOTIFICATION_TYPE_INVALID(HttpStatus.INTERNAL_SERVER_ERROR, "NOTIFICATION5002", "알림 타입이 올바르지 않습니다."),
-    NOTIFICATION_NOT_OWNED(HttpStatus.FORBIDDEN, "NOTIFICATION4001", "알림은 해당 회원의 소유가 아닙니다.");
+    NOTIFICATION_NOT_OWNED(HttpStatus.FORBIDDEN, "NOTIFICATION4001", "알림은 해당 회원의 소유가 아닙니다."),
 
+    // 면접 스케줄러 관련 에러
+    INTERVIEW_SCHEDULE_CREATE_FAIL(HttpStatus.INTERNAL_SERVER_ERROR, "SCHEDULER5001", "면접 시작 스케줄 등록에 실패했습니다."),
+    INTERVIEW_REMINDER_CREATE_FAIL(HttpStatus.INTERNAL_SERVER_ERROR, "SCHEDULER5002", "면접 리마인더 스케줄 등록에 실패했습니다."),
+    INTERVIEW_SCHEDULE_CANCEL_FAIL(HttpStatus.INTERNAL_SERVER_ERROR, "SCHEDULER5003", "면접 스케줄 취소에 실패했습니다."),
+    INTERVIEW_SCHEDULE_CHECK_FAIL(HttpStatus.INTERNAL_SERVER_ERROR, "SCHEDULER5004", "Job 존재 여부 확인에 실패했습니다."),
+    INTERVIEW_SCHEDULE_ALREADY_EXISTS(HttpStatus.CONFLICT, "SCHEDULER4001", "해당 면접 스케줄은 이미 존재합니다."),
+    INTERVIEW_REMINDER_TIME_INVALID(HttpStatus.BAD_REQUEST, "SCHEDULER4002", "면접 리마인더 시간이 유효하지 않습니다."),
+    INTERVIEW_SCHEDULE_INVALID_ARGUMENT(HttpStatus.BAD_REQUEST, "SCHEDULER4003", "면접 ID 또는 시간이 유효하지 않습니다.");
 
     private final HttpStatus httpStatus;
     private final String code;
