@@ -19,6 +19,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -94,7 +95,16 @@ public class InterviewCommandServiceImpl implements InterviewCommandService {
         // 인터뷰 리마인드 스케줄링
         interviewScheduler.scheduleInterviewReminderIfNotExists(
                 interview.getId(),
-                interview.getStartedAt()
+                interview.getStartedAt(),
+                Duration.ofDays(1),
+                "D1"
+        );
+
+        interviewScheduler.scheduleInterviewReminderIfNotExists(
+                interview.getId(),
+                interview.getStartedAt(),
+                Duration.ofDays(30),
+                "M30"
         );
 
         return InterviewConverter.createInterview(interview);
