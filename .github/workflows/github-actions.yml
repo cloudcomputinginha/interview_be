@@ -53,8 +53,8 @@ jobs:
         if: contains(github.ref, 'main')
         run: |
           docker login -u ${{ secrets.DOCKER_USERNAME }} -p ${{ secrets.DOCKER_PASSWORD }}
-          docker build -f Dockerfile -t ${{ secrets.DOCKER_USERNAME }}/docker-test-prod .
-          docker push ${{ secrets.DOCKER_USERNAME }}/docker-test-prod
+          docker build -f Dockerfile -t ${{ secrets.DOCKER_USERNAME }}/interview-be-service .
+          docker push ${{ secrets.DOCKER_USERNAME }}/interview-be-service
 
       ## deploy to production
       - name: Deploy to prod
@@ -67,7 +67,9 @@ jobs:
           key: ${{ secrets.PRIVATE_KEY }}
           envs: GITHUB_SHA
           script: |
-            sudo docker ps
-            sudo docker pull ${{ secrets.DOCKER_USERNAME }}/docker-test-prod
-            sudo docker run -d -p 8080:8080 ${{ secrets.DOCKER_USERNAME }}/docker-test-prod
+            docker stop interview-be-app || true # 컨테이너가 실행 중이면 중지
+            docker rm interview-be-app || true # 기존 컨테이너 삭제
+            docker rmi ${{ secrets.DOCKER_USERNAME }}/interview-be-service || true # 기존 이미지 삭제
+            sudo docker pull ${{ secrets.DOCKER_USERNAME }}/interview-be-service # 최신 이미지 pull
+            sudo docker run -d --name interview-be-app -p 8080:8080 ${{ secrets.DOCKER_USERNAME }}/interview-be-service # 컨테이너 실행
             sudo docker image prune -f
