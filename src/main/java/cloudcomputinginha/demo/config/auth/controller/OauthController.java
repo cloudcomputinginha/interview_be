@@ -2,6 +2,7 @@ package cloudcomputinginha.demo.config.auth.controller;
 
 import cloudcomputinginha.demo.apiPayload.ApiResponse;
 import cloudcomputinginha.demo.config.auth.JwtProvider;
+import cloudcomputinginha.demo.config.auth.dto.GuestLoginResponse;
 import cloudcomputinginha.demo.config.auth.dto.TokenReissueRequestDto;
 import cloudcomputinginha.demo.config.auth.dto.TokenReissueResponseDto;
 import cloudcomputinginha.demo.config.auth.service.OauthService;
@@ -79,5 +80,11 @@ public class OauthController {
 
         return ApiResponse.onSuccess(responseDto);
 
+    }
+
+    @PostMapping("/guest")
+    @Operation(summary = "게스트 로그인 API", description = "게스트 사용자 전용 로그인 기능입니다.")
+    public ApiResponse<GuestLoginResponse> guestLogin() {
+        return ApiResponse.onSuccess(oauthService.loginAsGuest());
     }
 }

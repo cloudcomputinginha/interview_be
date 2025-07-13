@@ -2,6 +2,7 @@ package cloudcomputinginha.demo.config.auth.service;
 
 import cloudcomputinginha.demo.config.auth.JwtProvider;
 import cloudcomputinginha.demo.config.auth.domain.GoogleUser;
+import cloudcomputinginha.demo.config.auth.dto.GuestLoginResponse;
 import cloudcomputinginha.demo.domain.Member;
 import cloudcomputinginha.demo.domain.enums.SocialProvider;
 import cloudcomputinginha.demo.repository.MemberRepository;
@@ -11,6 +12,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import java.io.IOException;
 import java.util.List;
+import java.util.Random;
 
 @Service
 @RequiredArgsConstructor
@@ -51,7 +53,7 @@ public class OauthService {
                     return memberRepository.save(newMember);
                 });
 
-        String accessToken = jwtProvider.generateAccessToken(member.getId());
+        String accessToken = jwtProvider.generateAccessToken(member.getId(), false);
         String refreshToken = jwtProvider.generateRefreshToken(member.getId());
 
         member.setRefreshToken(refreshToken);
@@ -71,5 +73,16 @@ public class OauthService {
                 .filter(x -> x.provider() == socialProvider)
                 .findFirst()
                 .orElseThrow(() -> new IllegalArgumentException("알 수 없는 SocialLoginType 입니다."));
+    }
+
+    // 게스트 사용자
+    public GuestLoginResponse loginAsGuest() {
+        String name = "게스트" + new Random().nextInt(10000);
+        Member guest = Member.createGuest(name);
+        memberRepository.save(guest);
+
+        String accessToken = jwtProvider.generateAccessToken(guest.getId(), true);
+
+        return new GuestLoginResponse(accessToken, guest.getId(), guest.getName());
     }
 }
