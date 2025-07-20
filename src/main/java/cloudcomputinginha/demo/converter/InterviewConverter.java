@@ -126,6 +126,7 @@ public class InterviewConverter {
                 .description(interview.getDescription())
                 .sessionName(interview.getSessionName())
                 .jobName(interview.getJobName())
+                .noticeUrl(interview.getNoticeUrl())
                 .interviewType(interview.getInterviewOption().getInterviewType())
                 .maxParticipants(interview.getMaxParticipants())
                 .currentParticipants(interview.getCurrentParticipants().intValue())
