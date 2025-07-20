@@ -25,7 +25,7 @@ public class CoverletterCommandServiceImpl implements CoverletterCommandService 
 
     @Override
     public Coverletter saveCoverletter(Long memberId, CoverletterRequestDTO.createCoverletterDTO requestDTO) {
-        Member member = memberRepository.getReferenceById(requestDTO.getMemberId());
+        Member member = memberRepository.getReferenceById(memberId);
         Coverletter coverletter = CoverletterConverter.toCoverletter(requestDTO, member);
         coverletterRepository.save(coverletter);
 
