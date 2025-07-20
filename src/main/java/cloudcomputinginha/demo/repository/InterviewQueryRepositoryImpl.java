@@ -29,6 +29,7 @@ public class InterviewQueryRepositoryImpl implements InterviewQueryRepository {
                         interview.description,
                         interview.sessionName,
                         interview.jobName,
+                        interview.noticeUrl,
                         interview.interviewOption.interviewType,
                         memberInterview.count().intValue(),
                         interview.maxParticipants,

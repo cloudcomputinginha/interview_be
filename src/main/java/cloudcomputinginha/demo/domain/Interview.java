@@ -3,6 +3,7 @@ package cloudcomputinginha.demo.domain;
 import cloudcomputinginha.demo.apiPayload.code.handler.MemberInterviewHandler;
 import cloudcomputinginha.demo.apiPayload.code.status.ErrorStatus;
 import cloudcomputinginha.demo.domain.common.BaseEntity;
+import cloudcomputinginha.demo.domain.embedded.Url;
 import cloudcomputinginha.demo.domain.enums.StartType;
 import jakarta.persistence.*;
 import lombok.*;
@@ -50,6 +51,9 @@ public class Interview extends BaseEntity {
 
     @Builder.Default
     private Integer maxParticipants = 1; //일대일 면접을 기준으로 초기화
+
+    @Column(length = 255)
+    private String noticeUrl; //면접 채용공고 URL
 
     @Builder.Default
     private Boolean isOpen = false;

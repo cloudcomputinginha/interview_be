@@ -16,10 +16,6 @@ public class CoverletterRequestDTO {
     @NoArgsConstructor(access = AccessLevel.PROTECTED)
     @AllArgsConstructor
     public static class createCoverletterDTO {
-        @ExistMember
-        @NotNull
-        private Long memberId;
-
         @NotBlank
         @Size(max = 100)
         private String corporateName;

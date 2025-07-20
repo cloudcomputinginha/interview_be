@@ -32,11 +32,12 @@ public class InterviewRequestDTO {
         private String name;
         @NotBlank
         private String description;
-        private String sessionName; // 그룹의 경우 필요
         @NotBlank
         private String corporateName; // 기업명
         @NotBlank
         private String jobName; // 직무명
+        private String noticeUrl; // 채용 공고 URL
+        private String sessionName; // 그룹의 경우 필요
 
         // 면접 옵션 정보
         @NotNull
