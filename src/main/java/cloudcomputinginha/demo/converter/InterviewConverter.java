@@ -92,6 +92,7 @@ public class InterviewConverter {
                 .interviewId(interview.getId())
                 .corporateName(interview.getCorporateName())
                 .jobName(interview.getJobName())
+                .noticeUrl(interview.getNoticeUrl())
                 .startType(interview.getStartType())
                 .participantCount(participantCount)
                 .build();

@@ -130,7 +130,6 @@ public class InterviewCommandServiceImpl implements InterviewCommandService {
                 .toList();
 
         if(isGroupInterview) {
-
             // 참가자들에게 참가알림 발송
             memberInterviewSocketService.enterInterview(interviewId);
         }

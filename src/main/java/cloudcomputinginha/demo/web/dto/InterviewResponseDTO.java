@@ -72,6 +72,7 @@ public class InterviewResponseDTO {
         private Long interviewId;
         private String corporateName;
         private String jobName;
+        private String noticeUrl;
         private StartType startType;
         private int participantCount;
     }
