@@ -6,6 +6,9 @@ import cloudcomputinginha.demo.domain.common.BaseEntity;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Entity
 @Getter
 @Builder
@@ -26,6 +29,10 @@ public class Coverletter extends BaseEntity {
 
     @Column(length = 20)
     private String jobName;
+
+    // 자소서 삭제 시 qna도 함께 삭제되길 원함.
+    @OneToMany(mappedBy = "coverletter", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Qna> qnas = new ArrayList<>();
 
     public void validateOwnedBy(Long memberId) {
         if (!this.member.getId().equals(memberId)) {

@@ -10,6 +10,8 @@ import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.DynamicUpdate;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Getter
@@ -61,6 +63,10 @@ public class Interview extends BaseEntity {
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "interview_option_id", unique = true, nullable = false)
     private InterviewOption interviewOption;
+
+    // 면접 삭제 시 참여자 기록도 삭제
+    @OneToMany(mappedBy = "interview", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<MemberInterview> memberInterviews = new ArrayList<>();
 
     public void updateStartedAt(LocalDateTime startedAt) {
         this.startedAt = startedAt;
