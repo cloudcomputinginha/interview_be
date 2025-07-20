@@ -46,6 +46,7 @@ public class InterviewResponseDTO {
         private String description;
         private String sessionName;
         private String jobName;
+        private String noticeUrl;
         private InterviewType interviewType;
         private int currentParticipants;
         private int maxParticipants;
