@@ -24,7 +24,7 @@ public class ResumeCommandServiceImpl implements ResumeCommandService {
         if (!resumeCreateDTO.getFileName().toLowerCase().endsWith(".pdf") || !resumeCreateDTO.getFileUrl().toLowerCase().endsWith(".pdf")) {
             throw new ResumeHandler(ErrorStatus.RESUME_FILE_TYPE_INVALID);
         }
-        Member member = memberRepository.getReferenceById(resumeCreateDTO.getMemberId());
+        Member member = memberRepository.getReferenceById(memberId);
         Resume resume = Resume.builder()
                 .member(member)
                 .fileName(resumeCreateDTO.getFileName())
