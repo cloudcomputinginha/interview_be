@@ -36,6 +36,7 @@ public class SecurityConfig {
                             public CorsConfiguration getCorsConfiguration(HttpServletRequest request) {
                                 CorsConfiguration configuration = new CorsConfiguration();
                                 configuration.setAllowedOrigins(List.of(
+                                        "http://localhost:8080",
                                         "http://localhost:3000",
                                         "https://cloud-computing-fe-two.vercel.app",
                                         "http://127.0.0.1:5500",
