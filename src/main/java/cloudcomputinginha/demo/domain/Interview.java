@@ -65,6 +65,7 @@ public class Interview extends BaseEntity {
     private InterviewOption interviewOption;
 
     // 면접 삭제 시 참여자 기록도 삭제
+    @Builder.Default
     @OneToMany(mappedBy = "interview", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<MemberInterview> memberInterviews = new ArrayList<>();
 

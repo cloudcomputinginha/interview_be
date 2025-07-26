@@ -45,18 +45,22 @@ public class Member extends BaseEntity {
     private String refreshToken;
 
     // 회원 탈퇴 시 자소서도 함께 삭제되길 원함.
+    @Builder.Default
     @OneToMany(mappedBy = "member", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Coverletter> coverletters = new ArrayList<>();
 
     // 회원 탈퇴 시 이력서도 함께 삭제되길 원함.
+    @Builder.Default
     @OneToMany(mappedBy = "member", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Resume> resumes = new ArrayList<>();
 
     // 회원 탈퇴 시 회원이 참여한 면접 기록도 함께 삭제되길 원함.
+    @Builder.Default
     @OneToMany(mappedBy = "member", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<MemberInterview> memberInterviews = new ArrayList<>();
 
     // 회원 탈퇴 시 해당 회원에게 발송된 알림도 함께 삭제되길 원함.
+    @Builder.Default
     @OneToMany(mappedBy = "receiver", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Notification> notifications = new ArrayList<>();
 
