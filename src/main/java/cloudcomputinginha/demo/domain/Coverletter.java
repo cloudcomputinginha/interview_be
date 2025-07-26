@@ -31,6 +31,7 @@ public class Coverletter extends BaseEntity {
     private String jobName;
 
     // 자소서 삭제 시 qna도 함께 삭제되길 원함.
+    @Builder.Default
     @OneToMany(mappedBy = "coverletter", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Qna> qnas = new ArrayList<>();
 
@@ -38,5 +39,10 @@ public class Coverletter extends BaseEntity {
         if (!this.member.getId().equals(memberId)) {
             throw new CoverletterHandler(ErrorStatus.COVERLETTER_NOT_OWNED);
         }
+    }
+
+    public void addQna(Qna qna) {
+        this.qnas.add(qna);
+        qna.setCoverletter(this);
     }
 }

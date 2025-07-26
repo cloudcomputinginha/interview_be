@@ -24,4 +24,8 @@ public class Qna extends BaseEntity {
 
     @Column(columnDefinition = "TEXT", nullable = false)
     private String answer;
+
+    protected void setCoverletter(Coverletter coverletter) {
+        this.coverletter = coverletter;
+    }
 }
