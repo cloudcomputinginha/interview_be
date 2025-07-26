@@ -11,6 +11,8 @@ import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.DynamicUpdate;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Getter
@@ -43,11 +45,16 @@ public class Interview extends BaseEntity {
     @Column(columnDefinition = "VARCHAR(20)")
     private StartType startType;
 
-    private Long hostId;
+//    private Long hostId;
 
     @Builder.Default
     @Column(nullable = false)
     private Integer currentParticipants = 1;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "host_id", nullable = false)
+    private Member host;
+
 
     @Builder.Default
     private Integer maxParticipants = 1; //일대일 면접을 기준으로 초기화
@@ -62,9 +69,13 @@ public class Interview extends BaseEntity {
 
     private LocalDateTime endedAt;
 
-    @OneToOne(fetch = FetchType.LAZY)
+    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.REMOVE, orphanRemoval = true)
     @JoinColumn(name = "interview_option_id", unique = true, nullable = false)
     private InterviewOption interviewOption;
+
+    @OneToMany(mappedBy = "interview", cascade = CascadeType.REMOVE, orphanRemoval = true)
+    private List<MemberInterview> memberInterviews = new ArrayList<>();
+
 
     public void updateStartedAt(LocalDateTime startedAt) {
         this.startedAt = startedAt;

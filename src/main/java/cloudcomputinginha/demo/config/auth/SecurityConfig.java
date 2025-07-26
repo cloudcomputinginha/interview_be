@@ -73,7 +73,7 @@ public class SecurityConfig {
 
                 //경로별 인가 작업
                 .authorizeHttpRequests((auth) -> auth
-                                .requestMatchers("/auth/GOOGLE", "/auth/google/callback").permitAll()
+                                .requestMatchers("/auth/GOOGLE", "/auth/google/callback", "/auth/guest").permitAll()
                                 .requestMatchers("/v3/api-docs/**",
                                         "/swagger-ui/**",
                                         "/swagger-resources/**",
