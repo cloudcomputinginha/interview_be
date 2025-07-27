@@ -13,8 +13,8 @@ public interface MemberInterviewRepository extends JpaRepository<MemberInterview
     List<MemberInterview> findByResumeId(Long resumeId);
 
     @Query("SELECT mi FROM MemberInterview mi " +
-            "JOIN FETCH mi.resume JOIN FETCH mi.coverletter JOIN FETCH mi.interview i " +
-            "WHERE i.id = :interviewId")
+            "LEFT JOIN FETCH mi.resume LEFT JOIN FETCH mi.coverletter " +
+            "WHERE mi.interview.id = :interviewId")
     List<MemberInterview> findByInterviewId(Long interviewId);
 
     List<MemberInterview> findWithMemberByInterviewId(Long interviewId);
@@ -22,8 +22,8 @@ public interface MemberInterviewRepository extends JpaRepository<MemberInterview
     Optional<MemberInterview> findByMemberIdAndInterviewId(Long memberId, Long interviewId);
 
     @Query("SELECT mi FROM MemberInterview mi " +
-            "JOIN FETCH mi.resume JOIN FETCH mi.coverletter JOIN FETCH mi.interview i " +
-            "WHERE i.id = :interviewId AND mi.status = 'IN_PROGRESS'")
+            "LEFT JOIN FETCH mi.resume LEFT JOIN FETCH mi.coverletter " +
+            "WHERE mi.interview.id = :interviewId AND mi.status = 'IN_PROGRESS'")
     List<MemberInterview> findByInterviewIdAndInprogress(Long interviewId);
 
     @Query("SELECT mi FROM MemberInterview mi " +
