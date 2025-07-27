@@ -80,4 +80,9 @@ public class Member extends BaseEntity {
         this.jobType = jobType;
         this.introduction = introduction;
     }
+
+    public void addResume(Resume resume) {
+        resumes.add(resume);
+        //resume.setMember(this); nullable = false로 설정
+    }
 }

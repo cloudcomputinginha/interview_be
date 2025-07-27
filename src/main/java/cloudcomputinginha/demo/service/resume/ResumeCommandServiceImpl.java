@@ -1,5 +1,6 @@
 package cloudcomputinginha.demo.service.resume;
 
+import cloudcomputinginha.demo.apiPayload.code.handler.MemberHandler;
 import cloudcomputinginha.demo.apiPayload.code.handler.ResumeHandler;
 import cloudcomputinginha.demo.apiPayload.code.status.ErrorStatus;
 import cloudcomputinginha.demo.domain.Member;
@@ -29,7 +30,9 @@ public class ResumeCommandServiceImpl implements ResumeCommandService {
         if (!resumeCreateDTO.getFileName().toLowerCase().endsWith(".pdf") || !resumeCreateDTO.getFileUrl().toLowerCase().endsWith(".pdf")) {
             throw new ResumeHandler(ErrorStatus.RESUME_FILE_TYPE_INVALID);
         }
-        Member member = memberRepository.getReferenceById(memberId);
+        Member member = memberRepository.findById(memberId)
+                .orElseThrow(() -> new MemberHandler(ErrorStatus.MEMBER_NOT_FOUND));
+
         Resume resume = Resume.builder()
                 .member(member)
                 .fileName(resumeCreateDTO.getFileName())
@@ -37,6 +40,9 @@ public class ResumeCommandServiceImpl implements ResumeCommandService {
                 .fileSize(resumeCreateDTO.getFileSize())
                 .fileType(FileType.PDF)
                 .build();
+
+        member.addResume(resume);
+
         return resumeRepository.save(resume);
     }
 

@@ -5,7 +5,6 @@ import cloudcomputinginha.demo.converter.InterviewConverter;
 import cloudcomputinginha.demo.converter.ResumeConverter;
 import cloudcomputinginha.demo.domain.Interview;
 import cloudcomputinginha.demo.domain.Resume;
-import cloudcomputinginha.demo.repository.MemberRepository;
 import cloudcomputinginha.demo.service.resume.ResumeCommandService;
 import cloudcomputinginha.demo.service.resume.ResumeQueryService;
 import cloudcomputinginha.demo.service.resume.ResumeS3Service;
@@ -17,7 +16,6 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -33,8 +31,6 @@ public class ResumeRestController {
     private final ResumeS3Service s3PresignedService;
     private final ResumeCommandService resumeCommandService;
     private final ResumeQueryService resumeQueryService;
-    private final MemberRepository memberRepository;
-    private final ApplicationEventPublisher applicationEventPublisher;
 
     @GetMapping("/upload")
     @Operation(summary = "이력서를 업로드할 presignedURL 발급", description = "업로드할 파일을 이름을 넘길 떄, 확장자를 포함합니다.")
