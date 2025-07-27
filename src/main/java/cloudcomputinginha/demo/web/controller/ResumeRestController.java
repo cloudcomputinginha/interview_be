@@ -91,4 +91,14 @@ public class ResumeRestController {
                 .toList();
         return ApiResponse.onSuccess(interviewCards);
     }
+
+    @DeleteMapping("/{resumeId}")
+    @Operation(summary = "이력서 삭제")
+    public ApiResponse<Void> deleteResume(
+            @PathVariable Long resumeId,
+            @AuthenticationPrincipal Long memberId
+    ) {
+        resumeCommandService.deleteResume(resumeId, memberId);
+        return ApiResponse.onSuccess(null);
+    }
 }
