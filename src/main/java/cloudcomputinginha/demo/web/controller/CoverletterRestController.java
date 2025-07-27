@@ -87,5 +87,15 @@ public class CoverletterRestController {
                 .toList();
         return ApiResponse.onSuccess(interviewCards);
     }
+
+    @DeleteMapping("/{coverletterId}")
+    @Operation(summary = "이력서 삭제")
+    public ApiResponse<Void> deleteResume(
+            @PathVariable Long coverletterId,
+            @AuthenticationPrincipal Long memberId
+    ) {
+        coverletterCommandService.deleteCoverletter(coverletterId, memberId);
+        return ApiResponse.onSuccess(null);
+    }
 }
 
