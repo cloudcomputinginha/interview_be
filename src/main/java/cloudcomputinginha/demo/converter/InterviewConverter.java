@@ -1,16 +1,15 @@
 package cloudcomputinginha.demo.converter;
 
-import cloudcomputinginha.demo.domain.*;
+import cloudcomputinginha.demo.domain.Interview;
+import cloudcomputinginha.demo.domain.InterviewOption;
+import cloudcomputinginha.demo.domain.Member;
+import cloudcomputinginha.demo.domain.MemberInterview;
 import cloudcomputinginha.demo.domain.enums.StartType;
-import cloudcomputinginha.demo.web.dto.InterviewOptionResponseDTO;
 import cloudcomputinginha.demo.web.dto.InterviewRequestDTO;
 import cloudcomputinginha.demo.web.dto.InterviewResponseDTO;
-import cloudcomputinginha.demo.web.dto.MemberInterviewResponseDTO;
 
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Map;
-import java.util.stream.Collectors;
 
 public class InterviewConverter {
     public static InterviewResponseDTO.InterviewEndResultDTO toInterviewEndResultDTO(Interview interview) {
@@ -100,22 +99,13 @@ public class InterviewConverter {
 
     public static InterviewResponseDTO.InterviewStartResponseDTO toInterviewStartResponseDTO(
             Interview interview,
-            List<MemberInterview> memberInterviews,
-            List<Qna> allQnas
+            List<MemberInterview> memberInterviews
     ) {
-        // 면접 참가자의 모든 QNA를 조회한 후, 자기소개서 id를 바탕으로 조회한 QNA를 그룹핑한다.
-        Map<Long, List<Qna>> qnaMap = allQnas.stream()
-                .collect(Collectors.groupingBy(q -> q.getCoverletter().getId()));
-
-        InterviewResponseDTO.InterviewDTO interviewDTO = InterviewConverter.toInterviewDTO(interview, memberInterviews.size());
-        InterviewOptionResponseDTO.InterviewOptionDetailDTO interviewOptionDTO = InterviewOptionConverter.toInterviewOptionDTO(interview.getInterviewOption());
-        List<MemberInterviewResponseDTO.ParticipantDTO> participantDTOs = MemberInterviewConverter.toParticipantDTOs(memberInterviews, qnaMap);
-
         return InterviewResponseDTO.InterviewStartResponseDTO.builder()
                 .interviewId(interview.getId())
-                .interview(interviewDTO)
-                .options(interviewOptionDTO)
-                .participants(participantDTOs)
+                .interview(InterviewConverter.toInterviewDTO(interview, memberInterviews.size()))
+                .options(InterviewOptionConverter.toInterviewOptionDTO(interview.getInterviewOption()))
+                .participants(MemberInterviewConverter.toParticipantDTOs(memberInterviews))
                 .build();
     }
 

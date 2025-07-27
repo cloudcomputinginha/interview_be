@@ -37,7 +37,6 @@ public class InterviewCommandServiceImpl implements InterviewCommandService {
     private final ResumeRepository resumeRepository;
     private final CoverletterRepository coverletterRepository;
     private final MemberInterviewRepository memberInterviewRepository;
-    private final QnaRepository qnaRepository;
     private final MemberInterviewSocketService memberInterviewSocketService;
 
     private final InterviewScheduler interviewScheduler;
@@ -120,21 +119,11 @@ public class InterviewCommandServiceImpl implements InterviewCommandService {
         List<MemberInterview> memberInterviews = isGroupInterview ?
                 memberInterviewRepository.findByInterviewIdAndInprogress(interviewId) :
                 memberInterviewRepository.findByInterviewId(interviewId);
-
         boolean hasMissingDocs = memberInterviews.stream()
                 .anyMatch(mi -> mi.getResume() == null || mi.getCoverletter() == null);
         if (hasMissingDocs) {
             throw new InterviewHandler(ErrorStatus.INTERVIEW_DOCUEMENTS_NOT_FOUND); //면접을 시작할 때는 모든 참가자의 자소서, 이력서가 필수여야 함
         }
-
-        List<Long> coverletterIds = memberInterviews.stream()
-                .map(mi -> mi.getCoverletter().getId())
-                .toList();
-        List<Qna> allQnas = qnaRepository.findAllByCoverletterIds(coverletterIds);
-
-        List<Long> memberIds = memberInterviews.stream()
-                .map(mi -> mi.getMember().getId())
-                .toList();
 
         if (isGroupInterview) {
             // 참가자들에게 참가알림 발송
@@ -146,7 +135,7 @@ public class InterviewCommandServiceImpl implements InterviewCommandService {
             interviewWithOption.updateStartedAt(LocalDateTime.now());
         }
 
-        return InterviewConverter.toInterviewStartResponseDTO(interviewWithOption, memberInterviews, allQnas);
+        return InterviewConverter.toInterviewStartResponseDTO(interviewWithOption, memberInterviews);
     }
 
     @Override
