@@ -1,12 +1,9 @@
 package cloudcomputinginha.demo.web.controller;
 
 import cloudcomputinginha.demo.apiPayload.ApiResponse;
-import cloudcomputinginha.demo.apiPayload.code.handler.MemberHandler;
-import cloudcomputinginha.demo.apiPayload.code.status.ErrorStatus;
 import cloudcomputinginha.demo.converter.InterviewConverter;
 import cloudcomputinginha.demo.converter.ResumeConverter;
 import cloudcomputinginha.demo.domain.Interview;
-import cloudcomputinginha.demo.domain.Member;
 import cloudcomputinginha.demo.domain.Resume;
 import cloudcomputinginha.demo.repository.MemberRepository;
 import cloudcomputinginha.demo.service.resume.ResumeCommandService;
@@ -50,9 +47,6 @@ public class ResumeRestController {
     @PostMapping("/upload")
     @Operation(summary = "S3에 저장된 이력서 메타데이터 저장")
     public ApiResponse<ResumeResponseDTO.CreateResumeResultDTO> saveResume(@AuthenticationPrincipal Long memberId, @RequestBody @Valid ResumeRequestDTO.ResumeCreateDTO resumeCreateDTO) {
-        Member member = memberRepository.findById(memberId)
-                .orElseThrow(() -> new MemberHandler(ErrorStatus.MEMBER_NOT_FOUND));
-
         Resume resume = resumeCommandService.saveResume(memberId, resumeCreateDTO);
 
         // 이력서 OCR 이벤트 발행
@@ -66,9 +60,6 @@ public class ResumeRestController {
     public ApiResponse<ResumeResponseDTO.ResumeListDTO> getResumeList(
             @AuthenticationPrincipal Long memberId
     ) {
-        Member member = memberRepository.findById(memberId)
-                .orElseThrow(() -> new MemberHandler(ErrorStatus.MEMBER_NOT_FOUND));
-
         List<Resume> resumes = resumeQueryService.getResumesByMember(memberId);
         return ApiResponse.onSuccess(ResumeConverter.toResumeListDTO(resumes));
     }
@@ -79,9 +70,6 @@ public class ResumeRestController {
             @PathVariable Long resumeId,
             @AuthenticationPrincipal Long memberId
     ) {
-        Member member = memberRepository.findById(memberId)
-                .orElseThrow(() -> new MemberHandler(ErrorStatus.MEMBER_NOT_FOUND));
-
         Resume resume = resumeQueryService.getResume(resumeId);
         resume.validateOwnedBy(memberId);
 
@@ -94,8 +82,6 @@ public class ResumeRestController {
             @PathVariable Long resumeId,
             @AuthenticationPrincipal Long memberId
     ) {
-        Member member = memberRepository.findById(memberId)
-                .orElseThrow(() -> new MemberHandler(ErrorStatus.MEMBER_NOT_FOUND));
         Resume resume = resumeQueryService.getResume(resumeId);
         resume.validateOwnedBy(memberId);
 
