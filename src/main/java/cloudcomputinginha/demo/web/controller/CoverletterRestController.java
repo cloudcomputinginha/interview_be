@@ -4,21 +4,21 @@ import cloudcomputinginha.demo.apiPayload.ApiResponse;
 import cloudcomputinginha.demo.apiPayload.code.handler.MemberHandler;
 import cloudcomputinginha.demo.apiPayload.code.status.ErrorStatus;
 import cloudcomputinginha.demo.converter.CoverletterConverter;
+import cloudcomputinginha.demo.converter.InterviewConverter;
 import cloudcomputinginha.demo.domain.Coverletter;
+import cloudcomputinginha.demo.domain.Interview;
 import cloudcomputinginha.demo.domain.Member;
 import cloudcomputinginha.demo.domain.Qna;
 import cloudcomputinginha.demo.repository.MemberRepository;
 import cloudcomputinginha.demo.service.coverletter.CoverletterCommandService;
 import cloudcomputinginha.demo.service.coverletter.CoverletterQueryService;
 import cloudcomputinginha.demo.service.qna.QnaQueryService;
-import cloudcomputinginha.demo.validation.annotation.ExistCoverletter;
-import cloudcomputinginha.demo.validation.annotation.ExistMember;
 import cloudcomputinginha.demo.web.dto.CoverletterRequestDTO;
 import cloudcomputinginha.demo.web.dto.CoverletterResponseDTO;
+import cloudcomputinginha.demo.web.dto.InterviewResponseDTO;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
-import jakarta.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.validation.annotation.Validated;
@@ -59,7 +59,7 @@ public class CoverletterRestController {
 
     @GetMapping("/{coverletterId}")
     @Operation(summary = "자기소개서 세부 조회")
-    public ApiResponse<CoverletterResponseDTO.CoverletterDetailDTO> getCoverletterDetail(@AuthenticationPrincipal Long memberId, @PathVariable @ExistCoverletter @NotNull Long coverletterId) {
+    public ApiResponse<CoverletterResponseDTO.CoverletterDetailDTO> getCoverletterDetail(@AuthenticationPrincipal Long memberId, @PathVariable Long coverletterId) {
         Member member = memberRepository.findById(memberId)
                 .orElseThrow(() -> new MemberHandler(ErrorStatus.MEMBER_NOT_FOUND));
 
@@ -70,5 +70,22 @@ public class CoverletterRestController {
         return ApiResponse.onSuccess(CoverletterConverter.toDetailDTO(coverletter, qnaList));
     }
 
+    @GetMapping("/{coverletterId}/interviews")
+    @Operation(summary = "해당 자기소개서를 사용중인 인터뷰 리스트 조회")
+    public ApiResponse<List<InterviewResponseDTO.InterviewGroupCardDTO>> getResumeInterviews(
+            @PathVariable Long coverletterId,
+            @AuthenticationPrincipal Long memberId
+    ) {
+        Member member = memberRepository.findById(memberId)
+                .orElseThrow(() -> new MemberHandler(ErrorStatus.MEMBER_NOT_FOUND));
+        Coverletter coverletter = coverletterQueryService.getCoverletter(coverletterId);
+        coverletter.validateOwnedBy(memberId);
+
+        List<Interview> interviews = coverletterQueryService.getInterviewsByCoverletter(coverletterId);
+        List<InterviewResponseDTO.InterviewGroupCardDTO> interviewCards = interviews.stream()
+                .map(InterviewConverter::toInterviewGroupCardDTO)
+                .toList();
+        return ApiResponse.onSuccess(interviewCards);
+    }
 }
 

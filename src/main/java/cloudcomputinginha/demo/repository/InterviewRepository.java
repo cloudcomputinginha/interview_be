@@ -16,6 +16,12 @@ public interface InterviewRepository extends JpaRepository<Interview, Long> {
             "JOIN FETCH i.interviewOption io " +
             "JOIN i.memberInterviews mi " +
             "WHERE mi.resume.id = :resumeId")
-    List<Interview> findByResume(Long resumeId);
+    List<Interview> findByResumeId(Long resumeId);
+
+    @Query("SELECT i FROM Interview i " +
+            "JOIN FETCH i.interviewOption io " +
+            "JOIN i.memberInterviews mi " +
+            "WHERE mi.coverletter.id = :coverletterId")
+    List<Interview> findByCoverletterId(Long coverletterId);
 
 }

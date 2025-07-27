@@ -29,6 +29,6 @@ public class ResumeQueryServiceImpl implements ResumeQueryService {
 
     @Override
     public List<Interview> getInterviewsByResume(Long resumeId) {
-        return interviewRepository.findByResume(resumeId);
+        return interviewRepository.findByResumeId(resumeId);
     }
 }
