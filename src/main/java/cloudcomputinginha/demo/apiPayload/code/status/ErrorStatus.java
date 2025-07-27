@@ -40,6 +40,7 @@ public enum ErrorStatus implements BaseErrorCode {
     INTERVIEW_END_TIME_INVALID(HttpStatus.CONFLICT, "INTERVIEW4003", "인터뷰의 종료 시간이 시작 시간보다 빠릅니다."),
     INTERVIEW_ALREADY_TERMINATED(HttpStatus.CONFLICT, "INTERVIEW4004", "해당하는 인터뷰는 이미 종료되었습니다."),
     INTERVIEW_NO_PERMISSION(HttpStatus.FORBIDDEN, "INTERVIEW4005", "해당 인터뷰 수정 권한이 없습니다."),
+    INTERVIEW_DOCUEMENTS_NOT_FOUND(HttpStatus.BAD_REQUEST, "INTERVIEW4006", "이력서와 자기소개서는 필수입니다."),
 
     // 멤버 인터뷰 관련 에러,
     INTERVIEW_STATUS_INVALID(HttpStatus.BAD_REQUEST, "MEMBERINTERVIEW4001", "올바른 인터뷰 상태가 아닙니다."),

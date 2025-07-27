@@ -12,6 +12,9 @@ import java.util.Optional;
 public interface MemberInterviewRepository extends JpaRepository<MemberInterview, Long> {
     List<MemberInterview> interview(Interview interview);
 
+    @Query("SELECT mi FROM MemberInterview mi " +
+            "JOIN FETCH mi.resume JOIN FETCH mi.coverletter JOIN FETCH mi.interview i " +
+            "WHERE i.id = :interviewId")
     List<MemberInterview> findByInterviewId(Long interviewId);
 
     List<MemberInterview> findWithMemberByInterviewId(Long interviewId);
@@ -27,7 +30,7 @@ public interface MemberInterviewRepository extends JpaRepository<MemberInterview
     @Query("SELECT mi FROM MemberInterview mi " +
             "JOIN FETCH mi.resume JOIN FETCH mi.coverletter JOIN FETCH mi.interview i " +
             "WHERE i.id = :interviewId AND mi.status = 'IN_PROGRESS'")
-    List<MemberInterview> findInprogressByInterviewId(Long interviewId);
+    List<MemberInterview> findByInterviewIdAndInprogress(Long interviewId);
 
     @Query("SELECT mi FROM MemberInterview mi " +
             "JOIN FETCH mi.interview i JOIN FETCH i.interviewOption o " +
