@@ -90,4 +90,8 @@ public class Member extends BaseEntity {
         coverletters.add(coverletter);
         // coverletter.setMember(this); nullable = false로 설정
     }
+
+    public void addMemberInterview(MemberInterview memberInterview) {
+        memberInterviews.add(memberInterview);
+    }
 }
