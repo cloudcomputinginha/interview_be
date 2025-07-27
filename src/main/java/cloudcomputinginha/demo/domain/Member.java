@@ -94,4 +94,9 @@ public class Member extends BaseEntity {
     public void addMemberInterview(MemberInterview memberInterview) {
         memberInterviews.add(memberInterview);
     }
+
+    public void addNotification(Notification notification) {
+        notifications.add(notification);
+        notification.setReceiver(this);
+    }
 }

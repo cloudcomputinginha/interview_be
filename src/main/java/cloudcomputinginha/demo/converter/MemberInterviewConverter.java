@@ -1,6 +1,7 @@
 package cloudcomputinginha.demo.converter;
 
 import cloudcomputinginha.demo.domain.*;
+import cloudcomputinginha.demo.domain.enums.InterviewStatus;
 import cloudcomputinginha.demo.web.dto.MemberInterviewResponseDTO;
 
 import java.util.List;
@@ -15,12 +16,19 @@ public class MemberInterviewConverter {
     }
 
     public static MemberInterview toMemberInterview(Member member, Interview interview, Resume resume, Coverletter coverletter) {
-        return MemberInterview.builder()
-                .member(member)
-                .interview(interview)
+        MemberInterview memberInterview = MemberInterview.builder()
                 .resume(resume)
                 .coverletter(coverletter)
+                .status(InterviewStatus.SCHEDULED)
                 .build();
+
+        memberInterview.setMember(member);
+        memberInterview.setInterview(interview);
+
+        member.addMemberInterview(memberInterview);
+        interview.addMemberInterview(memberInterview);
+
+        return memberInterview;
     }
 
     public static MemberInterviewResponseDTO.CreateMemberInterviewDTO toMemberInterviewResultDTO(MemberInterview memberInterview) {

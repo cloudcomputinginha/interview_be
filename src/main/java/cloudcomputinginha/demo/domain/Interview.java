@@ -80,7 +80,7 @@ public class Interview extends BaseEntity {
 
     public void setInterviewOption(InterviewOption option) {
         this.interviewOption = option;
-        // option.setInterview(this);
+        option.setInterview(this);
     }
 
     public void updateStartedAt(LocalDateTime startedAt) {

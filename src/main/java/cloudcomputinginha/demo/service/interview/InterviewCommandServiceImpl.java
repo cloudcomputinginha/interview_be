@@ -84,6 +84,8 @@ public class InterviewCommandServiceImpl implements InterviewCommandService {
 
         MemberInterview memberInterview = MemberInterviewConverter.toMemberInterview(member, interview, resume, coverletter);
         interview.addMemberInterview(memberInterview);
+        member.addMemberInterview(memberInterview);
+
 
         // 인터뷰 스케줄링
         interviewScheduler.scheduleInterviewStart(
