@@ -40,4 +40,12 @@ public class MemberRestController {
         MemberInfoResponseDTO result = memberCommandService.getBasicInfo(memberId);
         return ApiResponse.onSuccess(result);
     }
+
+    @DeleteMapping
+    @Operation(summary = "사용자 탈퇴 API", description = "사용자가 계정을 탈퇴합니다.")
+    public ApiResponse<Void> deleteMember(@AuthenticationPrincipal Long memberId) {
+        memberCommandService.deleteMember(memberId);
+        return ApiResponse.onSuccess(null);
+
+    }
 }
