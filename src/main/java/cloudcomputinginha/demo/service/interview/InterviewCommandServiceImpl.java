@@ -9,6 +9,7 @@ import cloudcomputinginha.demo.converter.InterviewConverter;
 import cloudcomputinginha.demo.converter.MemberInterviewConverter;
 import cloudcomputinginha.demo.domain.*;
 import cloudcomputinginha.demo.domain.enums.InterviewFormat;
+import cloudcomputinginha.demo.domain.enums.InterviewStatus;
 import cloudcomputinginha.demo.repository.*;
 import cloudcomputinginha.demo.scheduler.InterviewScheduler;
 import cloudcomputinginha.demo.service.memberInterview.MemberInterviewCommandService;
@@ -109,17 +110,19 @@ public class InterviewCommandServiceImpl implements InterviewCommandService {
         return InterviewConverter.createInterview(interview);
     }
 
-    // TODO: 개인 면접과 그룹 면접 컨트롤러나 서비스 분리하기 -> 내부 로직이 크게 달라짐
+    // TODO: 개인 면접과 그룹 면접 컨트롤러나 서비스 분리하기 -> 내부 로직이 크게 달라짐 (일단 startInterview는 그룹 면접 기반 처리)
     // TODO: 개인 면접일때, 상태 업데이트하기(DONE)
     @Override
     public InterviewResponseDTO.InterviewStartResponseDTO startInterview(Long memberId, Long interviewId, Boolean isAutoMaticStart) {
         Interview interviewWithOption = interviewRepository.findWithInterviewOptionById(interviewId);
         boolean isGroupInterview = interviewWithOption.getInterviewOption().getInterviewFormat().equals(InterviewFormat.GROUP);
 
-        List<MemberInterview> memberInterviews = isGroupInterview ?
-                memberInterviewRepository.findByInterviewIdAndInprogress(interviewId) :
-                memberInterviewRepository.findByInterviewId(interviewId);
-        boolean hasMissingDocs = memberInterviews.stream()
+        List<MemberInterview> memberInterviews = memberInterviewRepository.findByInterviewId(interviewId);
+        List<MemberInterview> inProgressMemberInterviews = memberInterviews.stream()
+                .filter(mi -> mi.getStatus() == InterviewStatus.IN_PROGRESS)
+                .toList();
+
+        boolean hasMissingDocs = inProgressMemberInterviews.stream()
                 .anyMatch(mi -> mi.getResume() == null || mi.getCoverletter() == null);
         if (hasMissingDocs) {
             throw new InterviewHandler(ErrorStatus.INTERVIEW_DOCUEMENTS_NOT_FOUND); //면접을 시작할 때는 모든 참가자의 자소서, 이력서가 필수여야 함
@@ -127,7 +130,7 @@ public class InterviewCommandServiceImpl implements InterviewCommandService {
 
         if (isGroupInterview) {
             // 참가자들에게 참가알림 발송
-            memberInterviewSocketService.enterInterview(interviewId);
+            memberInterviewSocketService.enterInterview(interviewId, memberInterviews);
         }
 
         if (!isAutoMaticStart) {
@@ -135,7 +138,7 @@ public class InterviewCommandServiceImpl implements InterviewCommandService {
             interviewWithOption.updateStartedAt(LocalDateTime.now());
         }
 
-        return InterviewConverter.toInterviewStartResponseDTO(interviewWithOption, memberInterviews);
+        return InterviewConverter.toInterviewStartResponseDTO(interviewWithOption, inProgressMemberInterviews);
     }
 
     @Override

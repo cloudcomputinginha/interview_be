@@ -62,10 +62,7 @@ public class MemberInterviewSocketServiceImpl implements MemberInterviewSocketSe
     }
 
     @Override
-    public void enterInterview(Long interviewId) {
-
-        List<MemberInterview> memberInterviews = memberInterviewRepository.findByInterviewId(interviewId);
-
+    public void enterInterview(Long interviewId, List<MemberInterview> memberInterviews) {
         AtomicInteger cnt = new AtomicInteger();
 
         memberInterviews.forEach((memberInterview) -> {
