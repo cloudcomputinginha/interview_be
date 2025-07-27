@@ -125,7 +125,7 @@ public class InterviewCommandServiceImpl implements InterviewCommandService {
         boolean hasMissingDocs = inProgressMemberInterviews.stream()
                 .anyMatch(mi -> mi.getResume() == null || mi.getCoverletter() == null);
         if (hasMissingDocs) {
-            throw new InterviewHandler(ErrorStatus.INTERVIEW_DOCUEMENTS_NOT_FOUND); //면접을 시작할 때는 모든 참가자의 자소서, 이력서가 필수여야 함
+            throw new InterviewHandler(ErrorStatus.INTERVIEW_DOCUMENTS_NOT_FOUND); //면접을 시작할 때는 모든 참가자의 자소서, 이력서가 필수여야 함
         }
 
         if (isGroupInterview) {

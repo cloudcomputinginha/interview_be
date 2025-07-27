@@ -53,7 +53,7 @@ public class CoverletterRestController {
 
     @GetMapping("/{coverletterId}/interviews")
     @Operation(summary = "해당 자기소개서를 사용중인 인터뷰 리스트 조회")
-    public ApiResponse<List<InterviewResponseDTO.InterviewGroupCardDTO>> getResumeInterviews(
+    public ApiResponse<List<InterviewResponseDTO.InterviewGroupCardDTO>> getCoverletterInterviews(
             @PathVariable Long coverletterId,
             @AuthenticationPrincipal Long memberId
     ) {
@@ -67,8 +67,8 @@ public class CoverletterRestController {
     }
 
     @DeleteMapping("/{coverletterId}")
-    @Operation(summary = "이력서 삭제")
-    public ApiResponse<Void> deleteResume(
+    @Operation(summary = "자기소개서 삭제")
+    public ApiResponse<Void> deleteCoverletter(
             @PathVariable Long coverletterId,
             @AuthenticationPrincipal Long memberId
     ) {

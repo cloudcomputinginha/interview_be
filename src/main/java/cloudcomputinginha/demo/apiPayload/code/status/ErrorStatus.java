@@ -31,16 +31,13 @@ public enum ErrorStatus implements BaseErrorCode {
     RESUME_FILE_TYPE_INVALID(HttpStatus.BAD_REQUEST, "RESUME4003", "이력서는 PDF 파일만 업로드할 수 있습니다."),
     RESUME_FILE_NAME_INVALID(HttpStatus.BAD_REQUEST, "RESUME4004", "파일 이름은 한글, 영문, 숫자, 언더바(_), 대시(-), 공백만 허용하며 .pdf로 끝나야 합니다."),
 
-    // 자소서 + 이력서 관련
-    AT_LEAST_ONE_PRESENT_DOCUMENTS(HttpStatus.BAD_REQUEST, "DOCUMENT4001", "이력서 또는 자기소개서 중 하나는 반드시 입력해야 합니다."),
-
     // 면접 관련 에러
     INTERVIEW_NOT_FOUND(HttpStatus.NOT_FOUND, "INTERVIEW4001", "해당하는 인터뷰를 찾을 수 없습니다."),
     INTERVIEW_NOT_ACCEPTING_MEMBERS(HttpStatus.BAD_REQUEST, "INTERVIEW4002", "현재 인터뷰는 참여자를 받지 않습니다."),
     INTERVIEW_END_TIME_INVALID(HttpStatus.CONFLICT, "INTERVIEW4003", "인터뷰의 종료 시간이 시작 시간보다 빠릅니다."),
     INTERVIEW_ALREADY_TERMINATED(HttpStatus.CONFLICT, "INTERVIEW4004", "해당하는 인터뷰는 이미 종료되었습니다."),
     INTERVIEW_NO_PERMISSION(HttpStatus.FORBIDDEN, "INTERVIEW4005", "해당 인터뷰 수정 권한이 없습니다."),
-    INTERVIEW_DOCUEMENTS_NOT_FOUND(HttpStatus.BAD_REQUEST, "INTERVIEW4006", "이력서와 자기소개서는 필수입니다."),
+    INTERVIEW_DOCUMENTS_NOT_FOUND(HttpStatus.BAD_REQUEST, "INTERVIEW4006", "이력서와 자기소개서는 필수입니다."),
 
     // 멤버 인터뷰 관련 에러,
     INTERVIEW_STATUS_INVALID(HttpStatus.BAD_REQUEST, "MEMBERINTERVIEW4001", "올바른 인터뷰 상태가 아닙니다."),
