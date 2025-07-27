@@ -1,8 +1,11 @@
 package cloudcomputinginha.demo.service.coverletter;
 
+import cloudcomputinginha.demo.apiPayload.code.handler.CoverletterHandler;
+import cloudcomputinginha.demo.apiPayload.code.status.ErrorStatus;
 import cloudcomputinginha.demo.domain.Coverletter;
+import cloudcomputinginha.demo.domain.Interview;
 import cloudcomputinginha.demo.repository.CoverletterRepository;
-import cloudcomputinginha.demo.repository.MemberRepository;
+import cloudcomputinginha.demo.repository.InterviewRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -14,7 +17,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class CoverletterQueryServiceImpl implements CoverletterQueryService {
     private final CoverletterRepository coverletterRepository;
-    private final MemberRepository memberRepository;
+    private final InterviewRepository interviewRepository;
 
     @Override
     public List<Coverletter> findAllCoverletterByMember(Long memberId) {
@@ -22,7 +25,16 @@ public class CoverletterQueryServiceImpl implements CoverletterQueryService {
     }
 
     @Override
-    public Coverletter getCoverletter(Long coverletterId) {
-        return coverletterRepository.getReferenceById(coverletterId);
+    public List<Interview> getInterviewsByCoverletter(Long coverletterId) {
+        return interviewRepository.findByCoverletterId(coverletterId);
+    }
+
+    @Override
+    public Coverletter getOwnedCoverletter(Long coverletterId, Long memberId) {
+        Coverletter coverletter = coverletterRepository.findById(coverletterId)
+                .orElseThrow(() -> new CoverletterHandler(ErrorStatus.COVERLETTER_NOT_FOUND));
+
+        coverletter.validateOwnedBy(memberId);
+        return coverletter;
     }
 }

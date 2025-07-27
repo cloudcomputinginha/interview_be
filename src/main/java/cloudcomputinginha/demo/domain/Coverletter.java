@@ -5,6 +5,7 @@ import cloudcomputinginha.demo.apiPayload.code.status.ErrorStatus;
 import cloudcomputinginha.demo.domain.common.BaseEntity;
 import jakarta.persistence.*;
 import lombok.*;
+import org.hibernate.annotations.BatchSize;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -32,6 +33,7 @@ public class Coverletter extends BaseEntity {
 
     // 자소서 삭제 시 qna도 함께 삭제되길 원함.
     @Builder.Default
+    @BatchSize(size = 50) // Lazy loading 시 성능 최적화를 위해 배치 사이즈 설정
     @OneToMany(mappedBy = "coverletter", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Qna> qnas = new ArrayList<>();
 
