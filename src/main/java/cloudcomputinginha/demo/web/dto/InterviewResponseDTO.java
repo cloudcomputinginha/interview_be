@@ -41,16 +41,16 @@ public class InterviewResponseDTO {
     @NoArgsConstructor
     @AllArgsConstructor
     public static class InterviewGroupCardDTO {
-        private Long interviewId;
-        private String name;
-        private String description;
-        private String sessionName;
-        private String jobName;
-        private String noticeUrl;
-        private InterviewType interviewType;
-        private int currentParticipants;
-        private int maxParticipants;
-        private LocalDateTime startedAt;
+        private Long interviewId; // 면접 ID
+        private String name; // 면접 이름
+        private String description; // 면접 설명
+        private String sessionName; // 세션 이름
+        private String jobName; // 직무명
+        private String noticeUrl; // 채용 공고 URL
+        private InterviewType interviewType; // 기술 or 인성
+        private int currentParticipants; // 현재 참가자 수
+        private int maxParticipants; // 최대 참가자 수
+        private LocalDateTime startedAt; // 면접 시작 시간
     }
 
     @Getter

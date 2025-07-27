@@ -1,6 +1,8 @@
 package cloudcomputinginha.demo.service.resume;
 
+import cloudcomputinginha.demo.domain.Interview;
 import cloudcomputinginha.demo.domain.Resume;
+import cloudcomputinginha.demo.repository.InterviewRepository;
 import cloudcomputinginha.demo.repository.ResumeRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -13,6 +15,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class ResumeQueryServiceImpl implements ResumeQueryService {
     private final ResumeRepository resumeRepository;
+    private final InterviewRepository interviewRepository;
 
     @Override
     public List<Resume> getResumesByMember(Long memberId) {
@@ -22,5 +25,10 @@ public class ResumeQueryServiceImpl implements ResumeQueryService {
     @Override
     public Resume getResume(Long resumeId) {
         return resumeRepository.getReferenceById(resumeId);
+    }
+
+    @Override
+    public List<Interview> getInterviewsByResume(Long resumeId) {
+        return interviewRepository.findByResume(resumeId);
     }
 }

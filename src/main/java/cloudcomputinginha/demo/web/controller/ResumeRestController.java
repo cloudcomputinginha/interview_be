@@ -2,24 +2,27 @@ package cloudcomputinginha.demo.web.controller;
 
 import cloudcomputinginha.demo.apiPayload.ApiResponse;
 import cloudcomputinginha.demo.apiPayload.code.handler.MemberHandler;
-import cloudcomputinginha.demo.apiPayload.code.handler.ResumeHandler;
 import cloudcomputinginha.demo.apiPayload.code.status.ErrorStatus;
+import cloudcomputinginha.demo.converter.InterviewConverter;
 import cloudcomputinginha.demo.converter.ResumeConverter;
+import cloudcomputinginha.demo.domain.Interview;
 import cloudcomputinginha.demo.domain.Member;
 import cloudcomputinginha.demo.domain.Resume;
 import cloudcomputinginha.demo.repository.MemberRepository;
 import cloudcomputinginha.demo.service.resume.ResumeCommandService;
 import cloudcomputinginha.demo.service.resume.ResumeQueryService;
 import cloudcomputinginha.demo.service.resume.ResumeS3Service;
+import cloudcomputinginha.demo.service.resume.ocr.ResumeOcrEvent;
 import cloudcomputinginha.demo.validation.annotation.ExistResume;
 import cloudcomputinginha.demo.validation.annotation.ValidFileName;
+import cloudcomputinginha.demo.web.dto.InterviewResponseDTO;
 import cloudcomputinginha.demo.web.dto.ResumeRequestDTO;
 import cloudcomputinginha.demo.web.dto.ResumeResponseDTO;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
-import jakarta.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -69,18 +72,33 @@ public class ResumeRestController {
     @GetMapping("/{resumeId}")
     @Operation(summary = "이력서 상세 조회")
     public ApiResponse<ResumeResponseDTO.ResumeDetailDTO> getResumeDetail(
-            @PathVariable @NotNull @ExistResume Long resumeId,
+            @PathVariable @ExistResume Long resumeId,
             @AuthenticationPrincipal Long memberId
     ) {
-        Resume resume = resumeQueryService.getResume(resumeId);
-
         Member member = memberRepository.findById(memberId)
                 .orElseThrow(() -> new MemberHandler(ErrorStatus.MEMBER_NOT_FOUND));
 
-        if (!resume.getMember().getId().equals(memberId)) {
-            throw new ResumeHandler(ErrorStatus.RESUME_NOT_OWNED);
-        }
+        Resume resume = resumeQueryService.getResume(resumeId);
+        resume.validateOwnedBy(memberId);
 
         return ApiResponse.onSuccess(ResumeConverter.toResumeDetailDTO(resume));
+    }
+
+    @GetMapping("/{resumeId}/interviews")
+    @Operation(summary = "해당 이력서를 사용중인 인터뷰 리스트 조회")
+    public ApiResponse<List<InterviewResponseDTO.InterviewGroupCardDTO>> getResumeInterviews(
+            @PathVariable @ExistResume Long resumeId,
+            @AuthenticationPrincipal Long memberId
+    ) {
+        Member member = memberRepository.findById(memberId)
+                .orElseThrow(() -> new MemberHandler(ErrorStatus.MEMBER_NOT_FOUND));
+        Resume resume = resumeQueryService.getResume(resumeId);
+        resume.validateOwnedBy(memberId);
+
+        List<Interview> interviews = resumeQueryService.getInterviewsByResume(resumeId);
+        List<InterviewResponseDTO.InterviewGroupCardDTO> interviewCards = interviews.stream()
+                .map(InterviewConverter::toInterviewGroupCardDTO)
+                .toList();
+        return ApiResponse.onSuccess(interviewCards);
     }
 }

@@ -2,6 +2,7 @@ package cloudcomputinginha.demo.repository;
 
 import cloudcomputinginha.demo.domain.Interview;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -10,4 +11,11 @@ public interface InterviewRepository extends JpaRepository<Interview, Long> {
     Interview getReferenceWithInterviewOptionById(Long interviewId);
 
     List<Interview> findAllByStartedAtAfterAndEndedAtIsNull(LocalDateTime startedAtAfter);
+
+    @Query("SELECT i, io FROM Interview i " +
+            "JOIN FETCH i.interviewOption io " +
+            "JOIN i.memberInterviews mi " +
+            "WHERE mi.resume.id = :resumeId")
+    List<Interview> findByResume(Long resumeId);
+
 }
