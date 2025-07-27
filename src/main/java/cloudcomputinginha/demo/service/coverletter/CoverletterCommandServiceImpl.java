@@ -27,7 +27,6 @@ public class CoverletterCommandServiceImpl implements CoverletterCommandService 
     private final CoverletterRepository coverletterRepository;
     private final QnaRepository qnaRepository;
     private final MemberInterviewRepository memberInterviewRepository;
-    private final CoverletterQueryService coverletterQueryService;
 
     @Override
     public Coverletter saveCoverletter(Long memberId, CoverletterRequestDTO.createCoverletterDTO requestDTO) {
@@ -40,7 +39,6 @@ public class CoverletterCommandServiceImpl implements CoverletterCommandService 
                 .toList();
 
         qnaRepository.saveAll(qnaList);
-
         return coverletter;
     }
 

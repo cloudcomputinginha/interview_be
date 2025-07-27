@@ -8,7 +8,7 @@ import java.util.List;
 public interface CoverletterQueryService {
     List<Coverletter> findAllCoverletterByMember(Long memberId);
 
-    Coverletter getCoverletter(Long coverletterId);
-
     List<Interview> getInterviewsByCoverletter(Long coverletterId);
+
+    Coverletter getOwnedCoverletter(Long coverletterId, Long memberId);
 }
