@@ -32,6 +32,7 @@ public class CoverletterCommandServiceImpl implements CoverletterCommandService 
     public Coverletter saveCoverletter(Long memberId, CoverletterRequestDTO.createCoverletterDTO requestDTO) {
         Member member = memberRepository.getReferenceById(memberId);
         Coverletter coverletter = CoverletterConverter.toCoverletter(requestDTO, member);
+        member.addCoverletter(coverletter);
         coverletterRepository.save(coverletter);
 
         List<Qna> qnaList = requestDTO.getQnaDTOList().stream()

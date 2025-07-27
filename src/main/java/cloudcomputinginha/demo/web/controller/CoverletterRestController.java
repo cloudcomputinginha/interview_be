@@ -5,7 +5,6 @@ import cloudcomputinginha.demo.converter.CoverletterConverter;
 import cloudcomputinginha.demo.converter.InterviewConverter;
 import cloudcomputinginha.demo.domain.Coverletter;
 import cloudcomputinginha.demo.domain.Interview;
-import cloudcomputinginha.demo.repository.MemberRepository;
 import cloudcomputinginha.demo.service.coverletter.CoverletterCommandService;
 import cloudcomputinginha.demo.service.coverletter.CoverletterQueryService;
 import cloudcomputinginha.demo.web.dto.CoverletterRequestDTO;
@@ -29,7 +28,6 @@ import java.util.List;
 public class CoverletterRestController {
     private final CoverletterCommandService coverletterCommandService;
     private final CoverletterQueryService coverletterQueryService;
-    private final MemberRepository memberRepository;
 
     @PostMapping
     @Operation(summary = "자기소개서 생성")
