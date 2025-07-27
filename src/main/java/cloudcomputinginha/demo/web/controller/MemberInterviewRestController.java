@@ -64,4 +64,13 @@ public class MemberInterviewRestController {
         MemberInterview memberInterview = memberInterviewCommandService.changeMemberInterviewDocument(interviewId, memberId, updateDocumentDTO);
         return ApiResponse.onSuccess(MemberInterviewConverter.toMemberInterviewDocumentDTO(memberInterview));
     }
+
+    @GetMapping("/interviews/{interviewId}/documents")
+    @Operation(summary = "나의 면접에서 사용되는 자기소개서, 이력서 조회 API", description = "면접에서 사용되는 자기소개서나 이력서를 조회합니다.")
+    public ApiResponse<MemberInterviewResponseDTO.ParticipantDTO> getMyInterviewDocuments(
+            @AuthenticationPrincipal Long memberId,
+            @RequestParam Long interviewId) {
+        MemberInterview memberInterview = memberInterviewQueryService.getMyInterviewDocuments(memberId, interviewId);
+        return ApiResponse.onSuccess(MemberInterviewConverter.toParticipantDTO(memberInterview));
+    }
 }
