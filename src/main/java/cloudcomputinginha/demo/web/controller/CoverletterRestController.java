@@ -36,7 +36,7 @@ public class CoverletterRestController {
         return ApiResponse.onSuccess(CoverletterConverter.toCreateCoverletterResponseDTO(coverletter));
     }
 
-    @GetMapping("/me")
+    @GetMapping
     @Operation(summary = "나의 자기소개서 리스트 조회")
     public ApiResponse<CoverletterResponseDTO.MyCoverletterListDTO> findMyCoverletter(@AuthenticationPrincipal Long memberId) {
         List<Coverletter> coverletterList = coverletterQueryService.findAllCoverletterByMember(memberId);

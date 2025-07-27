@@ -24,7 +24,7 @@ import java.util.List;
 
 @RestController
 @Tag(name = "이력서 API")
-@RequestMapping("/resumes/")
+@RequestMapping("/resumes")
 @RequiredArgsConstructor
 @Validated
 public class ResumeRestController {
