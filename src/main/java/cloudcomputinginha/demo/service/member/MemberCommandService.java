@@ -8,7 +8,5 @@ public interface MemberCommandService {
 
     MemberInfoResponseDTO updateBasicInfo(Long memberId, MemberInfoRequestDTO.updateInfoDTO request);
 
-    MemberInfoResponseDTO getBasicInfo(Long memberId);
-
     void deleteMember(Long memberId);
 }
