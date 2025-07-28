@@ -45,4 +45,12 @@ public class MemberInterview extends BaseEntity {
         this.resume = resume;
         this.coverletter = coverletter;
     }
+
+    public void setMember(Member member) {
+        this.member = member;
+    }
+
+    public void setInterview(Interview interview) {
+        this.interview = interview;
+    }
 }

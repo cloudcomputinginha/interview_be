@@ -73,6 +73,16 @@ public class Interview extends BaseEntity {
     @OneToMany(mappedBy = "interview", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<MemberInterview> memberInterviews = new ArrayList<>();
 
+    public void addMemberInterview(MemberInterview memberInterview) {
+        memberInterviews.add(memberInterview);
+        // memberInterview.setInterview(this);
+    }
+
+    public void setInterviewOption(InterviewOption option) {
+        this.interviewOption = option;
+        option.setInterview(this);
+    }
+
     public void updateStartedAt(LocalDateTime startedAt) {
         this.startedAt = startedAt;
     }

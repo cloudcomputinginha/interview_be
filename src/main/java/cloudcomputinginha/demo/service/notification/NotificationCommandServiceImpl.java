@@ -37,6 +37,7 @@ public class NotificationCommandServiceImpl implements NotificationCommandServic
     @Override
     public void createNotificationAndSend(Member receiver, NotificationType notificationType, String message, String url) {
         Notification notification = NotificationConverter.toNotification(receiver, notificationType, message, url);
+        receiver.addNotification(notification);
         notificationRepository.save(notification);
 
         String eventId = sseService.createId(receiver.getId());
