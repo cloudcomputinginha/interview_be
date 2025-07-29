@@ -30,8 +30,8 @@ public class ResumeS3Service {
         }
 
 
-        String key = "resumes/" + UUID.randomUUID() + "_" + fileName;
-        String fileUrl = "https://" + bucketName + ".s3." + ".amazonaws.com/" + key;
+        String key = "resumes/" + UUID.randomUUID();
+        String fileUrl = "https://" + bucketName + ".s3." + region + ".amazonaws.com/" + key;
 
         PutObjectRequest objectRequest = PutObjectRequest.builder()
                 .bucket(bucketName)
