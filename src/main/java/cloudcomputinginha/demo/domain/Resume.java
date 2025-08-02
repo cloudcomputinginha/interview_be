@@ -20,6 +20,7 @@ public class Resume extends BaseEntity {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "member_id", nullable = false)
+    @Setter
     private Member member;
 
     @Column(length = 100, nullable = false)

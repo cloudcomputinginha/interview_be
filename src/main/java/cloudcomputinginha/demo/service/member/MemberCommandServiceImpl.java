@@ -39,10 +39,11 @@ public class MemberCommandServiceImpl implements MemberCommandService {
     }
 
     @Override
-    public MemberInfoResponseDTO getBasicInfo(Long memberId) {
+    @Transactional
+    public void deleteMember(Long memberId) {
         Member member = memberRepository.findById(memberId)
                 .orElseThrow(() -> new MemberHandler(ErrorStatus.MEMBER_NOT_FOUND));
 
-        return MemberConverter.toMemberInfoResponseDTO(member);
+        memberRepository.delete(member);
     }
 }

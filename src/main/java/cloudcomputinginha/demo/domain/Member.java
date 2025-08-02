@@ -3,8 +3,10 @@ package cloudcomputinginha.demo.domain;
 import cloudcomputinginha.demo.domain.common.BaseEntity;
 import cloudcomputinginha.demo.domain.enums.SocialProvider;
 import jakarta.persistence.*;
-import jakarta.validation.constraints.NotNull;
 import lombok.*;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Getter
@@ -42,6 +44,26 @@ public class Member extends BaseEntity {
     @Column(columnDefinition = "TEXT")
     private String refreshToken;
 
+    // 회원 탈퇴 시 자소서도 함께 삭제되길 원함.
+    @Builder.Default
+    @OneToMany(mappedBy = "member", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Coverletter> coverletters = new ArrayList<>();
+
+    // 회원 탈퇴 시 이력서도 함께 삭제되길 원함.
+    @Builder.Default
+    @OneToMany(mappedBy = "member", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Resume> resumes = new ArrayList<>();
+
+    // 회원 탈퇴 시 회원이 참여한 면접 기록도 함께 삭제되길 원함.
+    @Builder.Default
+    @OneToMany(mappedBy = "member", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<MemberInterview> memberInterviews = new ArrayList<>();
+
+    // 회원 탈퇴 시 해당 회원에게 발송된 알림도 함께 삭제되길 원함.
+    @Builder.Default
+    @OneToMany(mappedBy = "receiver", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Notification> notifications = new ArrayList<>();
+
     public void setRefreshToken(String refreshToken) {
         this.refreshToken = refreshToken;
     }
@@ -57,5 +79,24 @@ public class Member extends BaseEntity {
         this.phone = phone;
         this.jobType = jobType;
         this.introduction = introduction;
+    }
+
+    public void addResume(Resume resume) {
+        resumes.add(resume);
+        //resume.setMember(this); nullable = false로 설정
+    }
+
+    public void addCoverletter(Coverletter coverletter) {
+        coverletters.add(coverletter);
+        // coverletter.setMember(this); nullable = false로 설정
+    }
+
+    public void addMemberInterview(MemberInterview memberInterview) {
+        memberInterviews.add(memberInterview);
+    }
+
+    public void addNotification(Notification notification) {
+        notifications.add(notification);
+        notification.setReceiver(this);
     }
 }

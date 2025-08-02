@@ -64,6 +64,7 @@ public class ResumeResponseDTO {
     @AllArgsConstructor
     public static class ResumeSimpleDTO {
         private Long resumeId;
+        private String fileName;
         private String fileUrl;
     }
 }

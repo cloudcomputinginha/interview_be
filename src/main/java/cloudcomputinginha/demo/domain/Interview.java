@@ -3,6 +3,7 @@ package cloudcomputinginha.demo.domain;
 import cloudcomputinginha.demo.apiPayload.code.handler.MemberInterviewHandler;
 import cloudcomputinginha.demo.apiPayload.code.status.ErrorStatus;
 import cloudcomputinginha.demo.domain.common.BaseEntity;
+import cloudcomputinginha.demo.domain.embedded.Url;
 import cloudcomputinginha.demo.domain.enums.StartType;
 import jakarta.persistence.*;
 import lombok.*;
@@ -10,6 +11,8 @@ import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.DynamicUpdate;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Getter
@@ -51,6 +54,9 @@ public class Interview extends BaseEntity {
     @Builder.Default
     private Integer maxParticipants = 1; //일대일 면접을 기준으로 초기화
 
+    @Column(length = 255)
+    private String noticeUrl; //면접 채용공고 URL
+
     @Builder.Default
     private Boolean isOpen = false;
 
@@ -61,6 +67,21 @@ public class Interview extends BaseEntity {
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "interview_option_id", unique = true, nullable = false)
     private InterviewOption interviewOption;
+
+    // 면접 삭제 시 참여자 기록도 삭제
+    @Builder.Default
+    @OneToMany(mappedBy = "interview", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<MemberInterview> memberInterviews = new ArrayList<>();
+
+    public void addMemberInterview(MemberInterview memberInterview) {
+        memberInterviews.add(memberInterview);
+        // memberInterview.setInterview(this);
+    }
+
+    public void setInterviewOption(InterviewOption option) {
+        this.interviewOption = option;
+        option.setInterview(this);
+    }
 
     public void updateStartedAt(LocalDateTime startedAt) {
         this.startedAt = startedAt;

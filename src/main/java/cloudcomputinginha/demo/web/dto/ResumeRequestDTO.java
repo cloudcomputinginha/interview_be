@@ -9,9 +9,6 @@ import lombok.Getter;
 public class ResumeRequestDTO {
     @Getter
     public static class ResumeCreateDTO {
-        @ExistMember
-        Long memberId; //TODO
-
         @NotEmpty
         String fileName;
         @NotEmpty

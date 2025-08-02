@@ -35,6 +35,9 @@ public class MemberInterviewSocketServiceImpl implements MemberInterviewSocketSe
         if (hasInterviewEnded(memberInterview)) {
             throw new MemberInterviewHandler(ErrorStatus.INTERVIEW_ALREADY_STARTED);
         }
+        if (memberInterview.getResume() == null || memberInterview.getCoverletter() == null) {
+            throw new MemberInterviewHandler(ErrorStatus.INTERVIEW_DOCUMENTS_NOT_FOUND);
+        }
 
         memberInterview.updateStatus(InterviewStatus.IN_PROGRESS);
         sessionManager.put(sessionId,
@@ -62,10 +65,7 @@ public class MemberInterviewSocketServiceImpl implements MemberInterviewSocketSe
     }
 
     @Override
-    public void enterInterview(Long interviewId) {
-
-        List<MemberInterview> memberInterviews = memberInterviewRepository.findByInterviewId(interviewId);
-
+    public void enterInterview(Long interviewId, List<MemberInterview> memberInterviews) {
         AtomicInteger cnt = new AtomicInteger();
 
         memberInterviews.forEach((memberInterview) -> {

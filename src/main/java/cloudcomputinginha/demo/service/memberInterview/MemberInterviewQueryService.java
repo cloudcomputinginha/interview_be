@@ -6,4 +6,6 @@ import java.util.List;
 
 public interface MemberInterviewQueryService {
     List<MemberInterview> getMyInterviews(Long memberId);
+
+    MemberInterview getMyInterviewDocuments(Long memberId, Long interviewId);
 }

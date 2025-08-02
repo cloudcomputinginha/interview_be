@@ -2,10 +2,8 @@ package cloudcomputinginha.demo.converter;
 
 import cloudcomputinginha.demo.domain.Coverletter;
 import cloudcomputinginha.demo.domain.Member;
-import cloudcomputinginha.demo.domain.Qna;
 import cloudcomputinginha.demo.web.dto.CoverletterRequestDTO;
 import cloudcomputinginha.demo.web.dto.CoverletterResponseDTO;
-import cloudcomputinginha.demo.web.dto.QnaResponseDTO;
 
 import java.util.List;
 
@@ -40,17 +38,17 @@ public class CoverletterConverter {
                 .build();
     }
 
-    public static CoverletterResponseDTO.CoverletterDetailDTO toDetailDTO(Coverletter coverletter, List<Qna> qnas) {
-        List<QnaResponseDTO.QnaDTO> qnaDTOs = qnas.stream()
-                .map(QnaConverter::toQnaDTO)
-                .toList();
-
+    public static CoverletterResponseDTO.CoverletterDetailDTO toDetailDTO(Coverletter coverletter) {
         return CoverletterResponseDTO.CoverletterDetailDTO.builder()
                 .coverletterId(coverletter.getId())
                 .corporateName(coverletter.getCorporateName())
                 .jobName(coverletter.getJobName())
                 .createdAt(coverletter.getCreatedAt())
-                .qnaList(qnaDTOs)
+                .qnaList(
+                        coverletter.getQnas().stream()
+                                .map(QnaConverter::toQnaDTO) //batch size 적용
+                                .toList()
+                )
                 .build();
     }
 }
