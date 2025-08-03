@@ -1,4 +1,4 @@
-package cloudcomputinginha.demo.service.resume;
+package cloudcomputinginha.demo.infra.aws;
 
 import cloudcomputinginha.demo.apiPayload.code.handler.ResumeHandler;
 import cloudcomputinginha.demo.apiPayload.code.status.ErrorStatus;
@@ -28,8 +28,7 @@ public class ResumeS3Service {
         if (!fileName.toLowerCase().endsWith(".pdf")) {
             throw new ResumeHandler(ErrorStatus.RESUME_FILE_TYPE_INVALID);
         }
-
-
+        
         String key = "resumes/" + UUID.randomUUID();
         String fileUrl = "https://" + bucketName + ".s3." + region + ".amazonaws.com/" + key;
 
