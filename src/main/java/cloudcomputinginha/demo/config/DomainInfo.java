@@ -13,12 +13,12 @@ public class DomainInfo {
     private String interviewAi;
 
 
-    @Value("${notification.domain.interview}")
+    @Value("${domain.interview}")
     public void setInterview(String interview) {
         DomainInfo.INTERVIEW = interview;
     }
 
-    @Value("${notification.domain.interview-ai}")
+    @Value("${domain.interview-ai}")
     public void setInterviewAi(String interviewAi) {
         DomainInfo.INTERVIEW_AI = interviewAi;
     }

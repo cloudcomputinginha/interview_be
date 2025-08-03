@@ -22,9 +22,9 @@ import java.util.List;
 public class SecurityConfig {
 
     private final JwtProvider jwtProvider;
-    @Value("${notification.domain.interview}")
+    @Value("${domain.interview}")
     private String interviewDomain;
-    @Value("${notification.domain.interview-ai}")
+    @Value("${domain.interview-ai}")
     private String interviewAiDomain;
 
     @Bean
