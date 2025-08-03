@@ -4,7 +4,7 @@ import cloudcomputinginha.demo.domain.Resume;
 import cloudcomputinginha.demo.web.dto.ResumeRequestDTO;
 
 public interface ResumeCommandService {
-    public Resume saveResume(Long memberId, ResumeRequestDTO.ResumeCreateDTO resumeCreateDTO, String interviewOcrResult);
+    public Resume saveResume(Long memberId, ResumeRequestDTO.ResumeCreateDTO resumeCreateDTO);
 
     void deleteResume(Long resumeId, Long memberId);
 }
