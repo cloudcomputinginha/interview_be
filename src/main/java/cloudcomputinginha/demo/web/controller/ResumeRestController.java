@@ -5,6 +5,7 @@ import cloudcomputinginha.demo.converter.InterviewConverter;
 import cloudcomputinginha.demo.converter.ResumeConverter;
 import cloudcomputinginha.demo.domain.Interview;
 import cloudcomputinginha.demo.domain.Resume;
+import cloudcomputinginha.demo.infra.ai.AiOpenFeignService;
 import cloudcomputinginha.demo.service.resume.ResumeCommandService;
 import cloudcomputinginha.demo.service.resume.ResumeQueryService;
 import cloudcomputinginha.demo.service.resume.ResumeS3Service;
@@ -31,6 +32,7 @@ public class ResumeRestController {
     private final ResumeS3Service s3PresignedService;
     private final ResumeCommandService resumeCommandService;
     private final ResumeQueryService resumeQueryService;
+    private final AiOpenFeignService aiOpenFeignService;
 
     @GetMapping("/upload")
     @Operation(summary = "이력서를 업로드할 presignedURL 발급", description = "업로드할 파일을 이름을 넘길 떄, 확장자를 포함합니다.")
@@ -42,7 +44,9 @@ public class ResumeRestController {
     @PostMapping("/upload")
     @Operation(summary = "S3에 저장된 이력서 메타데이터 저장")
     public ApiResponse<ResumeResponseDTO.CreateResumeResultDTO> saveResume(@AuthenticationPrincipal Long memberId, @RequestBody @Valid ResumeRequestDTO.ResumeCreateDTO resumeCreateDTO) {
-        Resume resume = resumeCommandService.saveResume(memberId, resumeCreateDTO);
+        String interviewOcrResult = aiOpenFeignService.getInterviewOcrResult(resumeCreateDTO.getFileUrl());
+
+        Resume resume = resumeCommandService.saveResume(memberId, resumeCreateDTO, interviewOcrResult);
 
         return ApiResponse.onSuccess(ResumeConverter.toCreateResumeResultDTO(resume));
     }

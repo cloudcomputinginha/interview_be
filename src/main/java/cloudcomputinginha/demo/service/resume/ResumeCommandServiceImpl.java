@@ -26,7 +26,7 @@ public class ResumeCommandServiceImpl implements ResumeCommandService {
     private final MemberInterviewRepository memberInterviewRepository;
 
     @Override
-    public Resume saveResume(Long memberId, ResumeRequestDTO.ResumeCreateDTO resumeCreateDTO) {
+    public Resume saveResume(Long memberId, ResumeRequestDTO.ResumeCreateDTO resumeCreateDTO, String interviewOcrResult) {
         if (!resumeCreateDTO.getFileName().toLowerCase().endsWith(".pdf") || !resumeCreateDTO.getFileUrl().toLowerCase().endsWith(".pdf")) {
             throw new ResumeHandler(ErrorStatus.RESUME_FILE_TYPE_INVALID);
         }
@@ -39,6 +39,7 @@ public class ResumeCommandServiceImpl implements ResumeCommandService {
                 .fileUrl(resumeCreateDTO.getFileUrl())
                 .fileSize(resumeCreateDTO.getFileSize())
                 .fileType(FileType.PDF)
+                .ocrResult(interviewOcrResult)
                 .build();
 
         member.addResume(resume);
