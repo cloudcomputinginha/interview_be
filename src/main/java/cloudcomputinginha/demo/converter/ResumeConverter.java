@@ -54,6 +54,7 @@ public class ResumeConverter {
                 .resumeId(resume.getId())
                 .fileName(resume.getFileName())
                 .fileUrl(resume.getFileUrl())
+                .ocrResult(resume.getOcrResult())
                 .build();
     }
 }
