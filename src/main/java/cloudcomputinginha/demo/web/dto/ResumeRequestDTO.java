@@ -1,6 +1,6 @@
 package cloudcomputinginha.demo.web.dto;
 
-import cloudcomputinginha.demo.validation.annotation.ExistMember;
+import cloudcomputinginha.demo.validation.annotation.ValidS3Url;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
@@ -12,6 +12,7 @@ public class ResumeRequestDTO {
         @NotEmpty
         String fileName;
         @NotEmpty
+        @ValidS3Url
         String fileUrl;
         @NotNull
         @Positive
