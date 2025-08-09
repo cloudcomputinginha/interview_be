@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 /**
  * AI 서버와 외부 통신
  */
-@FeignClient(name = "AiOpenFeign", url = "${domain.interview-ai}", configuration = AiFeignConfig.class)
+@FeignClient(name = "AiOpenFeign", url = "${domain.ai}", configuration = AiFeignConfig.class)
 public interface AiOpenFeignService {
     @GetMapping("/interview/ocr")
     String getInterviewOcrResult(@RequestParam(value = "pdf_path") String fileUrl);

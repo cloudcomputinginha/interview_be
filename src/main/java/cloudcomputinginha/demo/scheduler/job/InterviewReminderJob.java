@@ -3,6 +3,7 @@ package cloudcomputinginha.demo.scheduler.job;
 import cloudcomputinginha.demo.apiPayload.code.handler.InterviewHandler;
 import cloudcomputinginha.demo.apiPayload.code.handler.NotificationHandler;
 import cloudcomputinginha.demo.apiPayload.code.status.ErrorStatus;
+import cloudcomputinginha.demo.config.properties.DomainProperties;
 import cloudcomputinginha.demo.domain.Interview;
 import cloudcomputinginha.demo.domain.MemberInterview;
 import cloudcomputinginha.demo.domain.enums.NotificationType;
@@ -20,6 +21,7 @@ import java.util.List;
 @Component
 @RequiredArgsConstructor
 public class InterviewReminderJob extends QuartzJobBean {
+    private final DomainProperties domainProperties;
     private final NotificationCommandService notificationCommandService;
     private final InterviewQueryService interviewQueryService;
     private final MemberInterviewRepository memberInterviewRepository;
@@ -43,7 +45,7 @@ public class InterviewReminderJob extends QuartzJobBean {
 
         String message = notificationType.generateMessage(interview.getName());
 
-        String url = notificationType.generateUrl(interview.getId());
+        String url = notificationType.generateUrl(domainProperties, interview.getId());
 
         memberInterviews.stream()
                 .map(MemberInterview::getMember)

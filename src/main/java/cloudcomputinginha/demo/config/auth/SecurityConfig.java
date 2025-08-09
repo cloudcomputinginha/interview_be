@@ -1,8 +1,8 @@
 package cloudcomputinginha.demo.config.auth;
 
+import cloudcomputinginha.demo.config.properties.DomainProperties;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -20,12 +20,8 @@ import java.util.List;
 @EnableWebSecurity
 @RequiredArgsConstructor
 public class SecurityConfig {
-
+    private final DomainProperties domainProperties;
     private final JwtProvider jwtProvider;
-    @Value("${domain.interview}")
-    private String interviewDomain;
-    @Value("${domain.interview-ai}")
-    private String interviewAiDomain;
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity httpSecurity) throws Exception {
@@ -40,8 +36,8 @@ public class SecurityConfig {
                                         "http://localhost:3000",
                                         "https://cloud-computing-fe-two.vercel.app",
                                         "http://127.0.0.1:5500",
-                                        interviewDomain,
-                                        interviewAiDomain
+                                        domainProperties.getAi(),
+                                        domainProperties.getBackend()
                                 ));
 
                                 configuration.setAllowedMethods(
