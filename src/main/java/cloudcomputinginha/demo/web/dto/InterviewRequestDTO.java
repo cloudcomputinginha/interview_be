@@ -11,6 +11,7 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.springframework.format.annotation.DateTimeFormat;
+
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -36,7 +37,7 @@ public class InterviewRequestDTO {
         private String corporateName; // 기업명
         @NotBlank
         private String jobName; // 직무명
-        private String noticeUrl; // 채용 공고 URL
+        private String noticeUrl; // 채용 공고 URL TODO: 검증
         private String sessionName; // 그룹의 경우 필요
 
         // 면접 옵션 정보

@@ -2,6 +2,7 @@ package cloudcomputinginha.demo.service.notification;
 
 import cloudcomputinginha.demo.apiPayload.code.handler.NotificationHandler;
 import cloudcomputinginha.demo.apiPayload.code.status.ErrorStatus;
+import cloudcomputinginha.demo.config.properties.DomainProperties;
 import cloudcomputinginha.demo.converter.NotificationConverter;
 import cloudcomputinginha.demo.domain.Member;
 import cloudcomputinginha.demo.domain.Notification;
@@ -17,9 +18,10 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 @RequiredArgsConstructor
 public class NotificationCommandServiceImpl implements NotificationCommandService {
-    private final NotificationRepository notificationRepository;
     private final SseService sseService;
     private final ApplicationEventPublisher eventPublisher;
+    private final DomainProperties domainProperties;
+    private final NotificationRepository notificationRepository;
 
     /**
      * 1. Notification을 생성 및 DB 저장
@@ -27,16 +29,11 @@ public class NotificationCommandServiceImpl implements NotificationCommandServic
      * 3. @TransactionalEventListener가 커밋 이후 이벤트 감지
      * 4. 비동기로 sendToMyAllEmitters 실행
      * 5. SSE 알림 전송 완료
-     *
-     * @param receiver
-     * @param notificationType
-     * @param message
-     * @param url
      */
     @Transactional
     @Override
     public void createNotificationAndSend(Member receiver, NotificationType notificationType, String message, String url) {
-        Notification notification = NotificationConverter.toNotification(receiver, notificationType, message, url);
+        Notification notification = NotificationConverter.toNotification(receiver, notificationType, message, url, domainProperties);
         receiver.addNotification(notification);
         notificationRepository.save(notification);
 

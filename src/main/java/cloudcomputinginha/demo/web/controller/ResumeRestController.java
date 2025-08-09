@@ -5,9 +5,9 @@ import cloudcomputinginha.demo.converter.InterviewConverter;
 import cloudcomputinginha.demo.converter.ResumeConverter;
 import cloudcomputinginha.demo.domain.Interview;
 import cloudcomputinginha.demo.domain.Resume;
+import cloudcomputinginha.demo.infra.aws.ResumeS3Service;
 import cloudcomputinginha.demo.service.resume.ResumeCommandService;
 import cloudcomputinginha.demo.service.resume.ResumeQueryService;
-import cloudcomputinginha.demo.service.resume.ResumeS3Service;
 import cloudcomputinginha.demo.validation.annotation.ValidFileName;
 import cloudcomputinginha.demo.web.dto.InterviewResponseDTO;
 import cloudcomputinginha.demo.web.dto.ResumeRequestDTO;
@@ -43,7 +43,6 @@ public class ResumeRestController {
     @Operation(summary = "S3에 저장된 이력서 메타데이터 저장")
     public ApiResponse<ResumeResponseDTO.CreateResumeResultDTO> saveResume(@AuthenticationPrincipal Long memberId, @RequestBody @Valid ResumeRequestDTO.ResumeCreateDTO resumeCreateDTO) {
         Resume resume = resumeCommandService.saveResume(memberId, resumeCreateDTO);
-
         return ApiResponse.onSuccess(ResumeConverter.toCreateResumeResultDTO(resume));
     }
 

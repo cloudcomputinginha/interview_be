@@ -4,6 +4,7 @@ import cloudcomputinginha.demo.apiPayload.code.handler.DocumentHandler;
 import cloudcomputinginha.demo.apiPayload.code.handler.MemberHandler;
 import cloudcomputinginha.demo.apiPayload.code.handler.MemberInterviewHandler;
 import cloudcomputinginha.demo.apiPayload.code.status.ErrorStatus;
+import cloudcomputinginha.demo.config.properties.DomainProperties;
 import cloudcomputinginha.demo.converter.MemberInterviewConverter;
 import cloudcomputinginha.demo.domain.*;
 import cloudcomputinginha.demo.domain.enums.InterviewStatus;
@@ -27,6 +28,7 @@ public class MemberInterviewCommandServiceImpl implements MemberInterviewCommand
     private final CoverletterRepository coverletterRepository;
     private final ResumeRepository resumeRepository;
     private final NotificationCommandService notificationCommandService;
+    private final DomainProperties domainProperties;
 
     @Override
     public MemberInterview changeMemberInterviewStatus(Long interviewId, Long memberId, InterviewStatus status) {
@@ -70,7 +72,7 @@ public class MemberInterviewCommandServiceImpl implements MemberInterviewCommand
         // 알림 메시지 생성
         NotificationType notificationType = NotificationType.ROOM_ENTRY;
         String message = notificationType.generateMessage(member.getName(), interview.getName());
-        String url = notificationType.generateUrl(interview.getId());
+        String url = notificationType.generateUrl(domainProperties, interview.getId());
         System.out.println("message = " + message);
         System.out.println("url = " + url);
 

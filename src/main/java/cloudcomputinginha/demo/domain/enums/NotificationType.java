@@ -1,6 +1,6 @@
 package cloudcomputinginha.demo.domain.enums;
 
-import cloudcomputinginha.demo.config.DomainInfo;
+import cloudcomputinginha.demo.config.properties.DomainProperties;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 
@@ -32,10 +32,10 @@ public enum NotificationType {
         return String.format(messageTemplate, args);
     }
 
-    public String generateUrl(Object... args) {
+    public String generateUrl(DomainProperties domainProperties, Object... args) {
         String requestDomain = switch (this) {
-            case FEEDBACK_RECEIVED -> DomainInfo.INTERVIEW_AI;
-            default -> DomainInfo.INTERVIEW;
+            case FEEDBACK_RECEIVED -> domainProperties.getAi();
+            default -> domainProperties.getBackend();
         };
         return requestDomain + String.format(urlTemplate, args);
     }
