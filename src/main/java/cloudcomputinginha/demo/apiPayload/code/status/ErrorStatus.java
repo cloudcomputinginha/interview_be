@@ -61,7 +61,13 @@ public enum ErrorStatus implements BaseErrorCode {
     INTERVIEW_SCHEDULE_CHECK_FAIL(HttpStatus.INTERNAL_SERVER_ERROR, "SCHEDULER5004", "Job 존재 여부 확인에 실패했습니다."),
     INTERVIEW_SCHEDULE_ALREADY_EXISTS(HttpStatus.CONFLICT, "SCHEDULER4001", "해당 면접 스케줄은 이미 존재합니다."),
     INTERVIEW_REMINDER_TIME_INVALID(HttpStatus.BAD_REQUEST, "SCHEDULER4002", "면접 리마인더 시간이 유효하지 않습니다."),
-    INTERVIEW_SCHEDULE_INVALID_ARGUMENT(HttpStatus.BAD_REQUEST, "SCHEDULER4003", "면접 ID 또는 시간이 유효하지 않습니다.");
+    INTERVIEW_SCHEDULE_INVALID_ARGUMENT(HttpStatus.BAD_REQUEST, "SCHEDULER4003", "면접 ID 또는 시간이 유효하지 않습니다."),
+
+    // AI 관련 에러
+    AI_RESOURCE_NOT_FOUND(HttpStatus.NOT_FOUND, "AI4001", "AI 서비스에서 리소스를 찾을 수 없습니다."),
+    AI_BAD_REQUEST(HttpStatus.BAD_REQUEST, "AI4002", "AI 서비스에 잘못된 요청을 보냈습니다."),
+    AI_INTERNAL_SERVER_ERROR(HttpStatus.INTERNAL_SERVER_ERROR, "AI5001", "AI 서비스에서 내부 서버 에러가 발생했습니다."),
+    ;
 
     private final HttpStatus httpStatus;
     private final String code;
