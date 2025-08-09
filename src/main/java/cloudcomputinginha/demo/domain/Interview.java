@@ -3,7 +3,6 @@ package cloudcomputinginha.demo.domain;
 import cloudcomputinginha.demo.apiPayload.code.handler.MemberInterviewHandler;
 import cloudcomputinginha.demo.apiPayload.code.status.ErrorStatus;
 import cloudcomputinginha.demo.domain.common.BaseEntity;
-import cloudcomputinginha.demo.domain.embedded.Url;
 import cloudcomputinginha.demo.domain.enums.StartType;
 import jakarta.persistence.*;
 import lombok.*;

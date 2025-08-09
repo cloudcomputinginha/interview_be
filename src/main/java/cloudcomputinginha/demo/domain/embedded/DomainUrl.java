@@ -11,16 +11,16 @@ import lombok.NoArgsConstructor;
 @Embeddable
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class Url {
-    private String url;
+public class DomainUrl {
+    private String domainUrl;
 
-    public Url(String url) {
-        if (url == null || url.isBlank()) {
+    public DomainUrl(String domainUrl) {
+        if (domainUrl == null || domainUrl.isBlank()) {
             throw new NotificationHandler(ErrorStatus.URL_INVALID);
         }
-        if (!url.startsWith(DomainInfo.INTERVIEW) && !url.startsWith(DomainInfo.INTERVIEW_AI)) { //BE 서버나 AI 서버 URL이 아니라면
+        if (!domainUrl.startsWith(DomainInfo.INTERVIEW) && !domainUrl.startsWith(DomainInfo.INTERVIEW_AI)) { //BE 서버나 AI 서버 URL이 아니라면
             throw new NotificationHandler(ErrorStatus.URL_INVALID);
         }
-        this.url = url;
+        this.domainUrl = domainUrl;
     }
 }

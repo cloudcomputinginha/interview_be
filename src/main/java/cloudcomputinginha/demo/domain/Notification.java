@@ -1,7 +1,7 @@
 package cloudcomputinginha.demo.domain;
 
 import cloudcomputinginha.demo.domain.common.BaseEntity;
-import cloudcomputinginha.demo.domain.embedded.Url;
+import cloudcomputinginha.demo.domain.embedded.DomainUrl;
 import cloudcomputinginha.demo.domain.enums.NotificationType;
 import jakarta.persistence.*;
 import lombok.*;
@@ -26,8 +26,8 @@ public class Notification extends BaseEntity {
     private NotificationType type;
 
     @Embedded
-    @AttributeOverride(name = "url", column = @Column(name = "related_url", length = 255, nullable = false))
-    private Url url;
+    @AttributeOverride(name = "domainUrl", column = @Column(name = "related_url", length = 255, nullable = false))
+    private DomainUrl url;
 
     @Column(nullable = false, length = 100)
     private String message;
