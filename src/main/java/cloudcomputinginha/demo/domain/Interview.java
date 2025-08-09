@@ -63,7 +63,7 @@ public class Interview extends BaseEntity {
 
     private LocalDateTime endedAt;
 
-    @OneToOne(fetch = FetchType.LAZY)
+    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JoinColumn(name = "interview_option_id", unique = true, nullable = false)
     private InterviewOption interviewOption;
 
