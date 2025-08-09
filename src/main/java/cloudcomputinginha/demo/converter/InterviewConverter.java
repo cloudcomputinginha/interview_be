@@ -35,7 +35,7 @@ public class InterviewConverter {
                 .build();
     }
 
-    public static Interview toInterview(InterviewRequestDTO.InterviewCreateDTO request, InterviewOption interviewOption, Member member) {
+    public static Interview toInterview(InterviewRequestDTO.InterviewCreateDTO request, Member member) {
         return Interview.builder()
                 .name(request.getJobName())
                 .description(request.getDescription())
@@ -43,7 +43,6 @@ public class InterviewConverter {
                 .jobName(request.getJobName())
                 .noticeUrl(request.getNoticeUrl())
                 .sessionName(request.getSessionName())
-                .interviewOption(interviewOption)
                 .startType(request.getStartType())
                 .startedAt(combineStartAt(request))
                 .isOpen(request.getIsOpen() != null ? request.getIsOpen() : false)

@@ -77,8 +77,7 @@ public class InterviewCommandServiceImpl implements InterviewCommandService {
         memberInterviewCommandService.validateResumeOwnership(resume.getId(), memberId);
 
         InterviewOption interviewOption = InterviewConverter.toInterviewOption(request);
-        interviewOptionRepository.save(interviewOption);
-        Interview interview = InterviewConverter.toInterview(request, interviewOption, member);
+        Interview interview = InterviewConverter.toInterview(request, member);
         interview.setInterviewOption(interviewOption);
         // TODO: 초대 메일 검증 코드 + 초대 알림 전송
         interviewRepository.save(interview);
