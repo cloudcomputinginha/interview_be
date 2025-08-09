@@ -86,28 +86,29 @@ public class InterviewCommandServiceImpl implements InterviewCommandService {
         interview.addMemberInterview(memberInterview);
         member.addMemberInterview(memberInterview);
 
+        // 면접 시작 종류가 SCHEDULED인 경우, 시작과 리마인더를 스케줄링
+        if (interview.getStartType().equals(StartType.SCHEDULED)) {
+            // 인터뷰 스케줄링
+            interviewScheduler.scheduleInterviewStart(
+                    interview.getId(),
+                    interview.getStartedAt()
+            );
 
-        // 인터뷰 스케줄링
-        interviewScheduler.scheduleInterviewStart(
-                interview.getId(),
-                interview.getStartedAt()
-        );
+            // 인터뷰 리마인드 스케줄링
+            interviewScheduler.scheduleInterviewReminderIfNotExists(
+                    interview.getId(),
+                    interview.getStartedAt(),
+                    Duration.ofDays(1),
+                    "D1"
+            );
 
-        // 인터뷰 리마인드 스케줄링
-        interviewScheduler.scheduleInterviewReminderIfNotExists(
-                interview.getId(),
-                interview.getStartedAt(),
-                Duration.ofDays(1),
-                "D1"
-        );
-
-        interviewScheduler.scheduleInterviewReminderIfNotExists(
-                interview.getId(),
-                interview.getStartedAt(),
-                Duration.ofDays(30),
-                "M30"
-        );
-
+            interviewScheduler.scheduleInterviewReminderIfNotExists(
+                    interview.getId(),
+                    interview.getStartedAt(),
+                    Duration.ofDays(30),
+                    "M30"
+            );
+        }
         return InterviewConverter.createInterview(interview);
     }
 
