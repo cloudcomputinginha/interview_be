@@ -34,7 +34,7 @@ public class InterviewRestController {
 
     @PatchMapping("/{interviewId}/end")
     @Operation(summary = "면접 종료 API", description = "면접 종료 시간과 사용자 면접의 상태를 변경합니다.")
-    public ApiResponse<InterviewResponseDTO.InterviewEndResultDTO> terminateInterview(@AuthenticationPrincipal Long memberId, @PathVariable @ExistInterview @NotNull Long interviewId, @RequestBody @Valid InterviewRequestDTO.endInterviewRequestDTO endInterviewRequestDTO) {
+    public ApiResponse<InterviewResponseDTO.InterviewEndResultDTO> terminateInterview(@AuthenticationPrincipal Long memberId, @PathVariable @ExistInterview Long interviewId, @RequestBody @Valid InterviewRequestDTO.endInterviewRequestDTO endInterviewRequestDTO) {
         Interview interview = interviewCommandService.terminateInterview(memberId, interviewId, endInterviewRequestDTO);
         return ApiResponse.onSuccess(InterviewConverter.toInterviewEndResultDTO(interview));
     }
@@ -69,7 +69,7 @@ public class InterviewRestController {
 
     @GetMapping("/group/{interviewId}")
     @Operation(summary = "일대다 면접 모집글 세부 조회 API", description = "일대다 면접 모집글 세부를 조회합니다.")
-    public ApiResponse<InterviewResponseDTO.GroupInterviewDetailDTO> getGroupInterviewDetail(@AuthenticationPrincipal Long memberId, @PathVariable @NotNull @ExistInterview Long interviewId) {
+    public ApiResponse<InterviewResponseDTO.GroupInterviewDetailDTO> getGroupInterviewDetail(@AuthenticationPrincipal Long memberId, @PathVariable @ExistInterview Long interviewId) {
         return ApiResponse.onSuccess(interviewQueryService.getGroupInterviewDetail(memberId, interviewId));
     }
 
