@@ -61,7 +61,7 @@ public class InterviewRestController {
     }
 
     @GetMapping("/{interviewId}")
-    @Operation(summary = "면접 시작 정보 조회 API", description = "[개발용] 해당 API가 호출되면 AI서버에게 넘겨줄 면접의 모든 정보를 넘겨줍니다.")
+    @Operation(summary = "면접 시작 정보 조회 API", description = "[개발용] 이 API는 데이터베이스 상태를 변경하지 않는 읽기 전용(READ-ONLY) 작업입니다. 실제 면접 시작 API와 달리, 면접의 모든 정보를 AI서버에 넘겨주지만 면접 시작 시간이나 사용자 면접 상태를 변경하지 않습니다.")
     public ApiResponse<InterviewResponseDTO.InterviewStartResponseDTO> getStartInterviewInfo(@AuthenticationPrincipal Long memberId, @PathVariable @ExistInterview Long interviewId) {
         InterviewResponseDTO.InterviewStartResponseDTO interviewStartResponse = interviewQueryService.getStartInterviewInfo(memberId, interviewId);
         return ApiResponse.onSuccess(interviewStartResponse);
