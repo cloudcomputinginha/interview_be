@@ -26,7 +26,7 @@ public class Resume extends BaseEntity {
     @Column(length = 100, nullable = false)
     private String fileName;
 
-    @Column(length = 255, nullable = false, unique = true)
+    @Column(length = 255, nullable = false)
     private String fileUrl;
 
     @Column(nullable = false)
@@ -35,6 +35,9 @@ public class Resume extends BaseEntity {
     @Enumerated(EnumType.STRING)
     @Column(length = 4, nullable = false)
     private FileType fileType;
+
+    @Column(columnDefinition = "TEXT", nullable = false)
+    private String ocrResult;
 
     public void validateOwnedBy(Long memberId) {
         if (!this.member.getId().equals(memberId)) {

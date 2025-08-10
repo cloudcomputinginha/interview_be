@@ -66,5 +66,6 @@ public class ResumeResponseDTO {
         private Long resumeId;
         private String fileName;
         private String fileUrl;
+        private String ocrResult;
     }
 }

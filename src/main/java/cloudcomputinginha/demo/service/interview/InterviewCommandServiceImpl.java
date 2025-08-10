@@ -42,25 +42,6 @@ public class InterviewCommandServiceImpl implements InterviewCommandService {
 
     @Override
     @Transactional
-    public Interview terminateInterview(Long memberId, Long interviewId, InterviewRequestDTO.endInterviewRequestDTO endInterviewRequestDTO) {
-        Interview interview = interviewRepository.findWithInterviewOptionById(interviewId);
-
-        if (interview.getEndedAt() != null) {
-            throw new InterviewHandler(ErrorStatus.INTERVIEW_ALREADY_TERMINATED);
-        }
-
-        if (endInterviewRequestDTO.getEndedAt().isBefore(interview.getStartedAt())) {
-            throw new InterviewHandler(INTERVIEW_END_TIME_INVALID);
-        }
-
-        // InterviewOption 종료 시간 갱신
-        interview.updateEndedAt(endInterviewRequestDTO.getEndedAt());
-        interviewRepository.save(interview);
-        return interview;
-    }
-
-    @Override
-    @Transactional
     public InterviewResponseDTO.InterviewCreateResultDTO createInterview(InterviewRequestDTO.InterviewCreateDTO request, Long memberId) {
         Member member = memberRepository.findById(memberId)
                 .orElseThrow(() -> new MemberHandler(ErrorStatus.MEMBER_NOT_FOUND));
@@ -75,8 +56,7 @@ public class InterviewCommandServiceImpl implements InterviewCommandService {
         memberInterviewCommandService.validateResumeOwnership(resume.getId(), memberId);
 
         InterviewOption interviewOption = InterviewConverter.toInterviewOption(request);
-        interviewOptionRepository.save(interviewOption);
-        Interview interview = InterviewConverter.toInterview(request, interviewOption, member);
+        Interview interview = InterviewConverter.toInterview(request, member);
         interview.setInterviewOption(interviewOption);
         // TODO: 초대 메일 검증 코드 + 초대 알림 전송
         interviewRepository.save(interview);
@@ -85,66 +65,108 @@ public class InterviewCommandServiceImpl implements InterviewCommandService {
         interview.addMemberInterview(memberInterview);
         member.addMemberInterview(memberInterview);
 
+        // 면접 시작 종류가 SCHEDULED인 경우, 시작과 리마인더를 스케줄링
+        if (interview.getStartType().equals(StartType.SCHEDULED)) {
+            // 인터뷰 스케줄링
+            interviewScheduler.scheduleInterviewStart(
+                    interview.getId(),
+                    interview.getStartedAt()
+            );
 
-        // 인터뷰 스케줄링
-        interviewScheduler.scheduleInterviewStart(
-                interview.getId(),
-                interview.getStartedAt()
-        );
+            // 인터뷰 리마인드 스케줄링
+            interviewScheduler.scheduleInterviewReminderIfNotExists(
+                    interview.getId(),
+                    interview.getStartedAt(),
+                    Duration.ofDays(1),
+                    "D1"
+            );
 
-        // 인터뷰 리마인드 스케줄링
-        interviewScheduler.scheduleInterviewReminderIfNotExists(
-                interview.getId(),
-                interview.getStartedAt(),
-                Duration.ofDays(1),
-                "D1"
-        );
-
-        interviewScheduler.scheduleInterviewReminderIfNotExists(
-                interview.getId(),
-                interview.getStartedAt(),
-                Duration.ofDays(30),
-                "M30"
-        );
-
+            interviewScheduler.scheduleInterviewReminderIfNotExists(
+                    interview.getId(),
+                    interview.getStartedAt(),
+                    Duration.ofDays(30),
+                    "M30"
+            );
+        }
         return InterviewConverter.createInterview(interview);
     }
 
-    // TODO: 개인 면접과 그룹 면접 컨트롤러나 서비스 분리하기 -> 내부 로직이 크게 달라짐 (일단 startInterview는 그룹 면접 기반 처리)
-    // TODO: 개인 면접일때, 상태 업데이트하기(DONE)
     @Override
-    public InterviewResponseDTO.InterviewStartResponseDTO startInterview(Long memberId, Long interviewId, Boolean isAutoMaticStart) {
-        Interview interviewWithOption = interviewRepository.findWithInterviewOptionById(interviewId);
-        boolean isGroupInterview = interviewWithOption.getInterviewOption().getInterviewFormat().equals(InterviewFormat.GROUP);
+    public InterviewResponseDTO.InterviewStartResponseDTO startInterview(Long memberId, Long interviewId, Boolean isAutomaticStart) {
+        // 1. 면접과 면접 옵션 조회
+        Interview interviewWithOption = interviewRepository.findWithInterviewOptionById(interviewId)
+                .orElseThrow(() -> new InterviewHandler(ErrorStatus.INTERVIEW_NOT_FOUND));
 
+        // 2. 면접 포맷(그룹/개인)에 따라 내부 로직을 진행 후, 면접 참가자 리턴 받기
+        List<MemberInterview> inProgressMemberInterviews;
+        if (interviewWithOption.getInterviewOption().getInterviewFormat().equals(InterviewFormat.GROUP)) {
+            inProgressMemberInterviews = startGroupInterview(memberId, interviewWithOption);
+        } else {
+            inProgressMemberInterviews = startPersonalInterview(memberId, interviewWithOption);
+        }
+
+        // 3. 만약 면접을 사용자가 수동 시작하는 경우라면 모든 스케쥴을 취소한다.
+        if (!isAutomaticStart) {
+            interviewScheduler.cancelScheduledInterview(interviewId);
+        }
+
+        // 4. 면접 시작 시간을 정확히 업데이트
+        interviewWithOption.updateStartedAt(LocalDateTime.now());
+        return InterviewConverter.toInterviewStartResponseDTO(interviewWithOption, inProgressMemberInterviews);
+    }
+
+    private List<MemberInterview> startPersonalInterview(Long memberId, Interview interview) {
+        // 2-1. 면접 참가자 조회
+        MemberInterview memberInterview = memberInterviewRepository.findByMemberIdAndInterviewId(memberId, interview.getId())
+                .orElseThrow(() -> new InterviewHandler(ErrorStatus.MEMBER_INTERVIEW_NOT_FOUND));
+
+        // 2-2. 참가자가 자소서, 이력서가 모두 존재하는지 확인(둘 다 필수여야 함)
+        if (memberInterview.getResume() == null || memberInterview.getCoverletter() == null) {
+            throw new InterviewHandler(ErrorStatus.INTERVIEW_DOCUMENTS_NOT_FOUND);
+        }
+
+        // 2-3. 참가자의 memberInterview 상태 변경
+        if (memberInterview.getStatus() != InterviewStatus.IN_PROGRESS) {
+            // 면접 대기실에 입장하지 않고 시작하는 경우에는 그냥 직접 상태 변경
+            memberInterview.updateStatus(InterviewStatus.DONE);
+        } else {
+            // 면접 대기실에 입장하고 시작하는 경우에는 소켓을 통해 상태 변경
+            memberInterviewSocketService.enterInterview(interview.getId(), List.of(memberInterview));
+        }
+
+        return List.of(memberInterview);
+    }
+
+    private List<MemberInterview> startGroupInterview(Long memberId, Interview interview) {
+        // 2-1. 현재 면접 대기실에 입장한(상태가 IN_PROGRESS인) 참가자들 조회
+        Long interviewId = interview.getId();
         List<MemberInterview> memberInterviews = memberInterviewRepository.findByInterviewId(interviewId);
         List<MemberInterview> inProgressMemberInterviews = memberInterviews.stream()
                 .filter(mi -> mi.getStatus() == InterviewStatus.IN_PROGRESS)
                 .toList();
 
-        boolean hasMissingDocs = inProgressMemberInterviews.stream()
-                .anyMatch(mi -> mi.getResume() == null || mi.getCoverletter() == null);
-        if (hasMissingDocs) {
-            throw new InterviewHandler(ErrorStatus.INTERVIEW_DOCUMENTS_NOT_FOUND); //면접을 시작할 때는 모든 참가자의 자소서, 이력서가 필수여야 함
+        // 2-2. 현재 대기실에 입장한 참가자들 중 해당 메서드를 호출한 사용자가 없으면 예외 발생
+        if (inProgressMemberInterviews.stream()
+                .noneMatch(mi -> mi.getMember().getId().equals(memberId))) {
+            throw new InterviewHandler(ErrorStatus.INTERVIEW_NO_PERMISSION);
         }
 
-        if (isGroupInterview) {
-            // 참가자들에게 참가알림 발송
-            memberInterviewSocketService.enterInterview(interviewId, memberInterviews);
+        // 2-3. 참가자들의 자소서, 이력서가 모두 존재하는지 확인(둘 다 필수여야 함)
+        if (inProgressMemberInterviews.stream()
+                .anyMatch(mi -> mi.getResume() == null || mi.getCoverletter() == null)) {
+            throw new InterviewHandler(ErrorStatus.INTERVIEW_DOCUMENTS_NOT_FOUND);
         }
 
-        if (!isAutoMaticStart) {
-            interviewScheduler.cancelScheduledInterview(interviewId);
-            interviewWithOption.updateStartedAt(LocalDateTime.now());
-        }
+        // 2-4. 면접의 모든 memberInterview의 상태 변경 & 참가알림 발송
+        memberInterviewSocketService.enterInterview(interviewId, memberInterviews);
 
-        return InterviewConverter.toInterviewStartResponseDTO(interviewWithOption, inProgressMemberInterviews);
+        return inProgressMemberInterviews;
     }
 
     @Override
     @Transactional
     public InterviewResponseDTO.InterviewUpdateResponseDTO updateInterview(Long memberId, Long interviewId, InterviewRequestDTO.InterviewUpdateDTO request) {
-        Interview interview = interviewRepository.findById(interviewId)
+        Interview interview = interviewRepository.findWithInterviewOptionById(interviewId)
                 .orElseThrow(() -> new InterviewHandler(ErrorStatus.INTERVIEW_NOT_FOUND));
 
         if (!interview.getHostId().equals(memberId)) {
@@ -169,6 +191,34 @@ public class InterviewCommandServiceImpl implements InterviewCommandService {
             interview.updateIsOpen(false);
         }
         return InterviewConverter.toInterviewUpdateResponseDTO(interview);
+    }
+
+    @Override
+    @Transactional
+    public Interview terminateInterview(Long memberId, Long interviewId, InterviewRequestDTO.endInterviewRequestDTO endInterviewRequestDTO) {
+        // 1. 면접 조회
+        Interview interview = interviewRepository.findById(interviewId)
+                .orElseThrow(() -> new InterviewHandler(ErrorStatus.INTERVIEW_NOT_FOUND));
+
+        // 2. 면접이 종료된 상태라면 예외 발생
+        if (interview.getEndedAt() != null) {
+            throw new InterviewHandler(ErrorStatus.INTERVIEW_ALREADY_TERMINATED);
+        }
+        // 3. 면접의 종료시간이 시작시간 이전이라면 예외 발생
+        if (endInterviewRequestDTO.getEndedAt().isBefore(interview.getStartedAt())) {
+            throw new InterviewHandler(INTERVIEW_END_TIME_INVALID);
+        }
+        // 4. 면접 멤버에 API 사용자가 존재하지 않으면 예외 발생
+        List<MemberInterview> memberInterviews = memberInterviewRepository.findByInterviewId(interviewId);
+        if (memberInterviews.stream()
+                .noneMatch(mi -> mi.getMember().getId().equals(memberId))) {
+            throw new InterviewHandler(ErrorStatus.INTERVIEW_NO_PERMISSION);
+        }
+
+        // 5. 면접의 종료 시간 갱신
+        interview.updateEndedAt(endInterviewRequestDTO.getEndedAt());
+        interviewRepository.save(interview);
+        return interview;
     }
 
     @Override
