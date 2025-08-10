@@ -6,11 +6,13 @@ import lombok.Getter;
 import lombok.Setter;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.stereotype.Component;
+import org.springframework.validation.annotation.Validated;
 
 @Getter
 @Setter
 @Component
 @ConfigurationProperties(prefix = "cloud.aws")
+@Validated
 public class CloudProperties {
 
     @NotBlank(message = "AWS 인증 방식은 필수입니다.")

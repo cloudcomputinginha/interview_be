@@ -45,4 +45,6 @@ public interface InterviewCommandService {
      * @return 면접 엔티티
      */
     Interview terminateInterview(Long memberId, Long interviewId, InterviewRequestDTO.endInterviewRequestDTO endInterviewRequestDTO);
+
+    void deleteInterview(Long memberId, Long interviewId);
 }

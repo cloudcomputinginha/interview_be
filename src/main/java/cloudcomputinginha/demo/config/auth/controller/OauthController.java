@@ -10,12 +10,14 @@ import cloudcomputinginha.demo.domain.enums.SocialProvider;
 import cloudcomputinginha.demo.repository.MemberRepository;
 import io.jsonwebtoken.JwtException;
 import io.swagger.v3.oas.annotations.Operation;
+import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
+import java.io.IOException;
 import java.util.Map;
 
 
@@ -31,17 +33,21 @@ public class OauthController {
 
     @GetMapping(value = "/{socialProvider}")
     @Operation(summary = "소셜 로그인 시작 API", description = "소셜 로그인 시작합니다.")
-    public void socialProvider(@PathVariable(name = "socialProvider")SocialProvider socialProvider) {
+    public void socialProvider(@PathVariable(name = "socialProvider") SocialProvider socialProvider,
+                               @RequestParam(value = "redirect", required = false) String redirect,
+                               HttpServletResponse response) throws IOException {
         log.info(">> 사용자로부터 SNS 로그인 요청을 받음 :: {} Social Login", socialProvider);
-        oauthService.request(socialProvider);
+        oauthService.request(socialProvider, redirect, response);
     }
 
     @GetMapping(value = "/{socialProvider}/callback")
     @Operation(summary = "소셜 로그인 콜백 API", description = "소셜 로그인 콜백 처리합니다.")
-    public void callback(@PathVariable(name = "socialProvider")SocialProvider socialProvider, @RequestParam(name = "code") String code) {
+    public void callback(@PathVariable(name = "socialProvider") SocialProvider socialProvider,
+                         @RequestParam(name = "code") String code,
+                         @RequestParam(required = false) String state,
+                         HttpServletResponse response) throws IOException {
         log.info(">> 소셜 로그인 API 서버로부터 받은 code :: {}", code);
-
-        oauthService.oauthLoginCallback(socialProvider, code);
+        oauthService.oauthLoginCallback(socialProvider, code, state, response);
     }
 
     @DeleteMapping(value = "/logout")

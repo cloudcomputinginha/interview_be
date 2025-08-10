@@ -80,4 +80,11 @@ public class InterviewRestController {
         InterviewOptionResponseDTO.InterviewOptionUpdateResponseDTO result = interviewOptionCommandService.updateInterviewOption(memberId, interviewId, request);
         return ApiResponse.onSuccess(result);
     }
+
+    @DeleteMapping("/{interviewId}")
+    @Operation(summary = "면접 삭제 API", description = "면접을 삭제합니다.")
+    public ApiResponse<Void> deleteInterview(@AuthenticationPrincipal Long memberId, @PathVariable Long interviewId) {
+        interviewCommandService.deleteInterview(memberId, interviewId);
+        return ApiResponse.onSuccess(null);
+    }
 }
