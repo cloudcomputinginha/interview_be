@@ -53,7 +53,8 @@ public class InterviewRequestDTO {
         private int answerTime; // 대답 시간
 
         // 시작 정보
-        private StartType startType;
+        @NotNull
+        private StartType startType; // NOW or SCHEDULED
         private String scheduledDate;
         private String scheduledTime;
 

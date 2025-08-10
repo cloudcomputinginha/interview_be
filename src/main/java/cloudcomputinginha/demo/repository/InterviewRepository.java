@@ -6,12 +6,13 @@ import org.springframework.data.jpa.repository.Query;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 
 public interface InterviewRepository extends JpaRepository<Interview, Long> {
     @Query("SELECT i, io FROM Interview i " +
             "JOIN FETCH i.interviewOption io " +
             "WHERE i.id = :interviewId")
-    Interview findWithInterviewOptionById(Long interviewId);
+    Optional<Interview> findWithInterviewOptionById(Long interviewId);
 
     List<Interview> findAllByStartedAtAfterAndEndedAtIsNull(LocalDateTime startedAtAfter);
 
