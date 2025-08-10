@@ -5,6 +5,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
@@ -41,7 +42,8 @@ public class SecurityConfig {
                                         "https://cloud-computing-fe-two.vercel.app",
                                         "http://127.0.0.1:5500",
                                         interviewDomain,
-                                        interviewAiDomain
+                                        interviewAiDomain,
+                                        "https://www.injob.store"
                                 ));
 
                                 configuration.setAllowedMethods(
@@ -73,7 +75,7 @@ public class SecurityConfig {
 
                 //경로별 인가 작업
                 .authorizeHttpRequests((auth) -> auth
-                                .requestMatchers("/auth/GOOGLE", "/auth/google/callback").permitAll()
+                                //.requestMatchers("/auth/GOOGLE", "/auth/google/callback").permitAll()
                                 .requestMatchers("/v3/api-docs/**",
                                         "/swagger-ui/**",
                                         "/swagger-resources/**",
@@ -81,6 +83,8 @@ public class SecurityConfig {
 //                                "/**"
                                 ).permitAll()
                                 .requestMatchers("/ws-waiting-room/**").permitAll()
+                                .requestMatchers(HttpMethod.GET, "/auth/*", "/auth/*/callback").permitAll()
+                                .requestMatchers(HttpMethod.POST, "/auth/reissue").permitAll()
                                 .anyRequest().authenticated()
                 )
         ;

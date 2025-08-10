@@ -113,4 +113,10 @@ public class Interview extends BaseEntity {
         }
         this.currentParticipants += 1;
     }
+
+    public synchronized void decreaseCurrentParticipants() {
+        if (this.currentParticipants > 0) {
+            this.currentParticipants -= 1;
+        }
+    }
 }
