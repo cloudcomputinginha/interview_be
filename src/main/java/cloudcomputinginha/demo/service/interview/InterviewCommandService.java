@@ -17,7 +17,7 @@ public interface InterviewCommandService {
     InterviewResponseDTO.InterviewCreateResultDTO createInterview(InterviewRequestDTO.InterviewCreateDTO request, Long memberId);
 
     /**
-     * 그룹 면접을 시작하는 메서드
+     * 면접을 시작하는 메서드 (개인 및 그룹 면접 모두 시작 가능)
      *
      * @param memberId 면접을 시작하는 사용자 id
      * @param interviewId 시작할 면접 id
