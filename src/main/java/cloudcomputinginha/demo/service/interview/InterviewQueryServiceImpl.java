@@ -86,7 +86,7 @@ public class InterviewQueryServiceImpl implements InterviewQueryService {
 
         // 4. 참가자들의 자소서, 이력서 존재하는지 확인
         if (memberInterviews.stream()
-                .anyMatch(mi -> mi.getResume() == null || mi.getCoverletter() == null)) {
+                .anyMatch(mi -> !mi.hasResumeAndCoverLetter())) {
             throw new InterviewHandler(ErrorStatus.INTERVIEW_DOCUMENTS_NOT_FOUND);
         }
         return InterviewConverter.toInterviewStartResponseDTO(interviewWithOption, memberInterviews);

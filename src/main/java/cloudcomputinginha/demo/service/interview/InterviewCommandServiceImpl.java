@@ -121,8 +121,8 @@ public class InterviewCommandServiceImpl implements InterviewCommandService {
                 .orElseThrow(() -> new InterviewHandler(ErrorStatus.MEMBER_INTERVIEW_NOT_FOUND));
 
         // 2-2. 참가자가 자소서, 이력서가 모두 존재하는지 확인(둘 다 필수여야 함)
-        if (memberInterview.getResume() == null || memberInterview.getCoverletter() == null) {
-            throw new InterviewHandler(ErrorStatus.INTERVIEW_DOCUMENTS_NOT_FOUND);
+        if (!memberInterview.hasResumeAndCoverLetter()) {
+            throw new MemberInterviewHandler(ErrorStatus.INTERVIEW_DOCUMENTS_NOT_FOUND);
         }
 
         // 2-3. 참가자의 memberInterview 상태 변경
@@ -153,7 +153,7 @@ public class InterviewCommandServiceImpl implements InterviewCommandService {
 
         // 2-3. 참가자들의 자소서, 이력서가 모두 존재하는지 확인(둘 다 필수여야 함)
         if (inProgressMemberInterviews.stream()
-                .anyMatch(mi -> mi.getResume() == null || mi.getCoverletter() == null)) {
+                .anyMatch(mi -> !mi.hasResumeAndCoverLetter())) {
             throw new InterviewHandler(ErrorStatus.INTERVIEW_DOCUMENTS_NOT_FOUND);
         }
 
