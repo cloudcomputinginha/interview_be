@@ -97,7 +97,8 @@ public class InterviewCommandServiceImpl implements InterviewCommandService {
     @Override
     public InterviewResponseDTO.InterviewStartResponseDTO startInterview(Long memberId, Long interviewId, Boolean isAutomaticStart) {
         // 1. 면접과 면접 옵션 조회
-        Interview interviewWithOption = interviewRepository.findWithInterviewOptionById(interviewId);
+        Interview interviewWithOption = interviewRepository.findWithInterviewOptionById(interviewId)
+                .orElseThrow(() -> new InterviewHandler(ErrorStatus.INTERVIEW_NOT_FOUND));
 
         // 2. 면접 포맷(그룹/개인)에 따라 내부 로직을 진행 후, 면접 참가자 리턴 받기
         List<MemberInterview> inProgressMemberInterviews;
@@ -162,7 +163,7 @@ public class InterviewCommandServiceImpl implements InterviewCommandService {
     @Override
     @Transactional
     public InterviewResponseDTO.InterviewUpdateResponseDTO updateInterview(Long memberId, Long interviewId, InterviewRequestDTO.InterviewUpdateDTO request) {
-        Interview interview = interviewRepository.findById(interviewId)
+        Interview interview = interviewRepository.findWithInterviewOptionById(interviewId)
                 .orElseThrow(() -> new InterviewHandler(ErrorStatus.INTERVIEW_NOT_FOUND));
 
         if (!interview.getHostId().equals(memberId)) {
@@ -192,7 +193,9 @@ public class InterviewCommandServiceImpl implements InterviewCommandService {
     @Override
     @Transactional
     public Interview terminateInterview(Long memberId, Long interviewId, InterviewRequestDTO.endInterviewRequestDTO endInterviewRequestDTO) {
-        Interview interview = interviewRepository.findWithInterviewOptionById(interviewId);
+        // 1. 면접 조회
+        Interview interview = interviewRepository.findById(interviewId)
+                .orElseThrow(() -> new InterviewHandler(ErrorStatus.INTERVIEW_NOT_FOUND));
 
         if (interview.getEndedAt() != null) {
             throw new InterviewHandler(ErrorStatus.INTERVIEW_ALREADY_TERMINATED);
