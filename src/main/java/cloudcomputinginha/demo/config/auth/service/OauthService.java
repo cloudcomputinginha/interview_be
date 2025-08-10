@@ -6,8 +6,8 @@ import cloudcomputinginha.demo.domain.Member;
 import cloudcomputinginha.demo.domain.enums.SocialProvider;
 import cloudcomputinginha.demo.repository.MemberRepository;
 import jakarta.servlet.http.HttpServletResponse;
+import org.springframework.web.util.UriComponentsBuilder;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import java.io.IOException;
 import java.util.List;
@@ -21,9 +21,6 @@ public class OauthService {
     private final MemberRepository memberRepository;
     private final JwtProvider jwtProvider;
 
-    @Value("${frontend.redirect-uri}")
-    private String frontendRedirectUrl;
-
     public void request(SocialProvider socialProvider) {
         SocialOauth socialOauth = this.findSocialOauthByType(socialProvider);
         String redirectURL = socialOauth.getOauthRedirectURL();
@@ -34,7 +31,7 @@ public class OauthService {
         }
     }
 
-    public void oauthLoginCallback(SocialProvider socialProvider, String code) {
+    public void oauthLoginCallback(SocialProvider socialProvider, String code, String target, HttpServletResponse response) throws IOException {
         SocialOauth socialOauth = this.findSocialOauthByType(socialProvider);
         String googleAccessToken = socialOauth.requestAccessToken(code);
 
@@ -57,12 +54,14 @@ public class OauthService {
         member.setRefreshToken(refreshToken);
         memberRepository.save(member);
 
-        String redirectUrl = frontendRedirectUrl + "?at=" + accessToken + "&rt=" + refreshToken;
+        String redirectUrl = UriComponentsBuilder.fromUriString(target)
+                .queryParam("at", accessToken)   // 프론트와 합의된 파라미터 키
+                .queryParam("rt", refreshToken)
+                .build(true)
+                .toUriString();
 
-        try {
-            httpServletResponse.sendRedirect(redirectUrl);
-        } catch (IOException e) {
-            throw new RuntimeException("프론트엔드 리다이렉트 실패", e);
+        if (!response.isCommitted()) {
+            response.sendRedirect(redirectUrl);
         }
     }
 

@@ -12,4 +12,6 @@ public interface InterviewCommandService {
     public InterviewResponseDTO.InterviewStartResponseDTO startInterview(Long memberId, Long interviewId, Boolean isAutoMaticStart);
 
     InterviewResponseDTO.InterviewUpdateResponseDTO updateInterview(Long memberId, Long interviewId, InterviewRequestDTO.InterviewUpdateDTO request);
+
+    void deleteInterview(Long memberId, Long interviewId);
 }

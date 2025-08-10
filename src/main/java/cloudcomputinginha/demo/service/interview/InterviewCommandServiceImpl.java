@@ -1,15 +1,13 @@
 package cloudcomputinginha.demo.service.interview;
 
-import cloudcomputinginha.demo.apiPayload.code.handler.CoverletterHandler;
-import cloudcomputinginha.demo.apiPayload.code.handler.InterviewHandler;
-import cloudcomputinginha.demo.apiPayload.code.handler.MemberHandler;
-import cloudcomputinginha.demo.apiPayload.code.handler.ResumeHandler;
+import cloudcomputinginha.demo.apiPayload.code.handler.*;
 import cloudcomputinginha.demo.apiPayload.code.status.ErrorStatus;
 import cloudcomputinginha.demo.converter.InterviewConverter;
 import cloudcomputinginha.demo.converter.MemberInterviewConverter;
 import cloudcomputinginha.demo.domain.*;
 import cloudcomputinginha.demo.domain.enums.InterviewFormat;
 import cloudcomputinginha.demo.domain.enums.InterviewStatus;
+import cloudcomputinginha.demo.domain.enums.StartType;
 import cloudcomputinginha.demo.repository.*;
 import cloudcomputinginha.demo.scheduler.InterviewScheduler;
 import cloudcomputinginha.demo.service.memberInterview.MemberInterviewCommandService;
@@ -171,5 +169,49 @@ public class InterviewCommandServiceImpl implements InterviewCommandService {
             interview.updateIsOpen(false);
         }
         return InterviewConverter.toInterviewUpdateResponseDTO(interview);
+    }
+
+    @Override
+    @Transactional
+    public void deleteInterview(Long memberId, Long interviewId) {
+        Interview interview = interviewRepository.findById(interviewId)
+                .orElseThrow(() -> new InterviewHandler(ErrorStatus.INTERVIEW_NOT_FOUND));
+
+        StartType startType = interview.getStartType();
+        LocalDateTime now = LocalDateTime.now();
+
+        if (startType == StartType.NOW) {
+            throw new InterviewHandler(ErrorStatus.INTERVIEW_ALREADY_STARTED);
+        }
+
+        if (startType == StartType.SCHEDULED && !interview.getStartedAt().isAfter(now)) {
+            throw new InterviewHandler(ErrorStatus.INTERVIEW_ALREADY_STARTED);
+        }
+
+        InterviewFormat interviewFormat = interview.getInterviewOption().getInterviewFormat();
+
+        if (interviewFormat == InterviewFormat.INDIVIDUAL) {
+            if (!interview.getHostId().equals(memberId)) {
+                throw new InterviewHandler(ErrorStatus.INTERVIEW_NO_PERMISSION);
+            }
+
+            interviewRepository.delete(interview);
+            return;
+        }
+
+        MemberInterview memberInterview = memberInterviewRepository
+                .findByMemberIdAndInterviewId(memberId, interviewId)
+                .orElseThrow(() -> new MemberInterviewHandler(ErrorStatus.MEMBER_INTERVIEW_NOT_FOUND));
+
+        interview.getMemberInterviews().remove(memberInterview);
+        memberInterview.setInterview(null);
+        memberInterview.setMember(null);
+
+        memberInterviewRepository.delete(memberInterview);
+        interview.decreaseCurrentParticipants();
+
+        if (interview.getCurrentParticipants() <= 0) {
+            interviewRepository.delete(interview);
+        }
     }
 }
