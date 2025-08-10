@@ -11,6 +11,7 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.springframework.format.annotation.DateTimeFormat;
+
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -52,6 +53,7 @@ public class InterviewRequestDTO {
         private int answerTime; // 대답 시간
 
         // 시작 정보
+        @NotNull
         private StartType startType; // NOW or SCHEDULED
         private String scheduledDate;
         private String scheduledTime;
