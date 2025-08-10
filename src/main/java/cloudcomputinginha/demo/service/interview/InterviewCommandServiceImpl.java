@@ -197,15 +197,22 @@ public class InterviewCommandServiceImpl implements InterviewCommandService {
         Interview interview = interviewRepository.findById(interviewId)
                 .orElseThrow(() -> new InterviewHandler(ErrorStatus.INTERVIEW_NOT_FOUND));
 
+        // 2. 면접이 종료된 상태라면 예외 발생
         if (interview.getEndedAt() != null) {
             throw new InterviewHandler(ErrorStatus.INTERVIEW_ALREADY_TERMINATED);
         }
-
+        // 3. 면접의 종료시간이 시작시간 이전이라면 예외 발생
         if (endInterviewRequestDTO.getEndedAt().isBefore(interview.getStartedAt())) {
             throw new InterviewHandler(INTERVIEW_END_TIME_INVALID);
         }
+        // 4. 면접 멤버에 API 사용자가 존재하지 않으면 예외 발생
+        List<MemberInterview> memberInterviews = memberInterviewRepository.findByInterviewId(interviewId);
+        if (memberInterviews.stream()
+                .noneMatch(mi -> mi.getMember().getId().equals(memberId))) {
+            throw new InterviewHandler(ErrorStatus.INTERVIEW_NO_PERMISSION);
+        }
 
-        // InterviewOption 종료 시간 갱신
+        // 5. 면접의 종료 시간 갱신
         interview.updateEndedAt(endInterviewRequestDTO.getEndedAt());
         interviewRepository.save(interview);
         return interview;
