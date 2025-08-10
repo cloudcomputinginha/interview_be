@@ -67,4 +67,28 @@ public class InterviewQueryServiceImpl implements InterviewQueryService {
     public Optional<Interview> getInterview(Long interviewId) {
         return interviewRepository.findById(interviewId);
     }
+
+    @Override
+    @Transactional(readOnly = true)
+    public InterviewResponseDTO.InterviewStartResponseDTO getStartInterviewInfo(Long memberId, Long interviewId) {
+        // 1. 면접과 면접 옵션 조회
+        Interview interviewWithOption = interviewRepository.findWithInterviewOptionById(interviewId)
+                .orElseThrow(() -> new InterviewHandler(ErrorStatus.INTERVIEW_NOT_FOUND));
+
+        // 2. 면접 참여자 조회
+        List<MemberInterview> memberInterviews = memberInterviewRepository.findByInterviewId(interviewId);
+
+        // 3. 현재 사용자가 면접 참여자인지 확인
+        if (memberInterviews.stream()
+                .noneMatch(mi -> mi.getMember().getId().equals(memberId))) {
+            throw new InterviewHandler(ErrorStatus.INTERVIEW_NO_PERMISSION);
+        }
+
+        // 4. 참가자들의 자소서, 이력서 존재하는지 확인
+        if (memberInterviews.stream()
+                .anyMatch(mi -> !mi.hasResumeAndCoverLetter())) {
+            throw new InterviewHandler(ErrorStatus.INTERVIEW_DOCUMENTS_NOT_FOUND);
+        }
+        return InterviewConverter.toInterviewStartResponseDTO(interviewWithOption, memberInterviews);
+    }
 }

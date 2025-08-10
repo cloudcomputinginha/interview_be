@@ -15,7 +15,6 @@ import cloudcomputinginha.demo.web.dto.InterviewResponseDTO;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
-import jakarta.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.validation.annotation.Validated;
@@ -35,7 +34,7 @@ public class InterviewRestController {
 
     @PatchMapping("/{interviewId}/end")
     @Operation(summary = "면접 종료 API", description = "면접 종료 시간과 사용자 면접의 상태를 변경합니다.")
-    public ApiResponse<InterviewResponseDTO.InterviewEndResultDTO> terminateInterview(@AuthenticationPrincipal Long memberId, @PathVariable @ExistInterview @NotNull Long interviewId, @RequestBody @Valid InterviewRequestDTO.endInterviewRequestDTO endInterviewRequestDTO) {
+    public ApiResponse<InterviewResponseDTO.InterviewEndResultDTO> terminateInterview(@AuthenticationPrincipal Long memberId, @PathVariable @ExistInterview Long interviewId, @RequestBody @Valid InterviewRequestDTO.endInterviewRequestDTO endInterviewRequestDTO) {
         Interview interview = interviewCommandService.terminateInterview(memberId, interviewId, endInterviewRequestDTO);
         return ApiResponse.onSuccess(InterviewConverter.toInterviewEndResultDTO(interview));
     }
@@ -55,15 +54,22 @@ public class InterviewRestController {
     }
 
     @GetMapping("/{interviewId}/start")
-    @Operation(summary = "면접 시작 API", description = "해당 API가 호출되면 AI서버에게 넘겨줄 면접의 모든 정보를 넘겨줍니다.")
-    public ApiResponse<InterviewResponseDTO.InterviewStartResponseDTO> startInterview(@AuthenticationPrincipal Long memberId, @PathVariable @NotNull Long interviewId) {
+    @Operation(summary = "면접 시작 API", description = "해당 API가 호출되면 AI서버에게 넘겨줄 면접의 모든 정보를 넘겨주고, 면접 시작 시간과 사용자 면접 상태를 변경합니다.")
+    public ApiResponse<InterviewResponseDTO.InterviewStartResponseDTO> startInterview(@AuthenticationPrincipal Long memberId, @PathVariable Long interviewId) {
         InterviewResponseDTO.InterviewStartResponseDTO interviewStartResponse = interviewCommandService.startInterview(memberId, interviewId, false);
+        return ApiResponse.onSuccess(interviewStartResponse);
+    }
+
+    @GetMapping("/{interviewId}")
+    @Operation(summary = "면접 시작 정보 조회 API", description = "[개발용] 이 API는 데이터베이스 상태를 변경하지 않는 읽기 전용(READ-ONLY) 작업입니다. 실제 면접 시작 API와 달리, 면접의 모든 정보를 AI서버에 넘겨주지만 면접 시작 시간이나 사용자 면접 상태를 변경하지 않습니다.")
+    public ApiResponse<InterviewResponseDTO.InterviewStartResponseDTO> getStartInterviewInfo(@AuthenticationPrincipal Long memberId, @PathVariable @ExistInterview Long interviewId) {
+        InterviewResponseDTO.InterviewStartResponseDTO interviewStartResponse = interviewQueryService.getStartInterviewInfo(memberId, interviewId);
         return ApiResponse.onSuccess(interviewStartResponse);
     }
 
     @GetMapping("/group/{interviewId}")
     @Operation(summary = "일대다 면접 모집글 세부 조회 API", description = "일대다 면접 모집글 세부를 조회합니다.")
-    public ApiResponse<InterviewResponseDTO.GroupInterviewDetailDTO> getGroupInterviewDetail(@AuthenticationPrincipal Long memberId, @PathVariable @NotNull @ExistInterview Long interviewId) {
+    public ApiResponse<InterviewResponseDTO.GroupInterviewDetailDTO> getGroupInterviewDetail(@AuthenticationPrincipal Long memberId, @PathVariable @ExistInterview Long interviewId) {
         return ApiResponse.onSuccess(interviewQueryService.getGroupInterviewDetail(memberId, interviewId));
     }
 

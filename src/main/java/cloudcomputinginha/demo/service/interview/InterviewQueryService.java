@@ -15,10 +15,19 @@ public interface InterviewQueryService {
     /**
      * 현재 시간으로부터 예정된 모든 Interview를 조회한다.
      *
-     * @param currentTime
+     * @param currentTime 현재 시간
      * @return List<Interview>
      */
     List<Interview> getUpcomingInterviews(LocalDateTime currentTime);
 
     Optional<Interview> getInterview(Long interviewId);
+
+    /**
+     * 면접 시작 정보를 조회하는 메서드
+     *
+     * @param memberId 조회하는 사용자 id
+     * @param interviewId 조회할 면접 id
+     * @return InterviewResponseDTO.InterviewStartResponseDTO
+     */
+    InterviewResponseDTO.InterviewStartResponseDTO getStartInterviewInfo(Long memberId, Long interviewId);
 }

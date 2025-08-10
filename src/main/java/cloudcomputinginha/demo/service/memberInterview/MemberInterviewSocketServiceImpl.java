@@ -35,7 +35,7 @@ public class MemberInterviewSocketServiceImpl implements MemberInterviewSocketSe
         if (hasInterviewEnded(memberInterview)) {
             throw new MemberInterviewHandler(ErrorStatus.INTERVIEW_ALREADY_STARTED);
         }
-        if (memberInterview.getResume() == null || memberInterview.getCoverletter() == null) {
+        if (!memberInterview.hasResumeAndCoverLetter()) {
             throw new MemberInterviewHandler(ErrorStatus.INTERVIEW_DOCUMENTS_NOT_FOUND);
         }
 
