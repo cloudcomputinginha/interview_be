@@ -129,7 +129,13 @@ public class InterviewCommandServiceImpl implements InterviewCommandService {
         }
 
         // 2-3. 참가자의 memberInterview 상태 변경
-        memberInterview.updateStatus(InterviewStatus.DONE);
+        if (memberInterview.getStatus() != InterviewStatus.IN_PROGRESS) {
+            // 면접 대기실에 입장하지 않고 시작하는 경우에는 그냥 직접 상태 변경
+            memberInterview.updateStatus(InterviewStatus.DONE);
+        } else {
+            // 면접 대기실에 입장하고 시작하는 경우에는 소켓을 통해 상태 변경
+            memberInterviewSocketService.enterInterview(interview.getId(), List.of(memberInterview));
+        }
 
         return List.of(memberInterview);
     }
