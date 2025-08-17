@@ -2,6 +2,7 @@ plugins {
     id 'java'
     id 'org.springframework.boot' version '3.4.5'
     id 'io.spring.dependency-management' version '1.1.7'
+    id "io.sentry.jvm.gradle" version "5.9.0"
 }
 
 ext {
@@ -79,6 +80,18 @@ dependencies {
 
     // OpenFeign AI 서버와 통신을 위한 의존성
     implementation 'org.springframework.cloud:spring-cloud-starter-openfeign:4.2.1'
+
+    // Sentry 모니터링 시스템
+    implementation 'io.sentry:sentry-spring-boot-starter:6.27.0'
+}
+
+// Sentry 모니터링 시스템 - @Slf4j 로그 전송
+sentry {
+    includeSourceContext = true
+
+    org = "inha-university-6n"
+    projectName = "injob"
+    authToken = System.getenv("SENTRY_AUTH_TOKEN")
 }
 
 tasks.named('test') {
