@@ -1,0 +1,14 @@
+sns:
+  google:
+    url: ${GOOGLE_URL}
+    client:
+      id: ${GOOGLE_CLIENT_ID}
+      secret: ${GOOGLE_CLIENT_SECRET}
+    token:
+      url: ${GOOGLE_TOKEN_URL}
+    callback:
+      url: ${BACKEND_URL}/${GOOGLE_CALLBACK_ENDPOINT}
+
+frontend:
+  default-redirect-uri: ${DEFAULT_REDIRECT_URI}
+  allowed-redirect-uris: ${ALLOWED_REDIRECT_URIS}
