@@ -1,3 +1,0 @@
-domain: #도메인 정보 URL 생성, CORS 설정, FeignClient 등에 사용할 예정
-  backend: ${BACKEND_URL}
-  ai: ${AI_URL}
