@@ -1,0 +1,7 @@
+sentry:
+  dsn: ${SENTRY_DSN}
+  debug: true
+  server-name: ${SENTRY_SERVER_NAME}
+  send-default-pii: true
+  exception-resolver-order: 1
+  max-breadcrumbs: 30
