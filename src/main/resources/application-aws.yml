@@ -1,6 +1,0 @@
-cloud:
-  aws:
-    auth: ${AWS_AUTH} # 자격 증명 방식
-    s3:
-      bucket: ${S3_BUCKET_NAME}
-      region: ${S3_REGION}
