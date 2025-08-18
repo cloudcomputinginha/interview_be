@@ -8,8 +8,8 @@ spring:
       maximum-pool-size: 30
       minimum-idle: 10
       idle-timeout: 30000
-      max-liefetime: 1800000
-      connection-tiemout: 30000
+      max-lifetime: 1800000
+      connection-timeout: 30000
   sql:
     init:
       mode: never

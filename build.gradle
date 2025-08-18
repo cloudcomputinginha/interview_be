@@ -82,7 +82,7 @@ dependencies {
     implementation 'org.springframework.cloud:spring-cloud-starter-openfeign:4.2.1'
 
     // Sentry 모니터링 시스템
-    implementation 'io.sentry:sentry-spring-boot-starter:6.27.0'
+    implementation "io.sentry:sentry-spring-boot-starter-jakarta:8.19.0"
 
     // 환경변수(.env) 파일 관리
     implementation 'me.paulschwarz:spring-dotenv:4.0.0'
