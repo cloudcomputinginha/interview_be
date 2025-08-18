@@ -1,0 +1,12 @@
+spring:
+  profiles:
+    include:
+      - prod
+      - jwt
+      - oauth2
+      - aws
+      - domain
+      - sentry
+
+server:
+  forward-headers-strategy: FRAMEWORK

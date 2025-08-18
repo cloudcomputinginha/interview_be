@@ -83,6 +83,9 @@ dependencies {
 
     // Sentry 모니터링 시스템
     implementation 'io.sentry:sentry-spring-boot-starter:6.27.0'
+
+    // 환경변수(.env) 파일 관리
+    implementation 'me.paulschwarz:spring-dotenv:4.0.0'
 }
 
 // Sentry 모니터링 시스템 - @Slf4j 로그 전송
