@@ -45,7 +45,7 @@ jobs:
         if: contains(github.ref, 'dev')
         run: |
           IMAGE=${{ secrets.DOCKER_USERNAME }}/interview-be-service
-          docker login -u ${{ secrets.DOCKER_USERNAME }} -p ${{ secrets.DOCKER_PASSWORD }}
+          echo "${{ secrets.DOCKER_PASSWORD }}" | docker login -u "${{ secrets.DOCKER_USERNAME }}" --password-stdin
           docker build -f Dockerfile -t $IMAGE:latest .
           docker push $IMAGE:latest
 
@@ -84,7 +84,7 @@ jobs:
             chmod 600 .env
             
             # 최신 이미지 pull & app 교체
-            docker login -u ${{ secrets.DOCKER_USERNAME }} -p ${{ secrets.DOCKER_PASSWORD }}
+            echo "${{ secrets.DOCKER_PASSWORD }}" | docker login -u "${{ secrets.DOCKER_USERNAME }}" --password-stdin
             docker compose pull app
             docker compose up -d app
             
