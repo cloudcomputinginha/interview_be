@@ -1,0 +1,32 @@
+services:
+  nginx:
+    image: nginx:alpine
+    container_name: interview-be-nginx
+    restart: always
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./nginx/conf.d:/etc/nginx/conf.d:ro
+      # ./nginx/html:/usr/share/nginx/html
+      # EC2에서 인증서를 관리, 컨테이너는 인증서 "마운트"만 함
+      - /etc/letsencrypt:/etc/letsencrypt:ro
+      - /var/www/certbot:/var/www/certbot:ro
+    depends_on:
+      app:
+        condition: service_healthy # app이 준비된 후에 nginx 붙기 -> 초기 502 에러 방지
+
+  app:
+    image: ${DOCKER_USERNAME}/interview-be-service:latest
+    container_name: interview-be-app
+    restart: always
+    env_file:
+      - .env
+    expose:
+      - 8080
+    healthcheck:
+      test: [ "CMD-SHELL", "wget -qO- http://localhost:8080/actuator/health || curl -fsS http://localhost:8080/actuator/health" ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 60s
