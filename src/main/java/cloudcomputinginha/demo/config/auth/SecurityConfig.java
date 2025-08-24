@@ -80,7 +80,7 @@ public class SecurityConfig {
                                 .requestMatchers("/ws-waiting-room/**").permitAll()
                                 .requestMatchers(HttpMethod.GET, "/auth/*", "/auth/*/callback").permitAll()
                                 .requestMatchers(HttpMethod.POST, "/auth/reissue").permitAll()
-                                .requestMatchers(HttpMethod.GET, "/actuator/health").permitAll()
+                                .requestMatchers(HttpMethod.GET, "/healthz").permitAll()
                                 .anyRequest().authenticated()
                 )
         ;

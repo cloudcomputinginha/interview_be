@@ -25,7 +25,7 @@ services:
     expose:
       - 8080
     healthcheck:
-      test: [ "CMD-SHELL", "wget -qO- http://localhost:8080/actuator/health || curl -fsS http://localhost:8080/actuator/health" ]
+      test: [ "CMD-SHELL", "wget -qO- http://localhost:8080/healthz || curl -fsS http://localhost:8080/healthz" ]
       interval: 10s
       timeout: 5s
       retries: 5
