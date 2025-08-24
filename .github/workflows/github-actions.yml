@@ -87,8 +87,15 @@ jobs:
             
             # 최신 이미지 pull & app 교체
             echo "${{ secrets.DOCKER_PASSWORD }}" | docker login -u "${{ secrets.DOCKER_USERNAME }}" --password-stdin
+            if docker ps -a --format '{{.Names}}' | grep -qx 'interview-be-nginx'; then
+            # 이미 nginx가 한 번이라도 올라간 적이 있으면 app만 교체
             docker compose pull app
             docker compose up -d app
+            else
+            # nginx가 한 번도 없었다면 처음에 둘 다 띄워야 함
+            docker compose pull
+            docker compose up -d
+            fi
             
             # 불필요한 이미지 정리
             docker image prune -f
