@@ -1,4 +1,4 @@
-package cloudcomputinginha.demo.web.dto;
+package cloudcomputinginha.demo.web.dto.request;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotNull;

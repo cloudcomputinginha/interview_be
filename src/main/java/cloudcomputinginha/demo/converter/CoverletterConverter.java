@@ -2,8 +2,8 @@ package cloudcomputinginha.demo.converter;
 
 import cloudcomputinginha.demo.domain.Coverletter;
 import cloudcomputinginha.demo.domain.Member;
-import cloudcomputinginha.demo.web.dto.CoverletterRequestDTO;
-import cloudcomputinginha.demo.web.dto.CoverletterResponseDTO;
+import cloudcomputinginha.demo.web.dto.request.CoverletterRequestDTO;
+import cloudcomputinginha.demo.web.dto.response.CoverletterResponseDTO;
 
 import java.util.List;
 

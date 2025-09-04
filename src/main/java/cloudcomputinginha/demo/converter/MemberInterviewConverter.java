@@ -2,7 +2,7 @@ package cloudcomputinginha.demo.converter;
 
 import cloudcomputinginha.demo.domain.*;
 import cloudcomputinginha.demo.domain.enums.InterviewStatus;
-import cloudcomputinginha.demo.web.dto.MemberInterviewResponseDTO;
+import cloudcomputinginha.demo.web.dto.response.MemberInterviewResponseDTO;
 
 import java.util.List;
 

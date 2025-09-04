@@ -1,7 +1,7 @@
 package cloudcomputinginha.demo.converter;
 
 import cloudcomputinginha.demo.domain.InterviewOption;
-import cloudcomputinginha.demo.web.dto.InterviewOptionResponseDTO;
+import cloudcomputinginha.demo.web.dto.response.InterviewOptionResponseDTO;
 
 public class InterviewOptionConverter {
     public static InterviewOptionResponseDTO.InterviewOptionDetailDTO toInterviewOptionDTO(InterviewOption interviewOption) {

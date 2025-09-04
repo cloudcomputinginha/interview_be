@@ -4,7 +4,7 @@ import cloudcomputinginha.demo.domain.Coverletter;
 import cloudcomputinginha.demo.domain.MemberInterview;
 import cloudcomputinginha.demo.domain.Resume;
 import cloudcomputinginha.demo.domain.enums.InterviewStatus;
-import cloudcomputinginha.demo.web.dto.MemberInterviewRequestDTO;
+import cloudcomputinginha.demo.web.dto.request.MemberInterviewRequestDTO;
 
 
 public interface MemberInterviewCommandService {

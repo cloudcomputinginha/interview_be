@@ -12,7 +12,7 @@ import cloudcomputinginha.demo.repository.CoverletterRepository;
 import cloudcomputinginha.demo.repository.MemberInterviewRepository;
 import cloudcomputinginha.demo.repository.MemberRepository;
 import cloudcomputinginha.demo.repository.QnaRepository;
-import cloudcomputinginha.demo.web.dto.CoverletterRequestDTO;
+import cloudcomputinginha.demo.web.dto.request.CoverletterRequestDTO;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;

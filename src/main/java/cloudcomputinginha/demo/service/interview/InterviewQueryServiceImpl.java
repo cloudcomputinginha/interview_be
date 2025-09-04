@@ -12,7 +12,7 @@ import cloudcomputinginha.demo.repository.InterviewQueryRepository;
 import cloudcomputinginha.demo.repository.InterviewRepository;
 import cloudcomputinginha.demo.repository.MemberInterviewRepository;
 import cloudcomputinginha.demo.repository.MemberRepository;
-import cloudcomputinginha.demo.web.dto.InterviewResponseDTO;
+import cloudcomputinginha.demo.web.dto.response.InterviewResponseDTO;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;

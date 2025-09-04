@@ -11,7 +11,7 @@ import cloudcomputinginha.demo.infra.ai.AiOpenFeignService;
 import cloudcomputinginha.demo.repository.MemberInterviewRepository;
 import cloudcomputinginha.demo.repository.MemberRepository;
 import cloudcomputinginha.demo.repository.ResumeRepository;
-import cloudcomputinginha.demo.web.dto.ResumeRequestDTO;
+import cloudcomputinginha.demo.web.dto.request.ResumeRequestDTO;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;

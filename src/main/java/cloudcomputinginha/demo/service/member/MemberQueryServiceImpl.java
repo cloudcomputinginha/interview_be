@@ -5,7 +5,7 @@ import cloudcomputinginha.demo.apiPayload.code.status.ErrorStatus;
 import cloudcomputinginha.demo.converter.MemberConverter;
 import cloudcomputinginha.demo.domain.Member;
 import cloudcomputinginha.demo.repository.MemberRepository;
-import cloudcomputinginha.demo.web.dto.MemberInfoResponseDTO;
+import cloudcomputinginha.demo.web.dto.response.MemberInfoResponseDTO;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;

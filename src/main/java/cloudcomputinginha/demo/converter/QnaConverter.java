@@ -2,8 +2,8 @@ package cloudcomputinginha.demo.converter;
 
 import cloudcomputinginha.demo.domain.Coverletter;
 import cloudcomputinginha.demo.domain.Qna;
-import cloudcomputinginha.demo.web.dto.QnaRequestDTO;
-import cloudcomputinginha.demo.web.dto.QnaResponseDTO;
+import cloudcomputinginha.demo.web.dto.request.QnaRequestDTO;
+import cloudcomputinginha.demo.web.dto.response.QnaResponseDTO;
 
 public class QnaConverter {
     public static Qna toQna(QnaRequestDTO.createQnaDTO createQnaDTO, Coverletter coverletter) {

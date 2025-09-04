@@ -1,8 +1,8 @@
 package cloudcomputinginha.demo.service.interview;
 
 import cloudcomputinginha.demo.domain.Interview;
-import cloudcomputinginha.demo.web.dto.InterviewRequestDTO;
-import cloudcomputinginha.demo.web.dto.InterviewResponseDTO;
+import cloudcomputinginha.demo.web.dto.request.InterviewRequestDTO;
+import cloudcomputinginha.demo.web.dto.response.InterviewResponseDTO;
 
 public interface InterviewCommandService {
 

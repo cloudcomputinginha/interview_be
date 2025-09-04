@@ -3,7 +3,7 @@ package cloudcomputinginha.demo.repository;
 import cloudcomputinginha.demo.domain.QInterview;
 import cloudcomputinginha.demo.domain.QMemberInterview;
 import cloudcomputinginha.demo.domain.enums.InterviewFormat;
-import cloudcomputinginha.demo.web.dto.InterviewResponseDTO;
+import cloudcomputinginha.demo.web.dto.response.InterviewResponseDTO;
 import com.querydsl.core.types.Projections;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
@@ -37,7 +37,7 @@ public class InterviewQueryRepositoryImpl implements InterviewQueryRepository {
                 ))
                 .from(interview)
                 .leftJoin(memberInterview)
-                    .on(memberInterview.interview.id.eq(interview.id))
+                .on(memberInterview.interview.id.eq(interview.id))
                 .where(
                         interview.interviewOption.interviewFormat.eq(InterviewFormat.GROUP),
                         interview.isOpen.isTrue(),

@@ -7,7 +7,7 @@ import cloudcomputinginha.demo.converter.NotificationConverter;
 import cloudcomputinginha.demo.domain.Member;
 import cloudcomputinginha.demo.repository.MemberRepository;
 import cloudcomputinginha.demo.repository.NotificationRepository;
-import cloudcomputinginha.demo.web.dto.NotificationResponseDTO;
+import cloudcomputinginha.demo.web.dto.response.NotificationResponseDTO;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;

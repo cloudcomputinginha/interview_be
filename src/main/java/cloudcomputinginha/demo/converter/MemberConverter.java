@@ -1,7 +1,7 @@
 package cloudcomputinginha.demo.converter;
 
 import cloudcomputinginha.demo.domain.Member;
-import cloudcomputinginha.demo.web.dto.MemberInfoResponseDTO;
+import cloudcomputinginha.demo.web.dto.response.MemberInfoResponseDTO;
 
 public class MemberConverter {
     public static MemberInfoResponseDTO toMemberInfoResponseDTO(Member member) {

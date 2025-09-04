@@ -3,7 +3,7 @@ package cloudcomputinginha.demo.infra.aws;
 import cloudcomputinginha.demo.apiPayload.code.handler.ResumeHandler;
 import cloudcomputinginha.demo.apiPayload.code.status.ErrorStatus;
 import cloudcomputinginha.demo.config.properties.CloudProperties;
-import cloudcomputinginha.demo.web.dto.ResumeResponseDTO;
+import cloudcomputinginha.demo.web.dto.response.ResumeResponseDTO;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import software.amazon.awssdk.services.s3.model.PutObjectRequest;

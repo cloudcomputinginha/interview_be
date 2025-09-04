@@ -1,4 +1,4 @@
-package cloudcomputinginha.demo.web.dto;
+package cloudcomputinginha.demo.web.dto.request;
 
 import cloudcomputinginha.demo.validation.annotation.ValidS3Url;
 import jakarta.validation.constraints.NotEmpty;

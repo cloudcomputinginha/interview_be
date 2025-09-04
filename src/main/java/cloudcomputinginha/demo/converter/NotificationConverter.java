@@ -5,7 +5,7 @@ import cloudcomputinginha.demo.domain.Member;
 import cloudcomputinginha.demo.domain.Notification;
 import cloudcomputinginha.demo.domain.embedded.DomainUrl;
 import cloudcomputinginha.demo.domain.enums.NotificationType;
-import cloudcomputinginha.demo.web.dto.NotificationResponseDTO;
+import cloudcomputinginha.demo.web.dto.response.NotificationResponseDTO;
 
 import java.util.List;
 

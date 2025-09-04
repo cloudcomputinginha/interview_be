@@ -1,7 +1,7 @@
 package cloudcomputinginha.demo.service.interview;
 
 import cloudcomputinginha.demo.domain.Interview;
-import cloudcomputinginha.demo.web.dto.InterviewResponseDTO;
+import cloudcomputinginha.demo.web.dto.response.InterviewResponseDTO;
 
 import java.time.LocalDateTime;
 import java.util.List;

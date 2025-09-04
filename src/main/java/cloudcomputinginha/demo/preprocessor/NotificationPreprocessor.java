@@ -10,7 +10,7 @@ import cloudcomputinginha.demo.domain.enums.InterviewStatus;
 import cloudcomputinginha.demo.domain.enums.NotificationType;
 import cloudcomputinginha.demo.repository.MemberInterviewRepository;
 import cloudcomputinginha.demo.service.notification.NotificationCommandService;
-import cloudcomputinginha.demo.web.dto.NotificationRequestDTO;
+import cloudcomputinginha.demo.web.dto.request.NotificationRequestDTO;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;

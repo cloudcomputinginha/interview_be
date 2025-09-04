@@ -1,4 +1,4 @@
-package cloudcomputinginha.demo.web.dto;
+package cloudcomputinginha.demo.web.dto.request;
 
 import cloudcomputinginha.demo.domain.enums.InterviewFormat;
 import cloudcomputinginha.demo.domain.enums.InterviewType;

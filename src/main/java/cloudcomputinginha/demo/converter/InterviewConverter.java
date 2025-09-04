@@ -5,8 +5,8 @@ import cloudcomputinginha.demo.domain.InterviewOption;
 import cloudcomputinginha.demo.domain.Member;
 import cloudcomputinginha.demo.domain.MemberInterview;
 import cloudcomputinginha.demo.domain.enums.StartType;
-import cloudcomputinginha.demo.web.dto.InterviewRequestDTO;
-import cloudcomputinginha.demo.web.dto.InterviewResponseDTO;
+import cloudcomputinginha.demo.web.dto.request.InterviewRequestDTO;
+import cloudcomputinginha.demo.web.dto.response.InterviewResponseDTO;
 
 import java.time.LocalDateTime;
 import java.util.List;

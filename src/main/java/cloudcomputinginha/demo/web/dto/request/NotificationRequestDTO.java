@@ -1,4 +1,4 @@
-package cloudcomputinginha.demo.web.dto;
+package cloudcomputinginha.demo.web.dto.request;
 
 import jakarta.validation.constraints.NotNull;
 import lombok.Getter;

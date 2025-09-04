@@ -1,7 +1,7 @@
 package cloudcomputinginha.demo.converter;
 
 import cloudcomputinginha.demo.domain.Resume;
-import cloudcomputinginha.demo.web.dto.ResumeResponseDTO;
+import cloudcomputinginha.demo.web.dto.response.ResumeResponseDTO;
 
 import java.util.Collections;
 import java.util.List;
