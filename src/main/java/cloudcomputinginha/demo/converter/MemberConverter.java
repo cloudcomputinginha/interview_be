@@ -1,11 +1,11 @@
 package cloudcomputinginha.demo.converter;
 
 import cloudcomputinginha.demo.domain.Member;
-import cloudcomputinginha.demo.web.dto.response.MemberInfoResponseDTO;
+import cloudcomputinginha.demo.web.dto.response.MemberResponseDTO;
 
 public class MemberConverter {
-    public static MemberInfoResponseDTO toMemberInfoResponseDTO(Member member) {
-        return MemberInfoResponseDTO.builder()
+    public static MemberResponseDTO.MemberInfoReponseDTO toMemberInfoResponseDTO(Member member) {
+        return MemberResponseDTO.MemberInfoReponseDTO.builder()
                 .memberId(member.getId())
                 .name(member.getName())
                 .email(member.getEmail())

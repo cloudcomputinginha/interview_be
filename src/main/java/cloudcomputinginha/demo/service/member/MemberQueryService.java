@@ -1,7 +1,7 @@
 package cloudcomputinginha.demo.service.member;
 
-import cloudcomputinginha.demo.web.dto.response.MemberInfoResponseDTO;
+import cloudcomputinginha.demo.web.dto.response.MemberResponseDTO;
 
 public interface MemberQueryService {
-    MemberInfoResponseDTO getBasicInfo(Long memberId);
+    MemberResponseDTO.MemberInfoReponseDTO getBasicInfo(Long memberId);
 }

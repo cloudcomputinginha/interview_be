@@ -5,7 +5,7 @@ import cloudcomputinginha.demo.apiPayload.code.status.ErrorStatus;
 import cloudcomputinginha.demo.converter.MemberConverter;
 import cloudcomputinginha.demo.domain.Member;
 import cloudcomputinginha.demo.repository.MemberRepository;
-import cloudcomputinginha.demo.web.dto.response.MemberInfoResponseDTO;
+import cloudcomputinginha.demo.web.dto.response.MemberResponseDTO;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -17,7 +17,7 @@ public class MemberQueryServiceImpl implements MemberQueryService {
 
     @Override
     @Transactional
-    public MemberInfoResponseDTO getBasicInfo(Long memberId) {
+    public MemberResponseDTO.MemberInfoReponseDTO getBasicInfo(Long memberId) {
         Member member = memberRepository.findById(memberId)
                 .orElseThrow(() -> new MemberHandler(ErrorStatus.MEMBER_NOT_FOUND));
 
