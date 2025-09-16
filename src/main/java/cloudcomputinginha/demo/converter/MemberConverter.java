@@ -14,4 +14,11 @@ public class MemberConverter {
                 .introduction(member.getIntroduction())
                 .build();
     }
+
+    public static MemberResponseDTO.MemberSimpleInfoReponseDTO toMemberSimpleInfoReponseDTO(Member member) {
+        return MemberResponseDTO.MemberSimpleInfoReponseDTO.builder()
+                .memberId(member.getId())
+                .name(member.getName())
+                .build();
+    }
 }

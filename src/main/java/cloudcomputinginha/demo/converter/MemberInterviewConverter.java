@@ -41,6 +41,7 @@ public class MemberInterviewConverter {
     public static MemberInterviewResponseDTO.ParticipantDTO toParticipantDTO(MemberInterview memberInterview) {
         return MemberInterviewResponseDTO.ParticipantDTO.builder()
                 .memberInterviewId(memberInterview.getId())
+                .memberDTO(MemberConverter.toMemberSimpleInfoReponseDTO(memberInterview.getMember()))
                 .resumeDTO(ResumeConverter.toResumeSimpleDTO(memberInterview.getResume()))
                 .coverLetterDTO(CoverletterConverter.toDetailDTO(memberInterview.getCoverletter()))
                 .build();

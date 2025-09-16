@@ -13,9 +13,16 @@ public interface MemberInterviewRepository extends JpaRepository<MemberInterview
     List<MemberInterview> findByResumeId(Long resumeId);
 
     @Query("SELECT mi FROM MemberInterview mi " +
+            "LEFT JOIN FETCH mi.member " +
             "LEFT JOIN FETCH mi.resume LEFT JOIN FETCH mi.coverletter " +
             "WHERE mi.interview.id = :interviewId")
-    List<MemberInterview> findByInterviewId(Long interviewId);
+    List<MemberInterview> findAllByInterviewId(Long interviewId);
+
+    @Query("SELECT mi FROM MemberInterview mi " +
+            "LEFT JOIN FETCH mi.member " +
+            " JOIN FETCH mi.resume LEFT JOIN FETCH mi.coverletter " +
+            "WHERE mi.member.id = :memberId AND mi.interview.id = :interviewId")
+    Optional<MemberInterview> findWithMemberAndResumeAndCoverletterByMemberIdAndInterviewId(Long memberId, Long interviewId);
 
     List<MemberInterview> findWithMemberByInterviewId(Long interviewId);
 

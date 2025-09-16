@@ -13,6 +13,7 @@ public class MemberInterviewResponseDTO {
     @AllArgsConstructor
     public static class ParticipantDTO {
         private Long memberInterviewId;
+        private MemberResponseDTO.MemberSimpleInfoReponseDTO memberDTO;
         private ResumeResponseDTO.ResumeSimpleDTO resumeDTO;
         private CoverletterResponseDTO.CoverletterDetailDTO coverLetterDTO;
     }

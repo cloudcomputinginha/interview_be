@@ -47,7 +47,7 @@ public class InterviewQueryServiceImpl implements InterviewQueryService {
         Member member = memberRepository.findById(memberId)
                 .orElseThrow(() -> new MemberHandler(ErrorStatus.MEMBER_NOT_FOUND));
 
-        List<MemberInterview> memberInterviewList = memberInterviewRepository.findByInterviewId(interviewId);
+        List<MemberInterview> memberInterviewList = memberInterviewRepository.findAllByInterviewId(interviewId);
         MemberInterview myMemberInterview = memberInterviewList.stream()
                 .filter(memberInterview -> memberInterview.getMember().getId().equals(memberId))
                 .findFirst()
@@ -76,7 +76,7 @@ public class InterviewQueryServiceImpl implements InterviewQueryService {
                 .orElseThrow(() -> new InterviewHandler(ErrorStatus.INTERVIEW_NOT_FOUND));
 
         // 2. 면접 참여자 조회
-        List<MemberInterview> memberInterviews = memberInterviewRepository.findByInterviewId(interviewId);
+        List<MemberInterview> memberInterviews = memberInterviewRepository.findAllByInterviewId(interviewId);
 
         // 3. 현재 사용자가 면접 참여자인지 확인
         if (memberInterviews.stream()

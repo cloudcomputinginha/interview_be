@@ -18,4 +18,13 @@ public class MemberResponseDTO {
         private String jobType;
         private String introduction;
     }
+
+    @Getter
+    @Builder
+    @NoArgsConstructor
+    @AllArgsConstructor
+    public static class MemberSimpleInfoReponseDTO {
+        private Long memberId;
+        private String name;
+    }
 }

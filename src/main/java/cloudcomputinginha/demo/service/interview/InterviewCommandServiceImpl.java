@@ -117,7 +117,7 @@ public class InterviewCommandServiceImpl implements InterviewCommandService {
 
     private List<MemberInterview> startPersonalInterview(Long memberId, Interview interview) {
         // 2-1. 면접 참가자 조회
-        MemberInterview memberInterview = memberInterviewRepository.findByMemberIdAndInterviewId(memberId, interview.getId())
+        MemberInterview memberInterview = memberInterviewRepository.findWithMemberAndResumeAndCoverletterByMemberIdAndInterviewId(memberId, interview.getId())
                 .orElseThrow(() -> new InterviewHandler(ErrorStatus.MEMBER_INTERVIEW_NOT_FOUND));
 
         // 2-2. 참가자가 자소서, 이력서가 모두 존재하는지 확인(둘 다 필수여야 함)
@@ -140,7 +140,7 @@ public class InterviewCommandServiceImpl implements InterviewCommandService {
     private List<MemberInterview> startGroupInterview(Long memberId, Interview interview) {
         // 2-1. 현재 면접 대기실에 입장한(상태가 IN_PROGRESS인) 참가자들 조회
         Long interviewId = interview.getId();
-        List<MemberInterview> memberInterviews = memberInterviewRepository.findByInterviewId(interviewId);
+        List<MemberInterview> memberInterviews = memberInterviewRepository.findAllByInterviewId(interviewId);
         List<MemberInterview> inProgressMemberInterviews = memberInterviews.stream()
                 .filter(mi -> mi.getStatus() == InterviewStatus.IN_PROGRESS)
                 .toList();
@@ -209,7 +209,7 @@ public class InterviewCommandServiceImpl implements InterviewCommandService {
             throw new InterviewHandler(INTERVIEW_END_TIME_INVALID);
         }
         // 4. 면접 멤버에 API 사용자가 존재하지 않으면 예외 발생
-        List<MemberInterview> memberInterviews = memberInterviewRepository.findByInterviewId(interviewId);
+        List<MemberInterview> memberInterviews = memberInterviewRepository.findAllByInterviewId(interviewId);
         if (memberInterviews.stream()
                 .noneMatch(mi -> mi.getMember().getId().equals(memberId))) {
             throw new InterviewHandler(ErrorStatus.INTERVIEW_NO_PERMISSION);

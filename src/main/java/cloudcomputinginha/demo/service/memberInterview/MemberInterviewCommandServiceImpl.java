@@ -65,7 +65,7 @@ public class MemberInterviewCommandServiceImpl implements MemberInterviewCommand
         interview.increaseCurrentParticipants(); //이 메서드 내부에서 동시성을 보호하고, 정원이 넘치면 예외를 발생시킵니다.
 
         // 기존 참가자 목록 조회 (자기 자신 제외)
-        List<MemberInterview> otherParticipants = memberInterviewRepository.findByInterviewId(interviewId).stream()
+        List<MemberInterview> otherParticipants = memberInterviewRepository.findAllByInterviewId(interviewId).stream()
                 .filter(mi -> !mi.getMember().getId().equals(memberId))
                 .toList();
 
@@ -91,7 +91,7 @@ public class MemberInterviewCommandServiceImpl implements MemberInterviewCommand
 
     @Override
     public void finalizeStatuses(Long interviewId) {
-        List<MemberInterview> memberInterviews = memberInterviewRepository.findByInterviewId(interviewId);
+        List<MemberInterview> memberInterviews = memberInterviewRepository.findAllByInterviewId(interviewId);
 
         for (MemberInterview mi : memberInterviews) {
             switch (mi.getStatus()) {
